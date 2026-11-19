@@ -1,0 +1,121 @@
+{
+  "project_id": "ch-valmont-demo",
+  "region": "europe-west9",
+  "public_buckets": [
+    {
+      "bucket": "gs://ch-valmont-demo-export-radiologie",
+      "location": "EUROPE-WEST9",
+      "public": true,
+      "public_members": ["allUsers"],
+      "bindings": [
+        {
+          "role": "roles/storage.objectViewer",
+          "members": ["allUsers"]
+        }
+      ]
+    },
+    {
+      "bucket": "gs://ch-valmont-demo-backups-dpi",
+      "location": "EUROPE-WEST9",
+      "public": false,
+      "public_members": [],
+      "bindings": []
+    },
+    {
+      "bucket": "gs://ch-valmont-demo-archives-pacs",
+      "location": "EUROPE-WEST9",
+      "public": false,
+      "public_members": [],
+      "bindings": []
+    }
+  ],
+  "open_firewall": [
+    {
+      "name": "allow-ssh-anywhere",
+      "network": "default",
+      "direction": "INGRESS",
+      "priority": 1000,
+      "source_ranges": ["0.0.0.0/0"],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": ["22"]
+        }
+      ],
+      "exposed_sensitive_ports": ["22"],
+      "non_conforme": true
+    }
+  ],
+  "backup_protection": [
+    {
+      "bucket": "gs://ch-valmont-demo-backups-dpi",
+      "versioning_enabled": false,
+      "retention_policy_seconds": null,
+      "retention_locked": false,
+      "protege": false
+    },
+    {
+      "bucket": "gs://ch-valmont-demo-archives-pacs",
+      "versioning_enabled": true,
+      "retention_policy_seconds": 31536000,
+      "retention_locked": true,
+      "protege": true
+    }
+  ],
+  "iam_privileges": {
+    "overprivileged_bindings": [
+      {
+        "role": "roles/editor",
+        "member": "serviceAccount:sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+        "non_conforme": true,
+        "raison": "Rôle primitif excessif (roles/editor) accordé à un compte de service prestataire externe"
+      },
+      {
+        "role": "roles/owner",
+        "member": "user:admin-legacy@ch-valmont.fr",
+        "non_conforme": true,
+        "raison": "Compte générique legacy disposant des pleins pouvoirs (roles/owner)"
+      }
+    ],
+    "stale_service_account_keys": [
+      {
+        "service_account": "sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+        "key_id": "7f9a3c12e84b09d1",
+        "key_type": "USER_MANAGED",
+        "age_days": 248,
+        "max_age_days": 90,
+        "non_conforme": true
+      }
+    ],
+    "non_conforme": true
+  },
+  "kms_and_logging": {
+    "kms_keys": [
+      {
+        "name": "projects/ch-valmont-demo/locations/europe-west9/keyRings/kr-sante-dpi/cryptoKeys/key-dpi-patients",
+        "purpose": "ENCRYPT_DECRYPT",
+        "rotation_period_days": null,
+        "rotation_enabled": false,
+        "non_conforme": true
+      },
+      {
+        "name": "projects/ch-valmont-demo/locations/europe-west9/keyRings/kr-sante-dpi/cryptoKeys/key-pacs-imagerie",
+        "purpose": "ENCRYPT_DECRYPT",
+        "rotation_period_days": 90,
+        "rotation_enabled": true,
+        "non_conforme": false
+      }
+    ],
+    "audit_log_buckets": [
+      {
+        "bucket": "projects/ch-valmont-demo/locations/global/buckets/_Default",
+        "retention_days": 30,
+        "required_retention_days": 365,
+        "locked": false,
+        "data_access_logs_enabled": false,
+        "non_conforme": true
+      }
+    ],
+    "non_conforme": true
+  }
+}

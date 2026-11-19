@@ -1,0 +1,196 @@
+name: TRIAD CI — Qualité, Sécurité, Conteneur & Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: triad-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-tests:
+    name: Backend Python, Lint Bytecode & Sécurité ADK (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupération du dépôt
+        uses: actions/checkout@v4
+
+      - name: Installation de Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Installation des dépendances Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: "Vérification syntaxique (make lint : compileall, AST, pyproject.toml, JSON)"
+        run: make lint
+
+      - name: Contrôle pré-vol CI, SBOM CycloneDX 1.5, scripts forensiques & anti-fuite de secrets
+        run: make ci-validate && make sbom-check
+
+      - name: Exécution des tests unitaires & d'intégration
+        env:
+          PYTHONPATH: src
+          USE_GCP_SNAPSHOT: "true"
+        run: pytest -v tests/ -k "not live"
+
+  frontend-build:
+    name: Frontend React 19 + TypeScript (tsc & vite build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Récupération du dépôt
+        uses: actions/checkout@v4
+
+      - name: Installation de Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Installation déterministe des dépendances npm
+        run: npm ci
+
+      - name: Vérification du typage TypeScript, build de production & Performance Budget JS (< 350 Ko)
+        run: |
+          npx tsc --noEmit && npm run build
+          python3 -c "import pathlib; files = sorted(pathlib.Path('../src/triad/web/dist/assets').glob('index-*.js')); assert files and all(0 < f.stat().st_size < 358400 for f in files), f'Performance Budget dépassé: {[(f.name, f.stat().st_size) for f in files]}'"
+
+  terraform-iac:
+    name: Infrastructure Terraform GCP (fmt & validate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra/terraform
+    steps:
+      - name: Récupération du dépôt
+        uses: actions/checkout@v4
+
+      - name: Installation de Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.9.0"
+
+      - name: Vérification du formatage canonique HCL
+        run: terraform fmt -check -recursive
+
+      - name: Initialisation hors-ligne des providers
+        run: terraform init -backend=false -input=false
+
+      - name: Validation schématique Terraform
+        run: terraform validate
+
+  docker-smoke:
+    name: Smoke-Test E2E Conteneur & Audit Forensique ZIP (HEAD/GET, 403 -> 200, SHA-256)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupération du dépôt
+        uses: actions/checkout@v4
+
+      - name: Build de l'image multi-stage TRIAD
+        run: docker build --tag triad:ci-smoke .
+
+      - name: Cycle complet E2E conteneur (sondes HEAD/GET, verrous 403, audit & verify_bundle.sh)
+        run: |
+          CONTAINER_NAME="triad-ci-smoke"
+          SMOKE_PORT="18080"
+          SMOKE_SID="ci-smoke-e2e"
+          SMOKE_SECRET="ci-smoke-ephemeral-hmac"
+          SMOKE_ZIP="/tmp/triad_ci_smoke_bundle.zip"
+          SMOKE_SNAP="/tmp/triad_ci_smoke_snapshot.json"
+          SMOKE_SBOM="/tmp/triad_ci_smoke_sbom.json"
+          BASE_URL="http://127.0.0.1:${SMOKE_PORT}"
+          trap 'rm -f "${SMOKE_ZIP}" "${SMOKE_SNAP}" "${SMOKE_SBOM}"; docker logs "${CONTAINER_NAME}" || true; docker rm -f "${CONTAINER_NAME}" >/dev/null 2>&1 || true' EXIT
+
+          # Vérification bytecode du runtime conteneur non-root
+          docker run --rm triad:ci-smoke python -m compileall -q /app/src /app/run_demo.py
+
+          docker run -d \
+            --name "${CONTAINER_NAME}" \
+            --read-only \
+            --tmpfs /tmp:rw,noexec,nosuid,mode=1777 \
+            --tmpfs /app/logs:rw,nosuid,mode=1777 \
+            -p "127.0.0.1:${SMOKE_PORT}:8080" \
+            -e USE_GCP_SNAPSHOT=true \
+            -e USE_DEMO_CACHE=true \
+            -e LOG_FORMAT=json \
+            -e AUDIT_SIGNING_SECRET=ci-smoke-ephemeral-hmac \
+            triad:ci-smoke
+
+          echo "Attente de disponibilité sur ${BASE_URL}/api/health/ready ..."
+          READY=0
+          for i in $(seq 1 30); do
+            if curl -fsS "${BASE_URL}/api/health/ready" >/tmp/ready.json 2>/dev/null; then
+              READY=1
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "${READY}" -ne 1 ]; then
+            echo "ERREUR: Le conteneur TRIAD n'a pas répondu sur /api/health/ready en 30s."
+            exit 1
+          fi
+
+          # 1. Sondes GET & HEAD /api/health, /api/health/ready & /api/security/sbom (CycloneDX 1.5 signé)
+          curl -fsS "${BASE_URL}/api/health" >/tmp/health.json
+          grep -q '"status":"ok"' /tmp/health.json
+          curl -fsSI "${BASE_URL}/api/health" >/tmp/health.head
+          head -n1 /tmp/health.head | grep -q ' 200'
+          grep -iq '^x-content-type-options:[[:space:]]*nosniff' /tmp/health.head
+          curl -fsSI "${BASE_URL}/api/health/ready" | head -n1 | grep -q ' 200'
+          SBOM_SIG=$(curl -fsSD - "${BASE_URL}/api/security/sbom" -o "${SMOKE_SBOM}" | awk 'tolower($1)=="x-triad-signature:" {gsub(/\r/,"",$2); print $2}')
+          python3 -c "import hashlib, hmac, json, pathlib, sys; b = pathlib.Path(sys.argv[1]).read_bytes(); d = json.loads(b); assert d.get('bomFormat') == 'CycloneDX' and d.get('specVersion') == '1.5'; exp = hmac.new(sys.argv[2].encode(), b, hashlib.sha256).hexdigest(); assert sys.argv[3].startswith('hmac-sha256=') and hmac.compare_digest(exp, sys.argv[3].split('=', 1)[1].lower())" "${SMOKE_SBOM}" "${SMOKE_SECRET}" "${SBOM_SIG}"
+
+          # 2. Sondes HEAD & GET sur / (bundle React compilé)
+          curl -fsSI "${BASE_URL}/" | head -n1 | grep -q ' 200'
+          curl -fsS "${BASE_URL}/" >/tmp/index.html
+          grep -q '<div id="root"></div>' /tmp/index.html
+
+          # 3. Verrouillage HTTP 403 obligatoire sur les 12 livrables avant validation humaine
+          for ep in report mail json playbook csv bundle anssi-draft comex-brief terraform interview-guide risk-register cnil-draft; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/${ep}")
+            test "${CODE}" = "403" || { echo "ERREUR: /api/export/${ep} attendu 403, reçu ${CODE}"; exit 1; }
+          done
+
+          # 4. Cycle complet E2E : demo/load -> audit/run (cache) -> maintien 403 -> validate -> exports + verify_bundle.sh & verify_snapshot.sh
+          curl -fsS -X POST -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/demo/load" >/dev/null
+          curl -fsS -X POST -H "X-Session-Id: ${SMOKE_SID}" -H "Content-Type: application/json" \
+            -d '{"mode":"APRES","use_cache":true}' "${BASE_URL}/api/audit/run" >/dev/null
+
+          for ep in bundle anssi-draft comex-brief terraform interview-guide risk-register cnil-draft; do
+            PRE_VAL_CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/${ep}?mode=APRES")
+            test "${PRE_VAL_CODE}" = "403" || { echo "ERREUR: /api/export/${ep} doit rester en 403 avant validation, reçu ${PRE_VAL_CODE}"; exit 1; }
+          done
+
+          curl -fsS -X POST -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/validate?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/anssi-draft?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/comex-brief?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/terraform?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/interview-guide?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/risk-register?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/cnil-draft?mode=APRES" >/dev/null
+          curl -fsS -H "X-Session-Id: ${SMOKE_SID}" "${BASE_URL}/api/export/bundle?mode=APRES" -o "${SMOKE_ZIP}"
+          AUDIT_SIGNING_SECRET="${SMOKE_SECRET}" bash scripts/verify_bundle.sh "${SMOKE_ZIP}"
+
+          SNAP_SIG=$(curl -fsSD - "${BASE_URL}/api/sessions/${SMOKE_SID}/snapshot" -o "${SMOKE_SNAP}" | awk 'tolower($1)=="x-triad-signature:" {gsub(/\r/,"",$2); print $2}')
+          AUDIT_SIGNING_SECRET="${SMOKE_SECRET}" bash scripts/verify_snapshot.sh "${SMOKE_SNAP}" --signature "${SNAP_SIG}"
+
+          echo "OK: Smoke-test E2E Docker --read-only réussi (HEAD/GET health+ready, SBOM CycloneDX 1.5, 12 verrous 403 -> validation -> 12 pièces v6 + snapshot signés)."

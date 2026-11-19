@@ -1,0 +1,55 @@
+# Configuration type — Déploiement souverain TRIAD (europe-west9 / Paris)
+project_id      = "votre-projet-gcp"
+region          = "europe-west9"
+vertex_location = "europe-west9"
+gemini_model    = "gemini-2.5-flash"
+
+# Sécurité d'accès & Direct VPC Egress (Zero-Trust par défaut : désactiver l'accès public en production)
+allow_unauthenticated = false
+enable_iap_invoker    = false
+ingress_settings      = "INGRESS_TRAFFIC_ALL"
+enable_vpc_egress     = false
+vpc_egress_setting    = "PRIVATE_RANGES_ONLY"
+
+authorized_invokers = [
+  "group:cyber-risk-advisory@votre-domaine.fr",
+]
+
+# Inspection GCP réelle, rétention WORM & cycle de vie PSSI §6.1 des journaux SHA-256
+use_gcp_snapshot             = false
+use_demo_cache               = false
+enable_dlp_api               = false
+audit_logs_retention_days    = 365
+audit_logs_lock_retention    = false
+audit_logs_coldline_age_days = 90
+audit_logs_archive_age_days  = 365
+
+# Secret Manager souverain (europe-west9), WAF Cloud Armor, Monitoring & Budget
+secret_id                   = "triad-sensitive-config"
+mount_secret_env            = false
+audit_signing_secret_id     = "triad-audit-signing-secret"
+mount_audit_signing_secret  = false
+enable_secret_rotation      = false
+secret_rotation_period      = "7776000s"
+enable_cloud_armor          = false
+cloud_armor_rate_limit_rpm  = 120
+enable_eu_geofencing        = false
+allowed_eu_country_codes    = ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK"]
+enable_uptime_check         = true
+enable_startup_cpu_boost    = true
+enable_monitoring_dashboard = true
+enable_alert_policy         = false
+enable_5xx_alert            = true
+cloud_run_5xx_threshold     = 5
+enable_latency_alert        = true
+cloud_run_p95_latency_ms    = 5000
+enable_429_alert            = true
+cloud_run_429_threshold     = 25
+enable_security_alert       = true
+session_ttl_hours           = 24
+log_format                  = "json"
+alert_notification_email    = ""
+monthly_budget_amount       = 0
+billing_account_id          = ""
+budget_currency             = "EUR"
+enable_org_policies         = false

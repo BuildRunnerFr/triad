@@ -1,0 +1,492 @@
+{
+  "client": "Centre Hospitalier de Valmont",
+  "mode_apres": {
+    "findings": [
+      {
+        "id": "F-001",
+        "theme": "Exposition des données",
+        "exigence_nis2": "Art. 21 §2 (i) — contrôle d'accès",
+        "dit": {
+          "extrait": "Nos données patients ne sont jamais exposées sur Internet.",
+          "source": "notes_entretien_DSI.md"
+        },
+        "ecrit": {
+          "extrait": "Aucune donnée de santé n'est stockée sur un espace accessible publiquement.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§3.1"
+        },
+        "reel": {
+          "constat": "Le bucket export-radiologie possède un binding IAM public allUsers sur roles/storage.objectViewer.",
+          "ressource": "gs://ch-valmont-demo-export-radiologie",
+          "preuve": {
+            "bucket": "gs://ch-valmont-demo-export-radiologie",
+            "public": true,
+            "public_members": ["allUsers"],
+            "bindings": [{"role": "roles/storage.objectViewer", "members": ["allUsers"]}]
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Dit ≠ Réel",
+        "recommandation": "Révoquer immédiatement l'accès public allUsers sur le bucket export-radiologie et activer l'accès uniforme au niveau du bucket.",
+        "commande_correction": "gcloud storage buckets remove-iam-policy-binding gs://ch-valmont-demo-export-radiologie --member=allUsers --role=roles/storage.objectViewer (NON EXÉCUTÉE)",
+        "confiance": 0.98,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-002",
+        "theme": "Sécurité réseau et administration",
+        "exigence_nis2": "Art. 21 §2 (i) — contrôle d'accès",
+        "dit": {
+          "extrait": "L'accès admin passe uniquement par le VPN.",
+          "source": "notes_entretien_DSI.md"
+        },
+        "ecrit": {
+          "extrait": "L'administration des serveurs s'effectue exclusivement via le bastion, accessible par VPN. Aucun port d'administration n'est exposé sur Internet.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§4.3"
+        },
+        "reel": {
+          "constat": "La règle de pare-feu allow-ssh-anywhere autorise TCP/22 depuis 0.0.0.0/0 sur le réseau default.",
+          "ressource": "compute/firewalls/allow-ssh-anywhere",
+          "preuve": {
+            "name": "allow-ssh-anywhere",
+            "network": "default",
+            "source_ranges": ["0.0.0.0/0"],
+            "allowed": [{"IPProtocol": "tcp", "ports": ["22"]}],
+            "non_conforme": true
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Dit ≠ Réel",
+        "recommandation": "Supprimer ou restreindre la règle allow-ssh-anywhere à la plage IP du bastion VPN uniquement.",
+        "commande_correction": "gcloud compute firewall-rules delete allow-ssh-anywhere --quiet (NON EXÉCUTÉE)",
+        "confiance": 0.99,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-003",
+        "theme": "Sauvegardes et continuité",
+        "exigence_nis2": "Art. 21 §2 (c) — sauvegardes et continuité d'activité",
+        "dit": {
+          "extrait": "Nos sauvegardes sont protégées, un ransomware ne peut pas les supprimer.",
+          "source": "notes_entretien_DSI.md"
+        },
+        "ecrit": {
+          "extrait": "Les bases de données critiques et les systèmes applicatifs font l'objet de sauvegardes quotidiennes automatisées, conservées pendant une durée de 30 jours sur des espaces dédiés dans le cloud.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§5.2"
+        },
+        "reel": {
+          "constat": "Le bucket backups-dpi n'a ni versioning ni politique de rétention verrouillée (contrairement à archives-pacs qui est conforme).",
+          "ressource": "gs://ch-valmont-demo-backups-dpi",
+          "preuve": {
+            "bucket": "gs://ch-valmont-demo-backups-dpi",
+            "versioning_enabled": false,
+            "retention_policy_seconds": null,
+            "retention_locked": false,
+            "protege": false
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Dit ≠ Réel",
+        "recommandation": "Activer le versioning et une politique de rétention verrouillée (Bucket Lock) de 30 jours minimum sur backups-dpi, et compléter la PSSI §5.2.",
+        "commande_correction": "gcloud storage buckets update gs://ch-valmont-demo-backups-dpi --versioning --retention-period=30d (NON EXÉCUTÉE)",
+        "confiance": 0.97,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-004",
+        "theme": "Gestion des incidents et notification",
+        "exigence_nis2": "Art. 23 — notification des incidents (24 h / 72 h / 1 mois)",
+        "dit": {
+          "extrait": "On a eu un petit incident en septembre, géré en interne, rien de grave.",
+          "source": "notes_entretien_DSI.md"
+        },
+        "ecrit": {
+          "extrait": "d'une alerte précoce à l'ANSSI sous 24 h",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§6.2"
+        },
+        "reel": {
+          "constat": "Vérification documentaire et entretien : compromission d'un compte prestataire avec interruption partielle de la messagerie interne non qualifiée ni notifiée à l'ANSSI.",
+          "ressource": "Processus notification ANSSI",
+          "preuve": null
+        },
+        "statut": "non_conforme",
+        "gravite": "haute",
+        "contradiction": "Dit ≠ Écrit",
+        "recommandation": "Mettre en place une grille de qualification des incidents significatifs (Art. 23 NIS2) et former l'astreinte à l'alerte précoce ANSSI sous 24 h.",
+        "commande_correction": null,
+        "confiance": 0.93,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-005",
+        "theme": "Archives PACS (contrôle témoin)",
+        "exigence_nis2": "Art. 21 §2 (c) — sauvegardes et continuité d'activité",
+        "dit": null,
+        "ecrit": {
+          "extrait": "Test validé pour le périmètre DPI pré-production en date du 18 mars 2025.",
+          "source": "PV_test_restauration.md",
+          "section": "§3"
+        },
+        "reel": {
+          "constat": "Le bucket archives-pacs dispose du versioning activé et d'une politique de rétention verrouillée (365 jours).",
+          "ressource": "gs://ch-valmont-demo-archives-pacs",
+          "preuve": {
+            "bucket": "gs://ch-valmont-demo-archives-pacs",
+            "versioning_enabled": true,
+            "retention_policy_seconds": 31536000,
+            "retention_locked": true,
+            "protege": true
+          }
+        },
+        "statut": "conforme",
+        "gravite": "faible",
+        "contradiction": null,
+        "recommandation": "Maintenir la configuration actuelle sur archives-pacs et étendre le prochain test PRA (2026) au périmètre PACS.",
+        "commande_correction": null,
+        "confiance": 0.96,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-006",
+        "theme": "Gouvernance IAM et comptes de service",
+        "exigence_nis2": "Art. 21 §2 (i) & (j) — moindre privilège et gestion des identités",
+        "dit": null,
+        "ecrit": {
+          "extrait": "L'attribution des droits repose sur le principe du moindre privilège et la séparation des tâches. Les comptes nominatifs sont obligatoires ; l'usage de comptes génériques partagés est interdit.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§4.1"
+        },
+        "reel": {
+          "constat": "Le compte sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com détient roles/editor avec une clé USER_MANAGED non tournée depuis 248 jours (> 90 j), et admin-legacy@ch-valmont.fr conserve roles/owner.",
+          "ressource": "iam/serviceAccounts/sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+          "preuve": {
+            "overprivileged_bindings": [
+              {
+                "role": "roles/editor",
+                "member": "serviceAccount:sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+                "non_conforme": true
+              },
+              {
+                "role": "roles/owner",
+                "member": "user:admin-legacy@ch-valmont.fr",
+                "non_conforme": true
+              }
+            ],
+            "stale_service_account_keys": [
+              {
+                "service_account": "sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+                "key_id": "7f9a3c12e84b09d1",
+                "key_type": "USER_MANAGED",
+                "age_days": 248,
+                "max_age_days": 90,
+                "non_conforme": true
+              }
+            ],
+            "non_conforme": true
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Révoquer la clé JSON statique de 248 jours au profit de Workload Identity Federation, remplacer roles/editor par un rôle minimal dédié et supprimer le compte générique admin-legacy.",
+        "commande_correction": "gcloud projects remove-iam-policy-binding ch-valmont-demo --member=serviceAccount:sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com --role=roles/editor && gcloud iam service-accounts keys delete 7f9a3c12e84b09d1 --iam-account=sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com (NON EXÉCUTÉE)",
+        "confiance": 0.97,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-007",
+        "theme": "Cryptographie Cloud KMS et rétention des journaux",
+        "exigence_nis2": "Art. 21 §2 (h) & Art. 23 — rotation KMS et rétention des traces",
+        "dit": null,
+        "ecrit": {
+          "extrait": "Les journaux d'événements de sécurité sont centralisés et conservés 12 mois.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§6.1"
+        },
+        "reel": {
+          "constat": "La clé Cloud KMS key-dpi-patients n'a pas de rotation automatique active (contrairement à key-pacs-imagerie à 90 j) et le bucket Cloud Logging _Default ne conserve les journaux que 30 jours au lieu de 365 jours.",
+          "ressource": "cloudkms/europe-west9/cryptoKeys/key-sante-patients & logging/buckets/_Default",
+          "preuve": {
+            "kms_keys": [
+              {
+                "name": "projects/ch-valmont-demo/locations/europe-west9/keyRings/kr-sante-dpi/cryptoKeys/key-dpi-patients",
+                "purpose": "ENCRYPT_DECRYPT",
+                "rotation_period_days": null,
+                "rotation_enabled": false,
+                "non_conforme": true
+              },
+              {
+                "name": "projects/ch-valmont-demo/locations/europe-west9/keyRings/kr-sante-dpi/cryptoKeys/key-pacs-imagerie",
+                "purpose": "ENCRYPT_DECRYPT",
+                "rotation_period_days": 90,
+                "rotation_enabled": true,
+                "non_conforme": false
+              }
+            ],
+            "audit_log_buckets": [
+              {
+                "bucket": "projects/ch-valmont-demo/locations/global/buckets/_Default",
+                "retention_days": 30,
+                "required_retention_days": 365,
+                "locked": false,
+                "data_access_logs_enabled": false,
+                "non_conforme": true
+              }
+            ],
+            "non_conforme": true
+          }
+        },
+        "statut": "partiel",
+        "gravite": "haute",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Activer une rotation automatique à 90 jours sur la clé KMS key-dpi-patients, porter la rétention du bucket Cloud Logging _Default à 365 jours avec verrouillage et activer les journaux DATA_READ/DATA_WRITE.",
+        "commande_correction": "gcloud kms keys update key-dpi-patients --location=europe-west9 --keyring=kr-sante-dpi --rotation-period=90d --next-rotation-time=+24h && gcloud logging buckets update _Default --location=global --retention-days=365 (NON EXÉCUTÉE)",
+        "confiance": 0.96,
+        "citation_verifiee": true
+      }
+    ],
+    "top_3_risques": [
+      "Exposition publique du bucket gs://ch-valmont-demo-export-radiologie (allUsers) et ouverture SSH 0.0.0.0/0 (allow-ssh-anywhere) en contradiction directe avec le déclaratif DSI.",
+      "Sur-privilèges IAM critiques : compte prestataire externe doté de roles/editor avec clé statique de 248 jours et compte générique admin-legacy en roles/owner.",
+      "Vulnérabilité face aux rançongiciels et déficit forensique : absence de verrouillage WORM sur backups-dpi, clé KMS key-dpi-patients sans rotation et rétention des journaux limitée à 30 jours."
+    ],
+    "questions_entretien": [],
+    "mail_suivi": "Objet : [CH Valmont — Audit NIS2] Premiers constats prioritaires et plan d'action immédiat\n\nBonjour M. Garnier,\n\nSuite à notre entretien du 12 novembre et à l'analyse croisée de votre PSSI et de votre environnement Google Cloud sur nos 5 sondes de contrôle, nous souhaitons attirer votre attention sur les écarts prioritaires suivants :\n1. Le bucket export-radiologie est actuellement accessible publiquement (allUsers) et la règle allow-ssh-anywhere expose le port 22 sur Internet (0.0.0.0/0).\n2. Le compte prestataire sa-prestataire-meditech détient le rôle primitif roles/editor avec une clé statique non tournée depuis 248 jours (et admin-legacy conserve roles/owner).\n3. Le bucket backups-dpi ne dispose ni de versioning ni de verrouillage de rétention, la clé KMS key-dpi-patients n'a pas de rotation automatique, et la rétention Cloud Logging (_Default) est limitée à 30 jours contre 12 mois exigés par la PSSI §6.1.\n\nNous recommandons également de formaliser la qualification de l'incident de septembre au regard des délais de notification ANSSI (article 23 NIS2).\n\nNous restons à votre disposition pour valider le plan de remédiation à 30/60/90 jours.\n\nCordialement,\nÉquipe Risk Advisory Cyber — Deloitte"
+  },
+  "mode_avant": {
+    "findings": [
+      {
+        "id": "F-001",
+        "theme": "Exposition des données",
+        "exigence_nis2": "Art. 21 §2 (i) — contrôle d'accès",
+        "dit": null,
+        "ecrit": {
+          "extrait": "Aucune donnée de santé n'est stockée sur un espace accessible publiquement.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§3.1"
+        },
+        "reel": {
+          "constat": "Le bucket export-radiologie possède un binding IAM public allUsers sur roles/storage.objectViewer.",
+          "ressource": "gs://ch-valmont-demo-export-radiologie",
+          "preuve": {
+            "bucket": "gs://ch-valmont-demo-export-radiologie",
+            "public": true,
+            "public_members": ["allUsers"],
+            "bindings": [{"role": "roles/storage.objectViewer", "members": ["allUsers"]}]
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Révoquer immédiatement l'accès public allUsers sur le bucket export-radiologie.",
+        "commande_correction": "gcloud storage buckets remove-iam-policy-binding gs://ch-valmont-demo-export-radiologie --member=allUsers --role=roles/storage.objectViewer (NON EXÉCUTÉE)",
+        "confiance": 0.98,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-002",
+        "theme": "Sécurité réseau et administration",
+        "exigence_nis2": "Art. 21 §2 (i) — contrôle d'accès",
+        "dit": null,
+        "ecrit": {
+          "extrait": "L'administration des serveurs s'effectue exclusivement via le bastion, accessible par VPN. Aucun port d'administration n'est exposé sur Internet.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§4.3"
+        },
+        "reel": {
+          "constat": "La règle de pare-feu allow-ssh-anywhere autorise TCP/22 depuis 0.0.0.0/0 sur le réseau default.",
+          "ressource": "compute/firewalls/allow-ssh-anywhere",
+          "preuve": {
+            "name": "allow-ssh-anywhere",
+            "network": "default",
+            "source_ranges": ["0.0.0.0/0"],
+            "allowed": [{"IPProtocol": "tcp", "ports": ["22"]}],
+            "non_conforme": true
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Supprimer la règle allow-ssh-anywhere et restreindre SSH au bastion VPN.",
+        "commande_correction": "gcloud compute firewall-rules delete allow-ssh-anywhere --quiet (NON EXÉCUTÉE)",
+        "confiance": 0.99,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-003",
+        "theme": "Sauvegardes et continuité",
+        "exigence_nis2": "Art. 21 §2 (c) — sauvegardes et continuité d'activité",
+        "dit": null,
+        "ecrit": {
+          "extrait": "Les bases de données critiques et les systèmes applicatifs font l'objet de sauvegardes quotidiennes automatisées, conservées pendant une durée de 30 jours sur des espaces dédiés dans le cloud.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§5.2"
+        },
+        "reel": {
+          "constat": "Le bucket backups-dpi n'a ni versioning ni politique de rétention verrouillée.",
+          "ressource": "gs://ch-valmont-demo-backups-dpi",
+          "preuve": {
+            "bucket": "gs://ch-valmont-demo-backups-dpi",
+            "versioning_enabled": false,
+            "retention_policy_seconds": null,
+            "retention_locked": false,
+            "protege": false
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Activer le versioning et le verrouillage de rétention (30 jours) sur backups-dpi.",
+        "commande_correction": "gcloud storage buckets update gs://ch-valmont-demo-backups-dpi --versioning --retention-period=30d (NON EXÉCUTÉE)",
+        "confiance": 0.97,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-005",
+        "theme": "Archives PACS (contrôle témoin)",
+        "exigence_nis2": "Art. 21 §2 (c) — sauvegardes et continuité d'activité",
+        "dit": null,
+        "ecrit": {
+          "extrait": "Test validé pour le périmètre DPI pré-production en date du 18 mars 2025.",
+          "source": "PV_test_restauration.md",
+          "section": "§3"
+        },
+        "reel": {
+          "constat": "Le bucket archives-pacs dispose du versioning activé et d'une politique de rétention verrouillée (365 jours).",
+          "ressource": "gs://ch-valmont-demo-archives-pacs",
+          "preuve": {
+            "bucket": "gs://ch-valmont-demo-archives-pacs",
+            "versioning_enabled": true,
+            "retention_policy_seconds": 31536000,
+            "retention_locked": true,
+            "protege": true
+          }
+        },
+        "statut": "conforme",
+        "gravite": "faible",
+        "contradiction": null,
+        "recommandation": "Maintenir la configuration actuelle sur archives-pacs et étendre le prochain test PRA (2026) au périmètre PACS.",
+        "commande_correction": null,
+        "confiance": 0.96,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-006",
+        "theme": "Gouvernance IAM et comptes de service",
+        "exigence_nis2": "Art. 21 §2 (i) & (j) — moindre privilège et gestion des identités",
+        "dit": null,
+        "ecrit": {
+          "extrait": "L'attribution des droits repose sur le principe du moindre privilège et la séparation des tâches. Les comptes nominatifs sont obligatoires ; l'usage de comptes génériques partagés est interdit.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§4.1"
+        },
+        "reel": {
+          "constat": "Le compte sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com détient roles/editor avec une clé USER_MANAGED non tournée depuis 248 jours (> 90 j), et admin-legacy@ch-valmont.fr conserve roles/owner.",
+          "ressource": "iam/serviceAccounts/sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+          "preuve": {
+            "overprivileged_bindings": [
+              {
+                "role": "roles/editor",
+                "member": "serviceAccount:sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+                "non_conforme": true
+              },
+              {
+                "role": "roles/owner",
+                "member": "user:admin-legacy@ch-valmont.fr",
+                "non_conforme": true
+              }
+            ],
+            "stale_service_account_keys": [
+              {
+                "service_account": "sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com",
+                "key_id": "7f9a3c12e84b09d1",
+                "key_type": "USER_MANAGED",
+                "age_days": 248,
+                "max_age_days": 90,
+                "non_conforme": true
+              }
+            ],
+            "non_conforme": true
+          }
+        },
+        "statut": "non_conforme",
+        "gravite": "critique",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Révoquer la clé statique de 248 jours sur sa-prestataire-meditech, remplacer roles/editor par un rôle minimal et supprimer admin-legacy.",
+        "commande_correction": "gcloud projects remove-iam-policy-binding ch-valmont-demo --member=serviceAccount:sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com --role=roles/editor && gcloud iam service-accounts keys delete 7f9a3c12e84b09d1 --iam-account=sa-prestataire-meditech@ch-valmont-demo.iam.gserviceaccount.com (NON EXÉCUTÉE)",
+        "confiance": 0.97,
+        "citation_verifiee": true
+      },
+      {
+        "id": "F-007",
+        "theme": "Cryptographie Cloud KMS et rétention des journaux",
+        "exigence_nis2": "Art. 21 §2 (h) & Art. 23 — rotation KMS et rétention des traces",
+        "dit": null,
+        "ecrit": {
+          "extrait": "Les journaux d'événements de sécurité sont centralisés et conservés 12 mois.",
+          "source": "PSSI_CH_Valmont.md",
+          "section": "§6.1"
+        },
+        "reel": {
+          "constat": "La clé Cloud KMS key-dpi-patients n'a pas de rotation automatique active (contrairement à key-pacs-imagerie à 90 j) et le bucket Cloud Logging _Default ne conserve les journaux que 30 jours au lieu de 365 jours.",
+          "ressource": "cloudkms/europe-west9/cryptoKeys/key-sante-patients & logging/buckets/_Default",
+          "preuve": {
+            "kms_keys": [
+              {
+                "name": "projects/ch-valmont-demo/locations/europe-west9/keyRings/kr-sante-dpi/cryptoKeys/key-dpi-patients",
+                "purpose": "ENCRYPT_DECRYPT",
+                "rotation_period_days": null,
+                "rotation_enabled": false,
+                "non_conforme": true
+              },
+              {
+                "name": "projects/ch-valmont-demo/locations/europe-west9/keyRings/kr-sante-dpi/cryptoKeys/key-pacs-imagerie",
+                "purpose": "ENCRYPT_DECRYPT",
+                "rotation_period_days": 90,
+                "rotation_enabled": true,
+                "non_conforme": false
+              }
+            ],
+            "audit_log_buckets": [
+              {
+                "bucket": "projects/ch-valmont-demo/locations/global/buckets/_Default",
+                "retention_days": 30,
+                "required_retention_days": 365,
+                "locked": false,
+                "data_access_logs_enabled": false,
+                "non_conforme": true
+              }
+            ],
+            "non_conforme": true
+          }
+        },
+        "statut": "partiel",
+        "gravite": "haute",
+        "contradiction": "Écrit ≠ Réel",
+        "recommandation": "Activer une rotation automatique à 90 jours sur key-dpi-patients et porter la rétention du bucket Cloud Logging _Default à 365 jours.",
+        "commande_correction": "gcloud kms keys update key-dpi-patients --location=europe-west9 --keyring=kr-sante-dpi --rotation-period=90d --next-rotation-time=+24h && gcloud logging buckets update _Default --location=global --retention-days=365 (NON EXÉCUTÉE)",
+        "confiance": 0.96,
+        "citation_verifiee": true
+      }
+    ],
+    "top_3_risques": [
+      "Bucket export-radiologie exposé publiquement (allUsers) et port SSH (22) ouvert sur 0.0.0.0/0 malgré la PSSI §3.1 et §4.3.",
+      "Compte prestataire sa-prestataire-meditech doté de roles/editor avec une clé statique non tournée depuis 248 jours et compte générique admin-legacy en roles/owner.",
+      "Absence de protection anti-suppression sur backups-dpi, clé KMS key-dpi-patients sans rotation et rétention Cloud Logging limitée à 30 jours au lieu de 12 mois."
+    ],
+    "questions_entretien": [
+      "Pourquoi le bucket export-radiologie possède-t-il un accès public allUsers alors que la PSSI §3.1 l'interdit formellement ?",
+      "Qui utilise la règle de pare-feu allow-ssh-anywhere (0.0.0.0/0) et pourquoi le flux ne passe-t-il pas par le bastion VPN ?",
+      "Pourquoi le prestataire Meditech dispose-t-il de roles/editor sur tout le projet avec une clé statique active depuis 248 jours, et qui détient le compte générique admin-legacy (roles/owner) ?",
+      "Comment protégez-vous les sauvegardes DPI (backups-dpi) contre un rançongiciel et pourquoi la rétention Cloud Logging (_Default) est-elle plafonnée à 30 jours au lieu des 12 mois prévus en §6.1 ?",
+      "Avez-vous rencontré des incidents de sécurité au cours des 12 derniers mois, et comment avez-vous évalué l'obligation de notification ANSSI sous 24 h / 72 h ?"
+    ],
+    "mail_suivi": ""
+  }
+}

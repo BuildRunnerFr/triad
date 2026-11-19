@@ -1,0 +1,44 @@
+# Environnements virtuels & caches Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+
+# Secrets & configurations locales (ne jamais téléverser vers Cloud Build)
+.env
+.env.*
+*.json.key
+*credentials*.json
+
+# Journaux d'audit locaux
+logs/
+*.jsonl
+!data/*.jsonl
+
+# Git, GitHub Actions, scripts locaux & Infrastructure-as-Code
+# Note : tests/ est inclus pour permettre l'exécution de pytest dans cloudbuild.yaml
+# (le Dockerfile multi-stage ne copie pas tests/ dans l'image finale de production).
+.git/
+.gitignore
+.github/
+scripts/
+infra/
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Frontend : inclure frontend/src/ et les fichiers de build Vite/TS pour le
+# Dockerfile multi-stage, tout en excluant node_modules/ et artefacts locaux
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+src/triad/web/dist/
+
+# Système / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

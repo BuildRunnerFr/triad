@@ -1,0 +1,94 @@
+{
+  "referentiel": "Directive (UE) 2022/2555 (NIS2)",
+  "version": "1.0",
+  "exigences": [
+    {
+      "id": "NIS2-21-2-a",
+      "article": "Art. 21 §2 (a)",
+      "theme": "Gouvernance et risques",
+      "intitule_resume": "Politiques d'analyse des risques et de sécurité des systèmes d'information",
+      "mots_cles": ["PSSI", "analyse de risques", "EBIOS", "gouvernance", "politique de sécurité"],
+      "type_verification": ["documentaire", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-b",
+      "article": "Art. 21 §2 (b)",
+      "theme": "Gestion des incidents",
+      "intitule_resume": "Procédures de détection, traitement et réponse aux incidents de sécurité",
+      "mots_cles": ["incident", "détection", "cellule de crise", "journaux", "réponse"],
+      "type_verification": ["documentaire", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-c",
+      "article": "Art. 21 §2 (c)",
+      "theme": "Sauvegardes et continuité",
+      "intitule_resume": "Continuité des activités, gestion des sauvegardes protégées, reprise après sinistre et gestion de crise",
+      "mots_cles": ["sauvegarde", "backup", "versioning", "rétention", "immuabilité", "PRA", "PCA", "restauration", "RTO", "RPO"],
+      "type_verification": ["documentaire", "technique_gcp", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-d",
+      "article": "Art. 21 §2 (d)",
+      "theme": "Gouvernance et risques",
+      "intitule_resume": "Sécurité de la chaîne d'approvisionnement et relations avec les fournisseurs et prestataires",
+      "mots_cles": ["fournisseur", "prestataire", "sous-traitant", "chaîne d'approvisionnement", "contrat"],
+      "type_verification": ["documentaire", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-e",
+      "article": "Art. 21 §2 (e)",
+      "theme": "Gouvernance et risques",
+      "intitule_resume": "Sécurité lors de l'acquisition, du développement et de la maintenance des systèmes, y compris gestion des vulnérabilités",
+      "mots_cles": ["vulnérabilité", "maintenance", "développement", "correctif", "scan"],
+      "type_verification": ["documentaire"]
+    },
+    {
+      "id": "NIS2-21-2-f",
+      "article": "Art. 21 §2 (f)",
+      "theme": "Gouvernance et risques",
+      "intitule_resume": "Politiques et procédures d'évaluation de l'efficacité des mesures de cybersécurité",
+      "mots_cles": ["audit", "contrôle", "test", "efficacité", "comité cyber"],
+      "type_verification": ["documentaire", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-g",
+      "article": "Art. 21 §2 (g)",
+      "theme": "Gouvernance et risques",
+      "intitule_resume": "Pratiques de base en matière d'hygiène informatique et formation à la cybersécurité",
+      "mots_cles": ["sensibilisation", "formation", "hygiène", "personnel"],
+      "type_verification": ["documentaire", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-h",
+      "article": "Art. 21 §2 (h)",
+      "theme": "Exposition des données",
+      "intitule_resume": "Politiques et procédures relatives à l'utilisation de la cryptographie et du chiffrement",
+      "mots_cles": ["chiffrement", "cryptographie", "AES", "TLS", "données de santé"],
+      "type_verification": ["documentaire"]
+    },
+    {
+      "id": "NIS2-21-2-i",
+      "article": "Art. 21 §2 (i)",
+      "theme": "Exposition des données et accès",
+      "intitule_resume": "Sécurité des ressources humaines, politiques de contrôle d'accès, exposition réseau et gestion des actifs",
+      "mots_cles": ["contrôle d'accès", "moindre privilège", "bucket", "public", "allUsers", "pare-feu", "firewall", "SSH", "RDP", "VPN", "bastion"],
+      "type_verification": ["documentaire", "technique_gcp", "entretien"]
+    },
+    {
+      "id": "NIS2-21-2-j",
+      "article": "Art. 21 §2 (j)",
+      "theme": "Exposition des données et accès",
+      "intitule_resume": "Recours à l'authentification multifacteur (MFA) et aux communications sécurisées",
+      "mots_cles": ["MFA", "authentification forte", "multifacteur", "accès distant"],
+      "type_verification": ["documentaire", "entretien"]
+    },
+    {
+      "id": "NIS2-23",
+      "article": "Art. 23",
+      "theme": "Gestion des incidents",
+      "intitule_resume": "Obligation de notification des incidents significatifs : alerte précoce sous 24 h, notification sous 72 h et rapport final sous 1 mois",
+      "mots_cles": ["ANSSI", "24 h", "72 h", "1 mois", "notification", "incident significatif", "alerte précoce"],
+      "type_verification": ["documentaire", "entretien"]
+    }
+  ]
+}
