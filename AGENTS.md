@@ -2,26 +2,44 @@
 
 Ce dépôt contient **TRIAD**, une plateforme d'audit de conformité **NIS2** propulsée par **Google Cloud Vertex AI & ADK**, conçue dans le cadre du **Hackathon Deloitte × Google Cloud**.
 
-## Architecture du Dépôt
-- `src/triad/` : Backend FastAPI + agents ADK (`agents/`), sécurité & chaîne SHA-256 (`security/`), sondes GCP lecture seule & outils documentaires (`tools/`), API & gestion de sessions (`api/`).
-- `frontend/` : Interface React 19 + TypeScript + Vite + Tailwind + Three.js WebGL. Le build de production est généré dans `src/triad/web/dist/` (servi directement par FastAPI).
-- `infra/terraform/` : Infrastructure as Code GCP (Cloud Run v2, Secret Manager, Cloud Armor optionnel, Monitoring, IAM, politiques optionnelles de souveraineté/VPC egress).
-- `scripts/` : Outils CLI autonomes (`release_readiness.sh`, `verify_bundle.sh`, `verify_snapshot.sh`, `generate_sbom.sh`, `predeploy_check.sh`).
-- `tests/` : Suite de tests `pytest` (`62` tests hors-ligne + `1` test `live` Vertex AI).
-- `Dockerfile`, `cloudbuild.yaml`, `.github/workflows/ci.yml`, `Makefile` : Build multi-stage, CI/CD et déploiement Cloud Run.
+## Contexte Métier & Architecture Applicative
+- **Scénario de démonstration (`data/`)** : Audit NIS2 du Centre Hospitalier de Valmont en deux phases comparatives (`AVANT` / `APRÈS` entretiens contradictoires), croisant le **Dit** (`notes_entretien_DSI.md`), l'**Écrit** (`PSSI_CH_Valmont.md`, `PV_test_restauration.md`, `annexe_fournisseur_maintenance.md`) et le **Réel** (`gcp_snapshot.json` / sondes GCP lecture seule).
+- **Pipeline ADK 4 agents (`src/triad/agents/`)** :
+  1. `douanier.py` : contrôle documentaire, détection d'injection de prompt et masquage PII/DLP.
+  2. `garde_du_corps.py` : 5 sondes GCP strictement en **lecture seule** (`storage`, `firewall`, `backup`, `iam_privileges`, `kms_and_logging`).
+  3. `analyste.py` : croisement NIS2 Art. 21 & 23, matrices de couverture, risque tiers (Art. 21 §2 d), continuité RTO/RPO (Art. 21 §2 c) et correspondance HDS / ISO 27001 / RGPD.
+  4. `contre_auditeur.py` : contre-audit critique, vérification des citations exactes et cohérence `AVANT` / `APRÈS`.
+- **12 Livrables sous verrou humain `HTTP 403` (`src/triad/api/app.py`)** : `report`, `mail`, `json`, `playbook`, `csv`, `bundle` (archive `.zip` v6 à 12 pièces + `MANIFEST_SHA256.txt`), `anssi-draft` (Art. 23), `comex-brief` (Art. 20), `terraform` (GitOps `.tf`), `interview-guide`, `risk-register` (GRC) et `cnil-draft` (RGPD Art. 33/34). Débloqués uniquement après `POST /api/validate` (et re-verrouillés si un arbitrage GRC est modifié via `PATCH /api/findings/{id}/decision`).
+
+## Structure du Dépôt
+- `src/triad/` : Backend FastAPI, agents ADK (`agents/`), chaîne SHA-256 & logs structurés (`security/`), outils (`tools/`), API & persistance sessions disque (`api/session_store.py`).
+- `frontend/` : React 19 + TypeScript + Vite + Tailwind CSS + Three.js WebGL (mode Deloitte `#86BC25` × `#07090F`, 100 % français, code-splitting `React.lazy`, bascule Densité `Confort`/`Compact`). Build dans `src/triad/web/dist/`.
+- `infra/terraform/` : IaC GCP complète (`main.tf`, `variables.tf`, `outputs.tf`, `terraform.tfvars.example`).
+- `scripts/` : `release_readiness.sh`, `verify_bundle.sh` (v1..v6), `verify_snapshot.sh`, `generate_sbom.sh` (CycloneDX 1.5), `predeploy_check.sh`.
+- `tests/` : `62` tests `pytest` hors-ligne + `1` test `live` Vertex AI.
+- `Dockerfile`, `cloudbuild.yaml`, `.github/workflows/ci.yml`, `Makefile` : Build multi-stage (`uvicorn` PID 1, `--timeout-keep-alive 30 --no-server-header`), CI/CD et déploiement.
+
+## État Actuel Cloud Run & Infra GCP
+- **Projet GCP cible** : `deloitteinnov26par-595` (à configurer en local via `.env` copié depuis `.env.example`, jamais commité).
+- **Service Cloud Run déployé** : `triad` dans `europe-west9` (`PORT=8080`, `--cpu-boost`, `LOG_FORMAT=json`), URL publique actuelle : `https://triad-311153381291.europe-west9.run.app`.
+- **Vertex AI** : `VERTEX_LOCATION=global`, `GEMINI_MODEL=gemini-4-hydrogen`.
+- **Compte de service & Terraform (`infra/terraform/`)** :
+  - `Makefile` (`deploy`) vérifie si `triad-auditor@<PROJECT_ID>.iam.gserviceaccount.com` existe/est accessible et bascule sinon sur le compte de service Cloud Run par défaut.
+  - `infra/terraform/` provisionne Cloud Run v2 (`startup_cpu_boost`, sondes `/api/health/ready`), Secret Manager (`AUDIT_SIGNING_SECRET` + rotation optionnelle `enable_secret_rotation`), bucket GCS `audit_logs` (WORM + lifecycle `COLDLINE` 90j / `ARCHIVE` 365j), Cloud Monitoring (Uptime, 5xx, P95, 429, logs structurés), et options désactivées par défaut pour compatibilité sandbox : `enable_cloud_armor`, `enable_eu_geofencing`, `enable_org_policies`, `enable_vpc_egress`.
+  - **Prochaines pistes infra possibles** : appliquer `infra/terraform/` (création du SA dédié `triad-auditor` moindre privilège + Secret Manager `AUDIT_SIGNING_SECRET` monté sur Cloud Run), configurer un backend GCS pour le state Terraform, activer `enable_cloud_armor` + domaine personnalisé.
 
 ## Commandes Essentielles
 ```bash
 # 1. Build Frontend (obligatoire après toute modification dans frontend/)
 cd frontend && npx tsc --noEmit && npm run build
 
-# 2. Vérifications statiques, Terraform/YAML, anti-fuite secrets, budget JS (< 350 Ko) & SBOM
+# 2. Vérifications statiques, HCL/YAML, anti-fuite secrets, budget JS (< 350 Ko) & SBOM
 make lint && make ci-validate && make sbom-check
 
 # 3. Tests backend & sécurité (hors appels Vertex AI live)
 PYTHONPATH=src .venv/bin/pytest -v tests/ -k "not live"
 
-# 4. Certification E2E complète sans Docker (lint + tests + Uvicorn signé + 12 verrous 403->200 + bundle v6 + snapshot)
+# 4. Certification E2E complète sans Docker
 make release-check
 
 # 5. Déploiement Cloud Run (europe-west9)
@@ -29,14 +47,9 @@ ALLOW_UNAUTH=true make deploy && make deploy-check   # accès public démo
 make deploy && make deploy-check                   # accès privé IAM
 ```
 
-## Contexte Cloud Run & Vertex AI
-- Région Cloud Run : `europe-west9` (`PORT=8080`, `--cpu-boost` actif).
-- Vertex AI : `VERTEX_LOCATION=global`, `GEMINI_MODEL=gemini-4-hydrogen` (configurés dans `.env` local ou variables Cloud Run ; ne jamais commiter `.env`).
-- `Makefile` (`deploy`) vérifie si `triad-auditor@<PROJECT_ID>.iam.gserviceaccount.com` est accessible et bascule sinon sur le compte de service Cloud Run par défaut.
-
 ## Règles Non-Négociables
 1. **Zéro exécution corrective GCP** : les sondes GCP sont strictement en **lecture seule**. Ne jamais exécuter de commandes `gcloud` de remédiation depuis l'application.
-2. **Verrou humain `HTTP 403`** : les **12 routes d'export** (`/api/export/*`) doivent rester bloquées en `HTTP 403` tant que `POST /api/validate` n'a pas été approuvé (et re-verrouillées si un arbitrage GRC est modifié).
-3. **Intégrité forensique** : préserver la chaîne SHA-256 append-only (`audit_log.py`), la rétrocompatibilité de vérification de bundle **v1 (6 pièces) à v6 (12 pièces)**, et la signature optionnelle `AUDIT_SIGNING_SECRET` (`X-Triad-Signature`).
-4. **Sécurité Frontend & CSP** : zéro `dangerouslySetInnerHTML`, zéro `<script>` inline, UI 100 % en français (style cabinet Deloitte `#86BC25` × `#07090F`), et respect du budget JS initial (`src/triad/web/dist/assets/index-*.js` `< 358 400` octets).
+2. **Verrou humain `HTTP 403`** : les **12 routes d'export** (`/api/export/*`) doivent rester bloquées en `HTTP 403` avant `POST /api/validate`.
+3. **Intégrité forensique** : préserver la chaîne SHA-256 append-only, la rétrocompatibilité `verify_bundle` **v1 (6) à v6 (12 pièces)** et `X-Triad-Signature` (HMAC-SHA256).
+4. **Sécurité Frontend & CSP** : zéro `dangerouslySetInnerHTML`, zéro `<script>` inline, UI 100 % en français, budget JS initial `src/triad/web/dist/assets/index-*.js` `< 358 400` octets.
 5. **Zéro fuite de secrets** : ne jamais commiter `.env`, clés JSON, jetons GCP, `.venv/`, `node_modules/` ou `logs/`.
