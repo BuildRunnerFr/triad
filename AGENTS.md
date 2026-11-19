@@ -12,7 +12,11 @@ Ce dépôt contient **TRIAD**, une plateforme d'audit de conformité **NIS2** pr
 - **12 Livrables sous verrou humain `HTTP 403` (`src/triad/api/app.py`)** : `report`, `mail`, `json`, `playbook`, `csv`, `bundle` (archive `.zip` v6 à 12 pièces + `MANIFEST_SHA256.txt`), `anssi-draft` (Art. 23), `comex-brief` (Art. 20), `terraform` (GitOps `.tf`), `interview-guide`, `risk-register` (GRC) et `cnil-draft` (RGPD Art. 33/34). Débloqués uniquement après `POST /api/validate` (et re-verrouillés si un arbitrage GRC est modifié via `PATCH /api/findings/{id}/decision`).
 
 ## Structure du Dépôt
-- `src/triad/` : Backend FastAPI, agents ADK (`agents/`), chaîne SHA-256 & logs structurés (`security/`), outils (`tools/`), API & persistance sessions disque (`api/session_store.py`).
+- `src/triad/` : Backend FastAPI, agents ADK (`agents/`), outils (`tools/`).
+  - `api/app.py` : routes HTTP fines (sessions, verrou 403, signatures `X-Triad-Signature`, ETag) ; `api/session_store.py` (persistance disque) ; `api/observability.py` (rate-limit, métriques, rendu Prometheus).
+  - `reporting/` : calculs **purs** sans état HTTP — `renderers.py` (rendu des 12 livrables), `scoring.py` (score NIS2 & simulation de remédiation), `nis2_views.py` (vues supply-chain Art. 21 §2 d, continuité §2 c, crosswalk HDS/ISO/RGPD).
+  - `security/` : chaîne SHA-256 & logs structurés, `bundle_verify.py` (spécification v1..v6 + vérification forensique ZIP, secret HMAC injecté en paramètre), `sbom.py` (CycloneDX 1.5 en cache mémoire).
+  - Convention : les modules `reporting/` et `security/bundle_verify.py` n'appellent jamais `get_settings()` ; `app.py` leur passe les valeurs (les tests patchent `triad.api.app.get_settings`).
 - `frontend/` : React 19 + TypeScript + Vite + Tailwind CSS + Three.js WebGL (mode Deloitte `#86BC25` × `#07090F`, 100 % français, code-splitting `React.lazy`, bascule Densité `Confort`/`Compact`). Build dans `src/triad/web/dist/`.
 - `infra/terraform/` : IaC GCP complète (`main.tf`, `variables.tf`, `outputs.tf`, `terraform.tfvars.example`).
 - `scripts/` : `release_readiness.sh`, `verify_bundle.sh` (v1..v6), `verify_snapshot.sh`, `generate_sbom.sh` (CycloneDX 1.5), `predeploy_check.sh`.

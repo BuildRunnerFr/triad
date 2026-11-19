@@ -3160,6 +3160,7 @@ def test_security_sbom_cyclonedx_15_attestation_signature_and_container_fallback
     monkeypatch, tmp_path: Path
 ) -> None:
     import triad.api.app as app_module
+    import triad.security.sbom as sbom_module
     from triad.config import Settings
 
     real_settings = app_module.get_settings()
@@ -3212,12 +3213,12 @@ def test_security_sbom_cyclonedx_15_attestation_signature_and_container_fallback
     assert r_signed.headers.get("x-triad-signature") == expected_sig
 
     # 3. Repli conteneur slim (quand pyproject.toml et frontend/package-lock.json sont absents)
-    fallback_sbom = app_module._build_runtime_cyclonedx_sbom(repo_root=tmp_path)
+    fallback_sbom = sbom_module.build_runtime_cyclonedx_sbom(repo_root=tmp_path)
     assert fallback_sbom["bomFormat"] == "CycloneDX"
     assert fallback_sbom["specVersion"] == "1.5"
     assert str(fallback_sbom["serialNumber"]).startswith("urn:uuid:")
     assert isinstance(fallback_sbom["components"], list) and len(fallback_sbom["components"]) >= 10
-    assert fallback_sbom == app_module._build_runtime_cyclonedx_sbom(repo_root=tmp_path)
+    assert fallback_sbom == sbom_module.build_runtime_cyclonedx_sbom(repo_root=tmp_path)
 
 
 def test_gzip_compression_and_cache_control_cloud_run_headers() -> None:
@@ -3312,6 +3313,7 @@ def test_gzip_compression_and_cache_control_cloud_run_headers() -> None:
 
 def test_sbom_memory_cache_and_etag_304_conditional_requests(monkeypatch) -> None:
     import triad.api.app as app_module
+    import triad.security.sbom as sbom_module
     from triad.config import Settings
 
     secret = "iter19-etag-304-hmac-signing-secret"
@@ -3326,16 +3328,16 @@ def test_sbom_memory_cache_and_etag_304_conditional_requests(monkeypatch) -> Non
         ),
     )
 
-    # 1. Mémorisation effective en cache mémoire de _build_runtime_cyclonedx_sbom() (zéro relecture disque)
-    sbom_first = app_module._build_runtime_cyclonedx_sbom()
-    sbom_second = app_module._build_runtime_cyclonedx_sbom()
+    # 1. Mémorisation effective en cache mémoire de build_runtime_cyclonedx_sbom() (zéro relecture disque)
+    sbom_first = sbom_module.build_runtime_cyclonedx_sbom()
+    sbom_second = sbom_module.build_runtime_cyclonedx_sbom()
     assert sbom_first is sbom_second
 
     def _forbid_recompute(_root: Path):
         raise AssertionError("Le SBOM doit être servi depuis le cache mémoire sans recalcul")
 
-    monkeypatch.setattr(app_module, "_compute_runtime_cyclonedx_sbom_uncached", _forbid_recompute)
-    assert app_module._build_runtime_cyclonedx_sbom() is sbom_first
+    monkeypatch.setattr(sbom_module, "compute_runtime_cyclonedx_sbom_uncached", _forbid_recompute)
+    assert sbom_module.build_runtime_cyclonedx_sbom() is sbom_first
 
     # 2. Validation conditionnelle ETag / If-None-Match -> HTTP 304 sur GET /api/security/sbom
     r_sbom_200 = client.get("/api/security/sbom")
