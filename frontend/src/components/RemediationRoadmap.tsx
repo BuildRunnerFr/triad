@@ -888,7 +888,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Quadrant 1 */}
-          <div className="surface-card rounded-xl p-3.5 border-l-4 border-l-[#86BC25] space-y-2">
+          <div className="surface-card rounded-xl p-3.5 edge-accent space-y-2">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-extrabold text-main">
                 1. Quick-Wins Prioritaires
@@ -919,7 +919,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           </div>
 
           {/* Quadrant 2 */}
-          <div className="surface-card rounded-xl p-3.5 border-l-4 border-l-amber-500 space-y-2">
+          <div className="surface-card rounded-xl p-3.5 edge-amber space-y-2">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-extrabold text-main">
                 2. Chantiers Structurants

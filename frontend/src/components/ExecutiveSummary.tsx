@@ -39,6 +39,8 @@ import {
   GRC_DECISION_META,
 } from '../utils/grcSimulation';
 import { Nis2RadarChart } from './Nis2RadarChart';
+import CountUp from './reactbits/CountUp';
+import SpotlightCard from './reactbits/SpotlightCard';
 import { CloudTopologyViz } from './CloudTopologyViz';
 import { Nis2CoverageMatrix } from './Nis2CoverageMatrix';
 import type { ToastTone } from './ToastStack';
@@ -84,6 +86,9 @@ const GRAVITE_PILL: Record<
   },
   conforme: { label: 'Conforme ✓', cls: 'badge-success' },
 };
+
+/** Résultats d'audit dont les indicateurs ont déjà été animés pendant la session. */
+const playedKpiReveals = new Set<string>();
 
 export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
   synthesis,
@@ -299,6 +304,24 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
 
   const questionsCount = synthesis.questions_entretien?.length || 0;
 
+  // Le décompte des indicateurs ne se joue qu'une fois par résultat d'audit (pas à chaque retour sur la vue).
+  const revealKey = `${mode}:${total}:${nonConformes}:${maturityScore}:${verifiedQuotes}`;
+  const [firstReveal] = useState(() => !playedKpiReveals.has(revealKey));
+  useEffect(() => {
+    playedKpiReveals.add(revealKey);
+  }, [revealKey]);
+  const kpiCardProps = {
+    theme: theme === 'dark' ? ('dark' as const) : ('light' as const),
+    spotlightColor: '#86BC25',
+    intensity: theme === 'dark' ? 0.1 : 0.35,
+    borderGlow: 0.5,
+    spotlightSize: 220,
+    style: {
+      '--spotlight-card-surface': 'var(--bg-surface)',
+      '--spotlight-card-border': 'var(--border-subtle)',
+      '--spotlight-card-shadow': 'var(--shadow-panel)',
+    } as React.CSSProperties,
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -365,12 +388,12 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
         </div>
       </div>
 
-      {/* LIGNE 1 : 4 CARTES KPI AÉRÉES */}
+      {/* LIGNE 1 : 4 INDICATEURS (lueur React Bits SpotlightCard + décompte CountUp joué une fois par résultat) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         {/* KPI 1 : Maturité NIS2 */}
-        <div className="surface-panel rounded-2xl p-5 flex items-center gap-4">
+        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-center gap-4">
           <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-            <svg className="w-16 h-16 -rotate-90" viewBox="0 0 68 68">
+            <svg className="w-16 h-16 -rotate-90" viewBox="0 0 68 68" aria-hidden="true">
               <circle
                 cx="34"
                 cy="34"
@@ -394,94 +417,89 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                 strokeWidth="6"
                 strokeLinecap="round"
                 strokeDasharray={circumference}
-                initial={{ strokeDashoffset: circumference }}
+                initial={{ strokeDashoffset: firstReveal ? circumference : strokeOffset }}
                 animate={{ strokeDashoffset: strokeOffset }}
-                transition={{ duration: 0.75, ease: 'easeOut' }}
+                transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
               />
             </svg>
             <span className="absolute text-sm font-extrabold tabular-nums text-main">
-              {maturityScore}%
+              <CountUp to={maturityScore} from={firstReveal ? 0 : maturityScore} duration={0.75} trigger="load" />%
             </span>
           </div>
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-dim">
-              Maturité NIS2
-            </div>
+            <div className="text-xs font-semibold text-sub">Maturité NIS2</div>
             <div className="text-sm font-extrabold text-main mt-1 tabular-nums">
-              {conformes}/{total} conformes
+              {conformes}/{total} constats conformes
             </div>
             <div className="text-[11px] text-sub mt-0.5 tabular-nums">
               {partiels} partiel{partiels > 1 ? 's' : ''}
             </div>
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* KPI 2 : Écarts Non Conformes */}
-        <div className="surface-panel rounded-2xl p-5 flex items-start justify-between">
+        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-start justify-between">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-dim">
-              Écarts Majeurs
-            </div>
+            <div className="text-xs font-semibold text-sub">Écarts majeurs</div>
             <div className="flex items-baseline gap-2 mt-1.5">
               <span className="text-3xl font-extrabold tabular-nums tone-critical">
-                {nonConformes}
+                <CountUp to={nonConformes} from={firstReveal ? 0 : nonConformes} duration={0.6} trigger="load" />
               </span>
               {critiques > 0 && (
-                <span className="badge-critical text-[11px] font-bold px-2 py-0.5 rounded-full tabular-nums">
-                  {critiques} critique{critiques > 1 ? 's' : ''}
+                <span className="text-xs font-bold tabular-nums text-sub">
+                  dont {critiques} critique{critiques > 1 ? 's' : ''}
                 </span>
               )}
             </div>
-            <div className="text-[11px] text-sub mt-1">
-              Dit × Écrit × Réel
-            </div>
+            <div className="text-[11px] text-sub mt-1">Dit × Écrit × Réel</div>
           </div>
           <div className="w-10 h-10 rounded-xl badge-critical flex items-center justify-center shrink-0">
             <ShieldAlert className="w-5 h-5" />
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* KPI 3 : Sas DLP Douanier */}
-        <div className="surface-panel rounded-2xl p-5 flex items-start justify-between">
+        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-start justify-between">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-dim">
-              Sas DLP Douanier
-            </div>
+            <div className="text-xs font-semibold text-sub">Pièces en quarantaine</div>
             <div className="flex items-baseline gap-2 mt-1.5">
               <span className="text-3xl font-extrabold tabular-nums tone-warning">
-                {quarDocs.length}
+                <CountUp to={quarDocs.length} from={firstReveal ? 0 : quarDocs.length} duration={0.6} trigger="load" />
               </span>
-              <span className="text-xs font-semibold text-sub">quarantaine</span>
+              <span className="text-xs font-semibold text-sub">
+                pièce{quarDocs.length > 1 ? 's' : ''} isolée{quarDocs.length > 1 ? 's' : ''}
+              </span>
             </div>
             <div className="text-[11px] text-sub mt-1 tabular-nums">
-              {totalRedactions} PII masquée{totalRedactions > 1 ? 's' : ''}
+              {totalRedactions} donnée{totalRedactions > 1 ? 's' : ''} personnelle{totalRedactions > 1 ? 's' : ''} masquée{totalRedactions > 1 ? 's' : ''} (DLP)
             </div>
           </div>
           <div className="w-10 h-10 rounded-xl badge-warning flex items-center justify-center shrink-0">
             <FileLock2 className="w-5 h-5" />
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* KPI 4 : Preuves Exactes */}
-        <div className="surface-panel rounded-2xl p-5 flex items-start justify-between">
+        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-start justify-between">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-dim">
-              Preuves Vérifiées
-            </div>
+            <div className="text-xs font-semibold text-sub">Citations vérifiées mot à mot</div>
             <div className="flex items-baseline gap-2 mt-1.5">
               <span className="text-3xl font-extrabold tabular-nums tone-success">
-                {verifiedQuotes}/{total}
+                <CountUp to={verifiedQuotes} from={firstReveal ? 0 : verifiedQuotes} duration={0.6} trigger="load" />
+                <span className="text-xl text-sub">/{total}</span>
               </span>
             </div>
             <div className="text-[11px] text-sub mt-1 tabular-nums">
               {arbitratedCount} arbitrage{arbitratedCount > 1 ? 's' : ''} GRC
-              {elapsedSeconds ? ` • ${elapsedSeconds}s` : ''}
+              {elapsedSeconds
+                ? ` • audit en ${elapsedSeconds.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} s`
+                : ''}
             </div>
           </div>
           <div className="w-10 h-10 rounded-xl badge-success flex items-center justify-center shrink-0">
             <Quote className="w-5 h-5" />
           </div>
-        </div>
+        </SpotlightCard>
       </div>
 
       {/* LIGNE 2 : GRAPHIQUES (RADAR NIS2 + TOPOLOGIE CLOUD GCP) */}
@@ -502,7 +520,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
 
       {/* LIGNE 3 : TOP 3 RISQUES PRIORITAIRES (1 LIGNE CHACUN, DÉPLIABLE AU CLIC) */}
       {synthesis.top_3_risques && synthesis.top_3_risques.length > 0 && (
-        <div className="surface-panel rounded-2xl p-5 border-l-4 border-l-[#86BC25] space-y-3">
+        <div className="surface-panel rounded-2xl p-5 edge-accent space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-accent" />
@@ -754,7 +772,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           className="fixed inset-0 z-50 overflow-y-auto bg-[var(--bg-canvas)] text-main"
         >
           <div className="max-w-[1440px] mx-auto px-6 py-6 lg:px-10 lg:py-8 space-y-6">
-            <header className="surface-panel rounded-2xl p-5 border-l-4 border-l-[#86BC25] flex flex-wrap items-center justify-between gap-4">
+            <header className="surface-panel rounded-2xl p-5 edge-accent flex flex-wrap items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded-md bg-[#86BC25] text-black text-[11px] font-extrabold uppercase tracking-wider">
@@ -910,7 +928,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                     {(synthesis.top_3_risques || []).slice(0, 3).map((risk, idx) => (
                       <div
                         key={idx}
-                        className="surface-card rounded-xl p-3.5 flex items-start gap-3 border-l-4 border-l-[#86BC25]"
+                        className="surface-card rounded-xl p-3.5 flex items-start gap-3 edge-accent"
                       >
                         <span className="px-2 py-0.5 rounded-lg bg-[#86BC25] text-black font-mono font-extrabold text-xs shrink-0">
                           0{idx + 1}

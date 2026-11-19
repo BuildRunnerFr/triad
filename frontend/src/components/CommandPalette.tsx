@@ -651,11 +651,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <div className="flex items-center gap-2.5">
                       <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
                       <span className="font-semibold">
-                        Valider la synthèse et débloquer les livrables ({mode})
+                        Revoir et valider la synthèse ({mode === 'APRES' ? 'APRÈS' : mode})
                       </span>
                     </div>
                     <span className="badge-warning text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      Signature
+                      Attestation
                     </span>
                   </Command.Item>
                 )}

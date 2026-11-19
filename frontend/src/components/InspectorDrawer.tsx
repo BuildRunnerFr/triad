@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { DURATION, EASE_OUT, gsap, prefersReducedMotion, useGSAP } from '../motion/gsap';
 import {
   X,
   Copy,
@@ -60,6 +61,9 @@ interface InspectorDrawerProps {
   ) => Promise<boolean>;
 }
 
+/** Constats dont la triangulation a déjà été mise en scène pendant la session. */
+const playedEvidence = new Set<string>();
+
 export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
   content,
   mode = 'APRES',
@@ -67,6 +71,42 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
   onSaveFindingDecision,
 }) => {
   const [findingTab, setFindingTab] = useState<FindingSubTab>('preuves');
+  const evidenceRef = useRef<HTMLDivElement>(null);
+  const evidenceKey =
+    content?.type === 'finding' && findingTab === 'preuves' ? content.finding.id : null;
+
+  // Triangulation : le Dit et l'Écrit arrivent, puis le Réel se pose en dernier pour révéler l'écart.
+  useGSAP(
+    () => {
+      const root = evidenceRef.current;
+      // Joué une seule fois par constat : revenir sur l'onglet Preuves n'est pas une nouvelle découverte.
+      if (!root || !evidenceKey || playedEvidence.has(evidenceKey)) return;
+      playedEvidence.add(evidenceKey);
+      const cards = {
+        dit: root.querySelector('[data-evidence="dit"]'),
+        ecrit: root.querySelector('[data-evidence="ecrit"]'),
+        reel: root.querySelector('[data-evidence="reel"]'),
+      };
+      if (prefersReducedMotion()) {
+        gsap.fromTo(root, { opacity: 0 }, { opacity: 1, duration: DURATION.feedback });
+        return;
+      }
+      gsap
+        .timeline({ defaults: { ease: EASE_OUT } })
+        .fromTo(
+          [cards.dit, cards.ecrit],
+          { opacity: 0, y: 8 },
+          { opacity: 1, y: 0, duration: DURATION.state, stagger: 0.09 }
+        )
+        .fromTo(
+          cards.reel,
+          { opacity: 0, y: 10, filter: 'blur(4px)' },
+          { opacity: 1, y: 0, filter: 'blur(0px)', duration: DURATION.view, clearProps: 'filter' },
+          '-=0.1'
+        );
+    },
+    { scope: evidenceRef, dependencies: [evidenceKey] }
+  );
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [piiFilter, setPiiFilter] = useState<'ALL' | PiiKind>('ALL');
   const [piiSpotlight, setPiiSpotlight] = useState<boolean>(true);
@@ -357,7 +397,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                 )}
                 <mark
                   ref={highlightRef}
-                  className="bg-[#86BC25]/30 text-main border-b-2 border-[#86BC25] px-1 py-0.5 rounded font-semibold"
+                  className="bg-[#86BC25]/20 text-main underline decoration-2 decoration-[#86BC25] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
                 >
                   {renderTokensOnly(lineMatch, suspectQuote, claimMatchIdx)}
                 </mark>
@@ -376,7 +416,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             {renderTokensOnly(prefixText, suspectQuote, claimMatchIdx)}
             <mark
               ref={highlightRef}
-              className="bg-[#86BC25]/30 text-main border-b-2 border-[#86BC25] px-1 py-0.5 rounded font-semibold"
+              className="bg-[#86BC25]/20 text-main underline decoration-2 decoration-[#86BC25] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
             >
               {renderTokensOnly(focusLine, suspectQuote, claimMatchIdx)}
             </mark>
@@ -397,7 +437,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             {renderTokensOnly(before, suspectQuote, claimMatchIdx)}
             <mark
               ref={highlightRef}
-              className="bg-[#86BC25]/30 text-main border-b-2 border-[#86BC25] px-1 py-0.5 rounded font-semibold"
+              className="bg-[#86BC25]/20 text-main underline decoration-2 decoration-[#86BC25] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
             >
               {renderTokensOnly(match, suspectQuote, claimMatchIdx)}
             </mark>
@@ -539,11 +579,12 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                   {/* SOUS-ONGLET 1 : PREUVES DIT / ÉCRIT / RÉEL */}
                   {findingTab === 'preuves' && (
                     <div
+                      ref={evidenceRef}
                       role="tabpanel"
                       aria-label="Preuves Dit/Écrit/Réel"
                       className="space-y-3"
                     >
-                      <div className="surface-card rounded-xl p-4 border-l-4 border-l-sky-500 space-y-1">
+                      <div data-evidence="dit" className="surface-card rounded-xl p-4 edge-sky space-y-1">
                         <div className="flex items-center justify-between gap-2">
                           <span className="text-[10px] font-extrabold uppercase tone-info">
                             DIT • Entretien DSI
@@ -561,7 +602,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         </p>
                       </div>
 
-                      <div className="surface-card rounded-xl p-4 border-l-4 border-l-violet-500 space-y-1">
+                      <div data-evidence="ecrit" className="surface-card rounded-xl p-4 edge-violet space-y-1">
                         <div className="flex items-center justify-between gap-2">
                           <span className="text-[10px] font-extrabold uppercase tone-violet">
                             ÉCRIT • Référentiel
@@ -582,7 +623,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         </p>
                       </div>
 
-                      <div className="surface-card rounded-xl p-4 border-l-4 border-l-[#86BC25] space-y-1">
+                      <div data-evidence="reel" className="surface-card rounded-xl p-4 edge-accent space-y-1">
                         <div className="flex items-center justify-between gap-2">
                           <span className="text-[10px] font-extrabold uppercase text-accent">
                             RÉEL • Sonde Cloud GCP

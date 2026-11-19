@@ -73,6 +73,7 @@ import {
   type Nis2CoverageReport,
 } from '../utils/nis2Coverage';
 import { ForensicBundleVerifier } from './ForensicBundleVerifier';
+import { SealBanner, ValidationAttestation } from './ValidationSeal';
 import type { ToastTone } from './ToastStack';
 
 export type DeliverablesSubTab =
@@ -99,7 +100,7 @@ interface SecurityAndDeliverablesViewProps {
   cnilDraftMarkdown?: string;
   requestedSubTab?: DeliverablesSubTab | null;
   onSubTabHandled?: () => void;
-  onValidate: () => void;
+  onValidate: () => Promise<boolean>;
   onSelectDoc: (doc: SanitizedDocument) => void;
   onSelectFinding: (finding: Finding) => void;
   onSimulateViolation: () => void;
@@ -386,7 +387,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
       elements.push(
         <blockquote
           key={idx}
-          className="border-l-2 border-amber-500/70 bg-amber-500/10 px-3 py-1.5 rounded-r-lg text-[11px] text-sub leading-relaxed"
+          className="border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 rounded-lg text-[11px] text-sub leading-relaxed"
         >
           {renderInlineMarkdown(trimmed.replace(/^>\s*/, ''))}
         </blockquote>
@@ -554,7 +555,7 @@ function renderTerraformHclPreview(hcl: string): React.ReactNode {
           return (
             <div
               key={sIdx}
-              className="rounded-xl p-3 surface-subtle border-l-2 border-l-[#86BC25] space-y-1 text-[11px] text-sub"
+              className="rounded-xl p-3 surface-subtle edge-accent space-y-1 text-[11px] text-sub"
             >
               {sec.comments.map((c, cIdx) => (
                 <div key={cIdx} className="leading-snug font-mono break-words">
@@ -636,6 +637,16 @@ export const SecurityAndDeliverablesView: React.FC<
     requestedSubTab || (synthesis ? 'deliverables' : 'douanier')
   );
   const [chainFilter, setChainFilter] = useState<'ALL' | 'ALERTS' | 'HUMAN'>('ALL');
+  /** Horodatage de la signature effectuée dans cette session (déclenche la cérémonie de scellement). */
+  const [sealedAt, setSealedAt] = useState<Date | null>(null);
+  const handleAttestedValidate = async (): Promise<boolean> => {
+    // Horodatage posé dès la signature : la vue « validé » peut s'afficher avant le retour
+    // de onValidate (rafraîchissement du statut), la cérémonie doit donc être armée avant.
+    setSealedAt(new Date());
+    const ok = await onValidate();
+    if (!ok) setSealedAt(null);
+    return ok;
+  };
   const [logFilterAgent, setLogFilterAgent] = useState<string>('');
   const [logFilterAction, setLogFilterAction] = useState<string>('');
   const [logFilterMode, setLogFilterMode] = useState<string>('');
@@ -1865,31 +1876,12 @@ export const SecurityAndDeliverablesView: React.FC<
             </div>
           ) : !validated ? (
             /* Carte verrou épurée pré-validation */
-            <div className="surface-panel rounded-2xl p-6 sm:p-7 max-w-2xl mx-auto space-y-5">
-              <div className="flex flex-col items-center text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl badge-warning flex items-center justify-center">
-                  <Lock className="w-6 h-6" />
-                </div>
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <span className="badge-warning px-3 py-1 rounded-full font-mono text-[11px] font-extrabold">
-                    12 verrous HTTP 403
-                  </span>
-                  <span className="px-2.5 py-1 rounded-full surface-subtle font-mono text-[11px] font-bold text-sub">
-                    Phase {mode} • {synthesis.findings.length} constats
-                  </span>
-                </div>
-                <h3 className="text-lg sm:text-xl font-extrabold text-main">
-                  Validation consultant requise
-                </h3>
-                <button
-                  type="button"
-                  onClick={onValidate}
-                  className="inline-flex items-center gap-2 bg-[#86BC25] hover:bg-[#96cf2e] text-black font-extrabold text-sm px-6 py-3 rounded-xl shadow-sm transition cursor-pointer"
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Valider et débloquer</span>
-                </button>
-              </div>
+            <div className="surface-panel rounded-2xl p-6 sm:p-7 max-w-3xl mx-auto space-y-5">
+              <ValidationAttestation
+                synthesis={synthesis}
+                mode={mode}
+                onValidate={handleAttestedValidate}
+              />
 
               {/* Accordéon compact des 12 verrous HTTP 403 individuels */}
               <div className="rounded-xl border border-hairline overflow-hidden">
@@ -2025,13 +2017,19 @@ export const SecurityAndDeliverablesView: React.FC<
           ) : (
             /* Post-validation : Barre d'export compacte + Sélecteur d'aperçu à la demande */
             <div className="space-y-4">
+              <SealBanner
+                mode={mode}
+                hash={latestHash}
+                play={sealedAt !== null}
+                sealedAt={sealedAt}
+              />
               {/* Barre d'export compacte (actions principales + groupe secondaire propre) */}
               <div className="surface-panel rounded-2xl p-4 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="badge-success inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>12 livrables débloqués ({mode})</span>
+                      <span>12 livrables débloqués ({mode === 'APRES' ? 'APRÈS' : mode})</span>
                     </span>
                     <span className="px-2.5 py-1 rounded-full surface-subtle font-mono text-[11px] text-sub">
                       #{latestHash.slice(0, 14)}…

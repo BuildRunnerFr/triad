@@ -22,7 +22,7 @@
 
     --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
-    --text-muted: #64748B;
+    --text-muted: #7C8BA1;
 
     /* Jetons sémantiques haute lisibilité (Sombre Cyber Cockpit) */
     --critical-text: #FB7185;
@@ -70,7 +70,7 @@
 
     --text-primary: #0F172A;
     --text-secondary: #475569;
-    --text-muted: #64748B;
+    --text-muted: #5B6B80;
 
     /* Jetons sémantiques haute lisibilité WCAG AA (Clair Exécutif) */
     --critical-text: #BE123C;
@@ -120,14 +120,27 @@
 /* Surfaces & Hiérarchie Visuelle */
 .app-canvas {
   background-color: var(--bg-canvas);
-  background-image:
-    radial-gradient(circle at 12% 0%, rgba(134, 188, 37, 0.055), transparent 34%),
-    radial-gradient(circle at 88% 6%, rgba(56, 189, 248, 0.035), transparent 30%);
 }
 
-[data-theme="light"] .app-canvas {
-  background-image:
-    radial-gradient(circle at 12% 0%, rgba(134, 188, 37, 0.06), transparent 30%);
+/* Surfaces navigateur thémées : focus clavier, sélection, curseur de saisie */
+:where(a, button, [role="button"], [role="tab"], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--deloitte);
+  outline-offset: 2px;
+  border-radius: 0.6rem;
+}
+
+::selection {
+  background-color: rgba(134, 188, 37, 0.32);
+  color: var(--text-primary);
+}
+
+input, textarea {
+  caret-color: var(--deloitte);
+}
+
+/* Les zones à défilement interne gardent un défilement natif (Lenis les ignore) */
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
 .surface-panel {
@@ -150,6 +163,20 @@
   background-color: var(--bg-elevated);
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-dialog);
+}
+
+/* Bordure complète teintée (remplace les bandes latérales) : déclarée après les surfaces pour l'emporter */
+.edge-accent { border-color: var(--accent-border) !important; }
+.edge-sky { border-color: var(--info-border) !important; }
+.edge-violet { border-color: var(--violet-border) !important; }
+.edge-amber { border-color: var(--warning-border) !important; }
+.edge-rose { border-color: var(--critical-border) !important; }
+
+/* État sélectionné neutre (onglets, filtres, bascules) : le vert plein reste réservé à l'action principale */
+.seg-active {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px var(--border-strong), 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .row-interactive {

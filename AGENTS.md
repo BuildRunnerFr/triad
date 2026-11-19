@@ -18,6 +18,10 @@ Ce dépôt contient **TRIAD**, une plateforme d'audit de conformité **NIS2** pr
   - `security/` : chaîne SHA-256 & logs structurés, `bundle_verify.py` (spécification v1..v6 + vérification forensique ZIP, secret HMAC injecté en paramètre), `sbom.py` (CycloneDX 1.5 en cache mémoire).
   - Convention : les modules `reporting/` et `security/bundle_verify.py` n'appellent jamais `get_settings()` ; `app.py` leur passe les valeurs (les tests patchent `triad.api.app.get_settings`).
 - `frontend/` : React 19 + TypeScript + Vite + Tailwind CSS + Three.js WebGL (mode Deloitte `#86BC25` × `#07090F`, 100 % français, code-splitting `React.lazy`, bascule Densité `Confort`/`Compact`). Build dans `src/triad/web/dist/`.
+  - Mouvement : GSAP (`src/motion/gsap.ts`, jetons `DURATION`/`EASE_OUT`), Lenis (`src/motion/SmoothScroll.tsx`, chargé en différé, désactivé en `prefers-reduced-motion`, ignoré dans les conteneurs `overflow-*`). Les deux vivent dans le chunk `vendor-gsap` (hors budget `index-*.js`).
+  - React Bits (MIT + Commons Clause, usage applicatif) vendorisé dans `src/components/reactbits/` (`CountUp`, `DecryptedText`, `SpotlightCard`, imports `framer-motion`).
+  - Validation : plus de signature en un clic. `ValidationSeal.tsx` impose une attestation (récapitulatif + case à cocher) puis joue la cérémonie de scellement une seule fois par signature.
+  - Couleur : vert plein réservé à l'action principale et aux états validés ; sélection neutre via `.seg-active`, bordures teintées via `.edge-*` (pas de bande latérale).
 - `infra/terraform/` : IaC GCP complète (`main.tf`, `variables.tf`, `outputs.tf`, `terraform.tfvars.example`).
 - `scripts/` : `release_readiness.sh`, `verify_bundle.sh` (v1..v6), `verify_snapshot.sh`, `generate_sbom.sh` (CycloneDX 1.5), `predeploy_check.sh`.
 - `tests/` : `62` tests `pytest` hors-ligne + `1` test `live` Vertex AI.

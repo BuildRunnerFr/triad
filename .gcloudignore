@@ -42,3 +42,7 @@ src/triad/web/dist/
 Thumbs.db
 .vscode/
 .idea/
+
+# Artefacts locaux de revue design (captures navigateur, Impeccable)
+.playwright-mcp/
+.impeccable/

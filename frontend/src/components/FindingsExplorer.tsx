@@ -302,7 +302,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
           return (
             <div className="min-w-[200px]">
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="font-mono text-[11px] font-extrabold px-1.5 py-0.5 rounded bg-[#86BC25] text-black shrink-0">
+                <span className="font-mono text-[11px] font-bold px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main shrink-0">
                   {f.id}
                 </span>
                 <span className="font-bold text-main text-xs">{f.theme}</span>
@@ -623,7 +623,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                   onClick={() => setActiveTab(key)}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-extrabold transition cursor-pointer ${
                     isActive
-                      ? 'bg-[#86BC25] text-black shadow-xs'
+                      ? 'seg-active'
                       : 'text-sub hover:text-main'
                   }`}
                 >
@@ -681,7 +681,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                   onClick={() => setListLayout('cards')}
                   className={`p-1.5 rounded-lg transition cursor-pointer ${
                     listLayout === 'cards'
-                      ? 'bg-[#86BC25] text-black'
+                      ? 'seg-active'
                       : 'text-sub hover:text-main'
                   }`}
                   title="Vue Cartes"
@@ -694,7 +694,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                   onClick={() => setListLayout('table')}
                   className={`p-1.5 rounded-lg transition cursor-pointer ${
                     listLayout === 'table'
-                      ? 'bg-[#86BC25] text-black'
+                      ? 'seg-active'
                       : 'text-sub hover:text-main'
                   }`}
                   title="Vue Tableau"
@@ -739,7 +739,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                   onClick={() => setStatusFilter(key)}
                   className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                     active
-                      ? 'bg-[#86BC25] text-black'
+                      ? 'seg-active'
                       : 'surface-card text-sub hover:text-main'
                   }`}
                 >
@@ -808,7 +808,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                 onClick={() => setOnlyArbitrated(!onlyArbitrated)}
                 className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
                   onlyArbitrated
-                    ? 'bg-[#86BC25] text-black'
+                    ? 'seg-active'
                     : 'surface-card text-sub hover:text-main'
                 }`}
               >
@@ -938,12 +938,12 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                   <article
                     key={f.id}
                     onMouseEnter={() => setFocusedFinding(f)}
-                    className={`rounded-2xl surface-panel border-l-4 ${meta.border} p-4 space-y-3 transition`}
+                    className={`rounded-2xl surface-panel p-4 space-y-3 transition`}
                   >
                     {/* Ligne 1 : ID, titre court, article NIS2 + badges statut / gravité / arbitrage GRC */}
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2 min-w-0">
-                        <span className="font-mono text-xs font-extrabold px-2 py-0.5 rounded-md bg-[#86BC25] text-black shrink-0">
+                        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md surface-subtle border border-hairline text-main shrink-0">
                           {f.id}
                         </span>
                         <h3 className="text-sm font-extrabold text-main">
@@ -1034,7 +1034,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectFinding(f)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#86BC25] hover:bg-[#96cf2e] text-black text-xs font-extrabold transition cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl surface-card border border-strong hover:border-[var(--accent-border)] hover:text-accent text-main text-xs font-bold transition cursor-pointer"
                         >
                           <span>Inspecter</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />

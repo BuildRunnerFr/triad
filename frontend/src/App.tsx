@@ -101,6 +101,8 @@ const LazyComparatorView = lazy(loadComparatorView);
 const LazySecurityAndDeliverablesView = lazy(loadSecurityAndDeliverablesView);
 const LazyInspectorDrawer = lazy(loadInspectorDrawer);
 const LazyCommandPalette = lazy(loadCommandPalette);
+/** Défilement fluide Lenis chargé après le premier rendu (hors budget du bundle initial). */
+const LazySmoothScroll = lazy(() => import('./motion/SmoothScroll'));
 
 const ViewSkeleton: React.FC = () => (
   <div
@@ -854,8 +856,28 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleValidate = async () => {
-    await apiFetch(`/api/validate?mode=${mode}`, { method: 'POST' });
+  const handleValidate = async (): Promise<boolean> => {
+    let res: Response;
+    try {
+      res = await apiFetch(`/api/validate?mode=${mode}`, { method: 'POST' });
+    } catch {
+      pushToast(
+        'Validation impossible',
+        'Le serveur TRIAD ne répond pas. Vérifiez la connexion puis réessayez.',
+        'critical'
+      );
+      return false;
+    }
+    if (!res.ok) {
+      if (res.status !== 429) {
+        pushToast(
+          'Validation refusée',
+          `Le serveur a répondu ${res.status}. Les livrables restent verrouillés.`,
+          'critical'
+        );
+      }
+      return false;
+    }
     await fetchStatus(mode);
     await fetchDeliverables(mode);
     await refreshSessions();
@@ -864,6 +886,13 @@ export const App: React.FC = () => {
       `Signature scellée SHA-256 — Livrables ${mode} débloqués`,
       'success'
     );
+    return true;
+  };
+
+  const openValidationGate = () => {
+    preloadNavChunk('deliverables');
+    setDeliverablesSubTab('deliverables');
+    setActiveNav('deliverables');
   };
 
   const handleSaveFindingDecision = useCallback(
@@ -1155,7 +1184,7 @@ export const App: React.FC = () => {
       icon: LayoutDashboard,
       disabled: !synthesis,
       badge: synthesis ? `${synthesis.findings.length}` : undefined,
-      badgeTone: 'bg-[#86BC25]/20 text-[#86BC25]',
+      badgeTone: 'bg-white/[0.08] text-slate-300',
     },
     {
       id: 'triad',
@@ -1172,13 +1201,13 @@ export const App: React.FC = () => {
       badge: comparisonSummary
         ? `+${comparisonSummary.ditContradictionsCount}`
         : undefined,
-      badgeTone: 'bg-[#86BC25] text-black',
+      badgeTone: 'bg-white/[0.08] text-slate-300',
     },
     {
       id: 'deliverables',
       label: 'Livrables',
       icon: ShieldCheck,
-      badge: validated ? 'Validé' : '403',
+      badge: validated ? 'Validé' : 'À signer',
       badgeTone: validated
         ? 'bg-[#86BC25] text-black'
         : 'bg-amber-500/20 text-amber-300',
@@ -1201,6 +1230,9 @@ export const App: React.FC = () => {
           <a href="#main-content" className="skip-to-content">
             Aller au contenu principal
           </a>
+          <Suspense fallback={null}>
+            <LazySmoothScroll />
+          </Suspense>
 
           {/* RAIL DE NAVIGATION LATÉRAL GAUCHE (OBSIDIENNE #07090F) */}
         <aside className="lg:w-56 bg-[#07090F] text-white border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen z-30">
@@ -1386,18 +1418,23 @@ export const App: React.FC = () => {
                           if (!step.disabled) preloadNavChunk(step.targetNav);
                         }}
                         onClick={() => setActiveNav(step.targetNav)}
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-bold transition ${
+                        aria-current={step.active ? 'step' : undefined}
+                        title={step.done ? `${step.label} : terminé` : `${step.label} : à faire`}
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold border transition ${
                           step.disabled
-                            ? 'opacity-40 cursor-not-allowed text-dim'
+                            ? 'opacity-40 cursor-not-allowed text-dim border-transparent'
                             : step.active
-                            ? 'bg-[#86BC25] text-black cursor-pointer'
+                            ? 'border-[var(--accent-border)] bg-[var(--accent-soft)] cursor-pointer ' +
+                              (step.done ? 'text-accent' : 'text-main')
                             : step.done
-                            ? 'text-accent hover:bg-white/[0.05] cursor-pointer'
-                            : 'text-sub hover:text-main cursor-pointer'
+                            ? 'border-transparent text-accent hover:bg-[var(--bg-hover)] cursor-pointer'
+                            : 'border-transparent text-sub hover:text-main cursor-pointer'
                         }`}
                       >
-                        {step.done && !step.active && (
+                        {step.done ? (
                           <CheckCircle2 className="w-3 h-3 text-accent shrink-0" />
+                        ) : (
+                          <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full border border-current opacity-60 shrink-0" />
                         )}
                         <span>{step.label}</span>
                         {step.meta && (
@@ -1435,7 +1472,7 @@ export const App: React.FC = () => {
                         onClick={() => handleModeChange(m)}
                         className={`min-h-[32px] flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-extrabold transition cursor-pointer ${
                           active
-                            ? 'bg-[#86BC25] text-black shadow-xs'
+                            ? 'seg-active'
                             : 'text-sub hover:text-main'
                         }`}
                       >
@@ -1443,7 +1480,7 @@ export const App: React.FC = () => {
                         {ready && (
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${
-                              active ? 'bg-black' : 'bg-[#86BC25]'
+                              'bg-[#86BC25]'
                             }`}
                           />
                         )}
@@ -1741,22 +1778,25 @@ export const App: React.FC = () => {
                   {validated ? (
                     <span className="badge-success inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      Validé ({mode})
+                      Validé ({mode === 'APRES' ? 'APRÈS' : mode})
                     </span>
                   ) : (
                     <span className="badge-warning inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold">
                       <Lock className="w-3.5 h-3.5" />
-                      Verrou 403 ({mode})
+                      Livrables verrouillés ({mode === 'APRES' ? 'APRÈS' : mode})
                     </span>
                   )}
 
-                  {!validated && (
+                  {!validated && activeNav !== 'deliverables' && (
                     <button
                       type="button"
-                      onClick={handleValidate}
-                      className="bg-[#86BC25] hover:bg-[#96cf2e] text-black font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer"
+                      onMouseEnter={() => preloadNavChunk('deliverables')}
+                      onFocus={() => preloadNavChunk('deliverables')}
+                      onClick={openValidationGate}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-strong text-xs font-bold text-main transition cursor-pointer"
                     >
-                      ✓ Valider ({mode})
+                      <span>Revoir et valider</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-dim" />
                     </button>
                   )}
                 </div>
@@ -1832,7 +1872,7 @@ export const App: React.FC = () => {
               onSwitchMode={handleModeChange}
               onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               onToggleCache={() => setUseCache((c) => !c)}
-              onValidate={handleValidate}
+              onValidate={openValidationGate}
               onLoadDemo={handleLoadDemo}
               onSimulateViolation={handleSimulateViolation}
               onReset={handleReset}

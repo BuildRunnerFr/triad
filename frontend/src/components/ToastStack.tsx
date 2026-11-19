@@ -31,22 +31,22 @@ const TONE_META: Record<
   }
 > = {
   success: {
-    borderCls: 'border-l-4 border-l-[#86BC25]',
+    borderCls: 'edge-accent',
     iconCls: 'text-[#86BC25]',
     Icon: CheckCircle2,
   },
   info: {
-    borderCls: 'border-l-4 border-l-sky-400',
+    borderCls: 'edge-sky',
     iconCls: 'tone-info',
     Icon: Info,
   },
   warning: {
-    borderCls: 'border-l-4 border-l-amber-400',
+    borderCls: 'edge-amber',
     iconCls: 'tone-warning',
     Icon: AlertTriangle,
   },
   critical: {
-    borderCls: 'border-l-4 border-l-rose-500',
+    borderCls: 'edge-rose',
     iconCls: 'tone-critical',
     Icon: ShieldAlert,
   },

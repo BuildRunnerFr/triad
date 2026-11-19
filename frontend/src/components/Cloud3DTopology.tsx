@@ -1457,7 +1457,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       {effectiveMode === '3d' && (
         <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 pointer-events-none">
           {activeSimMeta && simStep !== null ? (
-            <div className="pointer-events-auto w-full surface-elevated border-l-4 border-l-rose-500 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="pointer-events-auto w-full surface-elevated edge-rose rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <span className="badge-critical font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full tabular-nums shrink-0">
                   {simStep + 1}/{ATTACK_SIMULATION_STEPS.length}

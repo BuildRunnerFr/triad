@@ -1,0 +1,1 @@
+import{g as e,u as t}from"./vendor-gsap-38_NcMYq.js";e.registerPlugin(t);const a="expo.out",i={feedback:.14,state:.24,view:.42,focal:.7};function r(){return typeof window>"u"||!window.matchMedia?!1:window.matchMedia("(prefers-reduced-motion: reduce)").matches}export{i as D,a as E,r as p};

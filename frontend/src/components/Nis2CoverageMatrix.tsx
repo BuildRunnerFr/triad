@@ -255,7 +255,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
               onKeyDown={(e) => handleTabKeyDown(e, idx)}
               className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer ${
                 isActive
-                  ? 'bg-[#86BC25] text-black shadow-xs'
+                  ? 'seg-active'
                   : 'text-sub hover:text-main'
               }`}
             >
@@ -314,19 +314,22 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="surface-card rounded-xl p-3.5 space-y-1.5">
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-dim">
-                  Taux couvert
+                <span className="text-xs font-semibold text-sub">
+                  Exigences évaluées
                 </span>
-                <span className="font-mono text-[11px] text-sub tabular-nums">
+                <span className="text-[11px] text-sub tabular-nums">
                   {report.coveredCount}/{report.totalRequirements}
                 </span>
               </div>
-              <div className="text-xl font-extrabold font-mono text-accent tabular-nums">
+              <div
+                className="text-xl font-extrabold text-main tabular-nums"
+                title="Part des exigences NIS2 rattachées à au moins un constat (évaluées, pas forcément conformes)"
+              >
                 {report.coverageRatePct}%
               </div>
               <div className="h-1.5 w-full rounded-full surface-subtle overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-[#86BC25] transition-all duration-300"
+                  className="h-full rounded-full bg-[var(--text-secondary)] opacity-60 transition-all duration-300"
                   style={{
                     width: `${Math.min(100, Math.max(4, report.coverageRatePct))}%`,
                   }}
@@ -335,7 +338,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
             </div>
 
             <div className="surface-card rounded-xl p-3.5 space-y-1">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+              <div className="text-xs font-semibold text-sub">
                 Conformes
               </div>
               <div className="text-xl font-extrabold font-mono tone-success tabular-nums">
@@ -345,7 +348,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
             </div>
 
             <div className="surface-card rounded-xl p-3.5 space-y-1">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+              <div className="text-xs font-semibold text-sub">
                 Partiels
               </div>
               <div className="text-xl font-extrabold font-mono tone-warning tabular-nums">
@@ -357,7 +360,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
             </div>
 
             <div className="surface-card rounded-xl p-3.5 space-y-1">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+              <div className="text-xs font-semibold text-sub">
                 Écarts
               </div>
               <div className="text-xl font-extrabold font-mono tone-critical tabular-nums">
@@ -392,7 +395,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                   onClick={() => setFilter(key)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                     active
-                      ? 'bg-[#86BC25] text-black'
+                      ? 'seg-active'
                       : 'surface-card text-sub hover:text-main'
                   }`}
                 >
@@ -502,7 +505,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                                           onInspectFindingInExplorer(target);
                                         }
                                       }}
-                                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md surface-subtle border border-hairline hover:border-strong disabled:opacity-60 text-main font-mono text-[11px] font-bold transition cursor-pointer"
                                     >
                                       <span>{fid}</span>
                                       <ArrowUpRight className="w-2.5 h-2.5" />
