@@ -56,6 +56,11 @@ interface MissionLaunchpadProps {
   onOpenCockpit: () => void;
   onOpenComparator: () => void;
   onSelectDoc: (doc: SanitizedDocument) => void;
+  findingsCount?: number;
+  arbitratedCount?: number;
+  validated?: boolean;
+  onOpenInvestigation?: () => void;
+  onOpenDeliverables?: () => void;
 }
 
 const AGENT_PIPELINE_PREVIEW = [
@@ -63,31 +68,31 @@ const AGENT_PIPELINE_PREVIEW = [
     step: '01',
     agentKey: 'Douanier',
     name: 'Douanier',
-    role: 'Sas DLP & Quarantaine',
+    role: 'Masque les données personnelles, isole les pièces suspectes',
     icon: ShieldCheck,
     badgeCls: 'badge-warning',
   },
   {
     step: '02',
     agentKey: 'AnalysteConformite',
-    name: 'Analyste Conformité',
-    role: 'NIS2 × Sondes GCP',
+    name: 'Analyste conformité',
+    role: 'Croise NIS2 et configuration GCP',
     icon: ScanSearch,
     badgeCls: 'badge-info',
   },
   {
     step: '03',
     agentKey: 'ContreAuditeur',
-    name: 'Contre-Auditeur',
-    role: 'Citations Exactes',
+    name: 'Contre-auditeur',
+    role: 'Vérifie chaque citation mot à mot',
     icon: Scale,
     badgeCls: 'badge-violet',
   },
   {
     step: '04',
     agentKey: 'GardeDuCorps',
-    name: 'Garde du Corps',
-    role: 'SHA-256 & Verrou 403',
+    name: 'Garde du corps',
+    role: 'Scelle le registre et verrouille les livrables',
     icon: LockKeyhole,
     badgeCls: 'badge-success',
   },
@@ -137,6 +142,11 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
   onOpenCockpit,
   onOpenComparator,
   onSelectDoc,
+  findingsCount = 0,
+  arbitratedCount = 0,
+  validated = false,
+  onOpenInvestigation,
+  onOpenDeliverables,
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const sessionImportInputRef = useRef<HTMLInputElement | null>(null);
@@ -235,512 +245,464 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
   const showTimings = hasAgentTimings(timingsMs);
   const totalPipelineMs = sumAgentTimingsMs(timingsMs);
 
+  const sessionLabel = isDefaultSession ? 'Démo Valmont' : activeSessionId;
+  const quarantined = docs.filter((d) => d.statut === 'quarantaine').length;
+  const phaseLabel = mode === 'APRES' ? 'APRÈS' : 'AVANT';
+
+  const steps = [
+    {
+      key: 'dossier',
+      title: 'Constituer le dossier',
+      done: docs.length > 0,
+      meta:
+        docs.length > 0
+          ? `${docs.length} pièce${docs.length > 1 ? 's' : ''}${quarantined > 0 ? ` · ${quarantined} en quarantaine` : ''}`
+          : 'Aucune pièce chargée',
+      action: docs.length > 0 ? null : { label: 'Charger la démo Valmont', onClick: onLoadDemo },
+    },
+    {
+      key: 'audit',
+      title: `Lancer l'audit ${phaseLabel}`,
+      done: currentReady,
+      meta: currentReady
+        ? `Synthèse ${phaseLabel} disponible${showTimings && totalPipelineMs !== null ? ` · ${formatAgentTimingMs(totalPipelineMs)}` : ''}`
+        : '4 agents, sondes en lecture seule',
+      action: currentReady
+        ? { label: 'Voir le cockpit', onClick: onOpenCockpit }
+        : { label: `Auditer (${phaseLabel})`, onClick: onRunAudit },
+    },
+    {
+      key: 'arbitrage',
+      title: 'Arbitrer les constats',
+      done: arbitratedCount > 0,
+      meta:
+        findingsCount > 0
+          ? `${arbitratedCount} / ${findingsCount} constats arbitrés`
+          : 'Après l’audit',
+      action: onOpenInvestigation ? { label: 'Ouvrir l’investigation', onClick: onOpenInvestigation } : null,
+    },
+    {
+      key: 'signature',
+      title: 'Signer et débloquer',
+      done: validated,
+      meta: validated ? 'Livrables déverrouillés' : '12 livrables verrouillés',
+      action: onOpenDeliverables ? { label: 'Revoir et signer', onClick: onOpenDeliverables } : null,
+    },
+  ];
+  const nextStepIndex = steps.findIndex((s) => !s.done);
+
+  const PHASES = [
+    {
+      key: 'AVANT' as const,
+      title: 'Phase AVANT',
+      lede: 'Pré-audit documentaire, avant les entretiens',
+      lanes: ['ecrit', 'reel'] as const,
+      outcome: 'Trame d’entretien DSI',
+    },
+    {
+      key: 'APRES' as const,
+      title: 'Phase APRÈS',
+      lede: 'Confrontation après entretiens contradictoires',
+      lanes: ['dit', 'ecrit', 'reel'] as const,
+      outcome: 'Contradictions et livrables',
+    },
+  ];
+  const LANE_LABEL = { dit: 'Dit', ecrit: 'Écrit', reel: 'Réel' } as const;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className="space-y-6"
+      className="space-y-8"
     >
-      {/* BARRE DE SESSION MINIMALISTE */}
-      <div className="surface-panel rounded-2xl px-4 py-3 space-y-2.5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <Layers className="w-4 h-4 text-accent shrink-0" />
-            <span className="text-xs font-extrabold text-main">Session</span>
-            <span
-              className={`font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
-                isDefaultSession ? 'badge-success' : 'badge-info'
-              }`}
+      {/* EN-TÊTE DE MISSION : le client d'abord, la session au second plan */}
+      <section aria-labelledby="mission-title" className="pt-1 pb-6 border-b border-hairline">
+        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+          <div className="min-w-0">
+            <p className="text-sm text-sub">Mission NIS2 · entité essentielle, secteur santé</p>
+            <h2
+              id="mission-title"
+              className="mt-1 text-[1.9rem] sm:text-[2.4rem] leading-[1.1] font-semibold tracking-[-0.025em] text-main"
             >
-              {isDefaultSession ? 'Valmont (default)' : activeSessionId}
-            </span>
-            {availableSessions.length > 1 && (
-              <span className="text-[11px] font-mono text-dim hidden sm:inline">
-                {availableSessions.length} espaces
-              </span>
-            )}
+              {clientName || 'Centre Hospitalier de Valmont'}
+            </h2>
+            <p className="mt-2 text-sm text-sub">
+              Directive NIS2, articles 21 et 23 · Sondes Google Cloud en lecture seule
+            </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {availableSessions.length > 1 && (
-              <div
-                role="group"
-                aria-label="Accès rapide aux sessions"
-                className="hidden xl:flex items-center gap-1 surface-subtle p-1 rounded-xl"
+          {/* Session : repliée, outils de gestion à la demande */}
+          <details className="group relative">
+            <summary className="list-none inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-hairline hover:border-strong text-xs text-sub cursor-pointer select-none [&::-webkit-details-marker]:hidden">
+              <Layers className="w-3.5 h-3.5" />
+              <span>
+                Session : <span className="font-semibold text-main">{sessionLabel}</span>
+              </span>
+              {availableSessions.length > 1 && (
+                <span className="tabular-nums">· {availableSessions.length} espaces</span>
+              )}
+              <ChevronDown className="w-3.5 h-3.5 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="absolute right-0 z-20 mt-2 w-[min(22rem,calc(100vw-2rem))] surface-elevated rounded-xl p-3 space-y-3">
+              <label className="block text-xs text-sub" htmlFor="triad-session-select">
+                Session d&apos;audit enregistrée
+              </label>
+              <select
+                id="triad-session-select"
+                value={activeSessionId}
+                onChange={(e) => onSelectSession(e.target.value)}
+                className="w-full min-h-[36px] rounded-lg surface-card px-2.5 py-1 text-xs font-semibold text-main cursor-pointer"
               >
-                {availableSessions.slice(0, 3).map((sess) => {
-                  const active = sess.session_id === activeSessionId;
-                  const anyReady = Boolean(
-                    sess.modes_ready?.AVANT || sess.modes_ready?.APRES
-                  );
-                  return (
-                    <button
-                      key={sess.session_id}
-                      type="button"
-                      aria-pressed={active}
-                      onClick={() => onSelectSession(sess.session_id)}
-                      className={`min-h-[28px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
-                        active
-                          ? 'bg-[var(--deloitte)] text-black'
-                          : 'text-sub hover:text-main'
-                      }`}
-                    >
-                      <span className="font-mono truncate max-w-[120px]">
-                        {sess.session_id === DEFAULT_SESSION_ID
-                          ? 'default'
-                          : sess.session_id}
-                      </span>
-                      {anyReady && (
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            active ? 'bg-black' : 'bg-[var(--deloitte)]'
-                          }`}
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            <label className="sr-only" htmlFor="triad-session-select">
-              Sélectionner une session d&apos;audit
-            </label>
-            <select
-              id="triad-session-select"
-              aria-label="Sélectionner une session d'audit enregistrée"
-              value={activeSessionId}
-              onChange={(e) => onSelectSession(e.target.value)}
-              className="min-h-[34px] max-w-[230px] rounded-xl surface-card px-2.5 py-1 text-xs font-semibold text-main hover:border-strong focus:outline-none focus:border-[var(--deloitte)] transition cursor-pointer"
-            >
-              {availableSessions.map((sess) => (
-                <option key={sess.session_id} value={sess.session_id}>
-                  {formatSessionOptionLabel(
-                    sess,
-                    sess.session_id === activeSessionId
-                  )}
-                </option>
-              ))}
-            </select>
-
-            {onExportSession && (
-              <button
-                type="button"
-                disabled={isExportingSession}
-                onClick={handleTriggerExportSession}
-                title={`Exporter le snapshot JSON signé de la session ${activeSessionId}`}
-                className="min-h-[34px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
-              >
-                {isExportingSession ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
-                ) : (
-                  <Download className="w-3.5 h-3.5 text-accent" />
-                )}
-                <span>Exporter</span>
-              </button>
-            )}
-
-            {onImportSession && (
-              <>
-                <input
-                  ref={sessionImportInputRef}
-                  type="file"
-                  accept=".json,application/json"
-                  className="hidden"
-                  aria-label="Importer un snapshot de session JSON"
-                  onChange={handleSessionSnapshotSelected}
-                />
+                {availableSessions.map((sess) => (
+                  <option key={sess.session_id} value={sess.session_id}>
+                    {formatSessionOptionLabel(sess, sess.session_id === activeSessionId)}
+                  </option>
+                ))}
+              </select>
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
-                  disabled={isImportingSession}
-                  onClick={() => sessionImportInputRef.current?.click()}
-                  title="Importer un snapshot de session (.json)"
-                  className="min-h-[34px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
+                  onClick={onCreateNewSession}
+                  className="col-span-2 inline-flex items-center justify-center gap-1.5 min-h-[36px] px-3 rounded-lg border border-strong text-xs font-semibold text-main hover:bg-[var(--bg-hover)] transition cursor-pointer"
                 >
-                  {isImportingSession ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
-                  ) : (
-                    <Upload className="w-3.5 h-3.5 text-accent" />
-                  )}
-                  <span>Importer</span>
+                  <Plus className="w-3.5 h-3.5" />
+                  Nouvelle session
                 </button>
-              </>
-            )}
-
-            {!isDefaultSession && onDeleteSession && (
-              <button
-                type="button"
-                onClick={() => onDeleteSession(activeSessionId)}
-                aria-label={`Supprimer la session ${activeSessionId}`}
-                title="Supprimer cette session secondaire"
-                className="min-h-[34px] inline-flex items-center gap-1 px-2.5 py-1 rounded-xl surface-card text-xs font-semibold text-sub hover:text-[var(--critical-text)] hover:border-[var(--critical-border)] transition cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={onCreateNewSession}
-              className="min-h-[34px] inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[var(--deloitte)]/45 bg-[var(--accent-soft)] hover:bg-[var(--deloitte)] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Nouvelle session</span>
-            </button>
-          </div>
+                {onExportSession && (
+                  <button
+                    type="button"
+                    disabled={isExportingSession}
+                    onClick={handleTriggerExportSession}
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[36px] px-3 rounded-lg border border-hairline text-xs font-semibold text-sub hover:text-main disabled:opacity-50 transition cursor-pointer"
+                  >
+                    {isExportingSession ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                    Exporter (.json)
+                  </button>
+                )}
+                {onImportSession && (
+                  <>
+                    <input
+                      ref={sessionImportInputRef}
+                      type="file"
+                      accept=".json,application/json"
+                      className="hidden"
+                      aria-label="Importer un snapshot de session JSON"
+                      onChange={handleSessionSnapshotSelected}
+                    />
+                    <button
+                      type="button"
+                      disabled={isImportingSession}
+                      onClick={() => sessionImportInputRef.current?.click()}
+                      className="inline-flex items-center justify-center gap-1.5 min-h-[36px] px-3 rounded-lg border border-hairline text-xs font-semibold text-sub hover:text-main disabled:opacity-50 transition cursor-pointer"
+                    >
+                      {isImportingSession ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                      Importer
+                    </button>
+                  </>
+                )}
+                {!isDefaultSession && onDeleteSession && (
+                  <button
+                    type="button"
+                    onClick={() => onDeleteSession(activeSessionId)}
+                    className="col-span-2 inline-flex items-center justify-center gap-1.5 min-h-[36px] px-3 rounded-lg text-xs font-semibold text-[var(--critical-text)] hover:bg-[var(--critical-bg)] transition cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Supprimer cette session
+                  </button>
+                )}
+              </div>
+            </div>
+          </details>
         </div>
 
         {importErrorBanner && (
           <div
             role="alert"
-            className="rounded-xl border border-[var(--critical-border)] bg-[var(--critical-bg)] px-3.5 py-2 flex items-start justify-between gap-3"
+            className="mt-4 rounded-lg border border-[var(--critical-border)] bg-[var(--critical-bg)] px-3.5 py-2 flex items-start justify-between gap-3"
           >
-            <div className="flex items-start gap-2 min-w-0 text-xs">
-              <ShieldAlert className="w-4 h-4 text-[var(--critical-text)] shrink-0 mt-0.5" />
-              <div className="min-w-0">
-                <span className="font-extrabold text-[var(--critical-text)]">
-                  Import refusé
-                  {importErrorBanner.status
-                    ? ` (HTTP ${importErrorBanner.status})`
-                    : ''}{' '}
-                  :{' '}
-                </span>
-                <span className="text-main break-words">
-                  {importErrorBanner.detail}
-                </span>
-              </div>
-            </div>
+            <p className="text-xs text-main">
+              <span className="font-bold text-[var(--critical-text)]">
+                Import refusé{importErrorBanner.status ? ` (HTTP ${importErrorBanner.status})` : ''} :{' '}
+              </span>
+              {importErrorBanner.detail}
+            </p>
             <button
               type="button"
               onClick={() => setImportErrorBanner(null)}
               aria-label="Fermer l'alerte"
-              className="p-1 rounded-lg text-sub hover:text-main transition cursor-pointer shrink-0"
+              className="p-1 rounded text-sub hover:text-main cursor-pointer shrink-0"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
-      </div>
+      </section>
 
-      {/* 2 BLOCS PRINCIPAUX AÉRÉS : SCÉNARIO (7 COLS) + PIÈCES DU DOSSIER (5 COLS) */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-        {/* BLOC 1 : SCÉNARIO, PHASE & LANCEMENT */}
-        <div className="xl:col-span-7 surface-panel rounded-2xl p-6 space-y-6 relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-56 h-56 rounded-full bg-[var(--deloitte)]/8 blur-3xl pointer-events-none" />
-
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="badge-success inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider">
-                <Building2 className="w-3.5 h-3.5" />
-                Entité Essentielle • Santé
-              </span>
-              <span className="text-xs font-mono text-dim">
-                NIS2 Art. 21 &amp; 23 • Sonde GCP Read-Only
-              </span>
-            </div>
-
-            <h2 className="text-2xl font-extrabold tracking-tight text-main">
-              {clientName || 'Centre Hospitalier de Valmont'}
-            </h2>
-          </div>
-
-          {/* Sélecteur épuré des 2 phases */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <button
-              type="button"
-              onClick={() => onModeChange('AVANT')}
-              className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                mode === 'AVANT'
-                  ? 'border-[var(--deloitte)] bg-[var(--accent-soft)] shadow-xs'
-                  : 'surface-card hover:border-strong'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-extrabold uppercase tracking-wide text-accent">
-                  Phase AVANT
-                </span>
-                {modesReady?.AVANT && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--deloitte)] text-black">
-                    <CheckCircle2 className="w-3 h-3" />
-                    Prêt
-                  </span>
-                )}
-              </div>
-              <div className="text-sm font-extrabold text-main">
-                Écrit × Réel Cloud
-              </div>
-              <div className="text-xs text-sub mt-0.5">
-                Pré-audit &amp; trame DSI
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onModeChange('APRES')}
-              className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                mode === 'APRES'
-                  ? 'border-[var(--deloitte)] bg-[var(--accent-soft)] shadow-xs'
-                  : 'surface-card hover:border-strong'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-extrabold uppercase tracking-wide text-accent">
-                  Phase APRÈS
-                </span>
-                {modesReady?.APRES && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--deloitte)] text-black">
-                    <CheckCircle2 className="w-3 h-3" />
-                    Prêt
-                  </span>
-                )}
-              </div>
-              <div className="text-sm font-extrabold text-main">
-                Dit × Écrit × Réel
-              </div>
-              <div className="text-xs text-sub mt-0.5">
-                Contradictions &amp; livrables
-              </div>
-            </button>
-          </div>
-
-          {/* Barre d'actions d'exécution & accès rapide */}
-          <div className="pt-4 border-t border-hairline flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={onRunAudit}
-                className="inline-flex items-center gap-2 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
+      {/* DÉROULÉ DE MISSION : la prochaine étape porte la seule action principale */}
+      <section aria-labelledby="steps-title">
+        <h3 id="steps-title" className="sr-only">Déroulé de la mission</h3>
+        <ol className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 surface-panel rounded-2xl overflow-hidden divide-y sm:divide-y-0 divide-[var(--border-subtle)]">
+          {steps.map((step, idx) => {
+            const isNext = idx === nextStepIndex;
+            return (
+              <li
+                key={step.key}
+                aria-current={isNext ? 'step' : undefined}
+                className={`p-5 flex flex-col gap-3 sm:border-r border-hairline last:border-r-0 sm:[&:nth-child(2)]:max-xl:border-r-0 sm:[&:nth-child(-n+2)]:max-xl:border-b ${
+                  isNext ? 'bg-[var(--bg-elevated)]' : ''
+                }`}
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Auditer ({mode === 'AVANT' ? 'AVANT' : 'APRÈS'})</span>
-              </button>
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-xs font-bold tabular-nums ${
+                      step.done
+                        ? 'bg-[var(--reel-soft)] text-[var(--accent-text)]'
+                        : isNext
+                        ? 'bg-[var(--text-primary)] text-[var(--bg-surface)]'
+                        : 'border border-strong text-sub'
+                    }`}
+                  >
+                    {step.done ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
+                  </span>
+                  <span className={`text-sm font-semibold ${step.done || isNext ? 'text-main' : 'text-sub'}`}>
+                    {step.title}
+                  </span>
+                </div>
+                <p className="text-xs text-sub tabular-nums">{step.meta}</p>
+                {step.action && (step.done || isNext) && (
+                  <button
+                    type="button"
+                    onClick={step.action.onClick}
+                    className={`mt-auto self-start inline-flex items-center gap-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                      isNext
+                        ? 'px-3.5 py-2 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-[#0B100D]'
+                        : 'py-1 text-[var(--accent-text)] hover:underline underline-offset-4'
+                    }`}
+                  >
+                    {isNext && step.key === 'audit' && <Play className="w-3.5 h-3.5 fill-current" />}
+                    {step.action.label}
+                    {!isNext && <ArrowRight className="w-3.5 h-3.5" />}
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </section>
 
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        {/* PHASES : deux faces nettes, et la méthode des 4 agents */}
+        <section aria-labelledby="phases-title" className="xl:col-span-7 surface-panel rounded-2xl p-5 sm:p-6 space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 id="phases-title" className="text-base font-semibold text-main">
+              Phases d&apos;audit
+            </h3>
+            <div className="flex flex-wrap items-center gap-2">
+              {bothReady && (
+                <button
+                  type="button"
+                  onClick={onOpenComparator}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline hover:border-strong text-xs font-semibold text-main transition cursor-pointer"
+                >
+                  <GitCompareArrows className="w-3.5 h-3.5" />
+                  Comparer AVANT / APRÈS
+                </button>
+              )}
               <button
                 type="button"
                 onClick={onRunBothModes}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl surface-card hover:border-strong text-xs font-bold text-main transition cursor-pointer"
-                title="Exécuter AVANT puis APRÈS et ouvrir le Comparateur"
+                title="Exécuter AVANT puis APRÈS et ouvrir le comparateur"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline hover:border-strong text-xs font-semibold text-main transition cursor-pointer"
               >
-                <GitCompareArrows className="w-3.5 h-3.5 text-accent" />
-                <span>AVANT → APRÈS</span>
+                <Play className="w-3.5 h-3.5" />
+                Auditer AVANT puis APRÈS
               </button>
             </div>
+          </div>
 
-            {currentReady && (
-              <div className="flex flex-wrap items-center gap-2">
-                {bothReady && (
-                  <button
-                    type="button"
-                    onClick={onOpenComparator}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl surface-card hover:border-strong text-xs font-bold text-accent transition cursor-pointer"
-                  >
-                    <GitCompareArrows className="w-3.5 h-3.5" />
-                    <span>Comparateur</span>
-                  </button>
-                )}
+          <div role="radiogroup" aria-label="Phase d'audit active" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {PHASES.map((ph) => {
+              const active = mode === ph.key;
+              const ready = Boolean(modesReady?.[ph.key]);
+              return (
                 <button
+                  key={ph.key}
                   type="button"
-                  onClick={onOpenCockpit}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => onModeChange(ph.key)}
+                  className={`text-left p-4 rounded-xl border transition cursor-pointer ${
+                    active
+                      ? 'border-[var(--text-primary)] bg-[var(--bg-elevated)] shadow-[inset_0_0_0_1px_var(--text-primary)]'
+                      : 'border-hairline hover:border-strong'
+                  }`}
                 >
-                  <span>Cockpit</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-accent" />
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-main">{ph.title}</span>
+                    <span className={`text-xs font-semibold ${ready ? 'text-[var(--accent-text)]' : 'text-sub'}`}>
+                      {ready ? 'Synthèse prête' : 'À lancer'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-sub mt-1">{ph.lede}</p>
+                  <div className="mt-3 flex items-center gap-1.5 text-xs text-main">
+                    {ph.lanes.map((lane, i) => (
+                      <React.Fragment key={lane}>
+                        {i > 0 && <span className="text-sub">×</span>}
+                        <span className="inline-flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full" style={{ background: `var(--${lane})` }} aria-hidden="true" />
+                          {LANE_LABEL[lane]}
+                        </span>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs text-sub">Produit : {ph.outcome.charAt(0).toLowerCase() + ph.outcome.slice(1)}</p>
                 </button>
-              </div>
-            )}
+              );
+            })}
           </div>
 
-          {/* Accordéon discret : Pipeline 4 Agents & Télémétrie */}
-          <div className="pt-2 border-t border-hairline">
-            <button
-              type="button"
-              aria-expanded={pipelineOpen}
-              onClick={() => setPipelineOpen((v) => !v)}
-              className="w-full flex items-center justify-between gap-2 py-1.5 text-left text-xs font-bold text-sub hover:text-main transition cursor-pointer"
-            >
-              <span className="inline-flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-                <span>Pipeline Zero-Trust (4 agents)</span>
-                {showTimings && totalPipelineMs !== null && (
-                  <span className="badge-success inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono text-[10px] font-bold tabular-nums">
-                    <Clock className="w-2.5 h-2.5" />
-                    {formatAgentTimingMs(totalPipelineMs)}
-                  </span>
-                )}
-              </span>
-              <ChevronDown
-                className={`w-4 h-4 text-dim transition-transform ${
-                  pipelineOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
-
-            {pipelineOpen && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3">
-                {AGENT_PIPELINE_PREVIEW.map((ag) => {
-                  const Icon = ag.icon;
-                  const agentMs =
-                    timingsMs && typeof timingsMs[ag.agentKey] === 'number'
-                      ? timingsMs[ag.agentKey]
-                      : null;
-                  return (
-                    <div
-                      key={ag.step}
-                      className="surface-card rounded-xl p-3 space-y-1.5"
-                    >
-                      <div className="flex items-center justify-between gap-1">
-                        <span
-                          className={`w-7 h-7 rounded-lg flex items-center justify-center ${ag.badgeCls}`}
-                        >
-                          <Icon className="w-3.5 h-3.5" />
-                        </span>
-                        <span className="font-mono text-[10px] font-bold text-dim tabular-nums">
-                          {agentMs !== null
-                            ? formatAgentTimingMs(agentMs)
-                            : `#${ag.step}`}
-                        </span>
-                      </div>
-                      <div className="text-xs font-extrabold text-main leading-tight">
-                        {ag.name}
-                      </div>
-                      <div className="text-[10px] text-sub leading-tight">
-                        {ag.role}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* BLOC 2 : DÉPÔT & LISTE COMPACTE DES PIÈCES */}
-        <div className="xl:col-span-5 surface-panel rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <h3 className="text-base font-extrabold text-main">
-                Pièces du dossier
-              </h3>
-              <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded-full surface-subtle text-main tabular-nums">
-                {docs.length}
-              </span>
+          {/* La méthode : 4 agents en chaîne, chacun à moindre privilège */}
+          <div className="pt-4 border-t border-hairline">
+            <div className="flex items-baseline justify-between gap-2">
+              <h4 className="text-sm font-semibold text-main">La chaîne des 4 agents</h4>
+              {showTimings && totalPipelineMs !== null && (
+                <span className="text-xs text-sub tabular-nums">
+                  Dernière exécution : {formatAgentTimingMs(totalPipelineMs)}
+                </span>
+              )}
             </div>
+            <ol className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-4">
+              {AGENT_PIPELINE_PREVIEW.map((ag, i) => {
+                const Icon = ag.icon;
+                const agentMs =
+                  timingsMs && typeof timingsMs[ag.agentKey] === 'number' ? timingsMs[ag.agentKey] : null;
+                return (
+                  <li key={ag.step} className="relative">
+                    <div className="flex items-center gap-2">
+                      <span className="w-8 h-8 rounded-lg border border-hairline bg-[var(--bg-elevated)] inline-flex items-center justify-center text-main shrink-0">
+                        <Icon className="w-4 h-4" />
+                      </span>
+                      {i < AGENT_PIPELINE_PREVIEW.length - 1 && (
+                        <span aria-hidden="true" className="hidden sm:block flex-1 h-px bg-[var(--border-strong)]" />
+                      )}
+                    </div>
+                    <p className="mt-2 text-xs font-semibold text-main">{ag.name}</p>
+                    <p className="text-[11px] text-sub leading-snug">{ag.role}</p>
+                    {agentMs !== null && (
+                      <p className="text-[11px] text-sub tabular-nums mt-0.5">{formatAgentTimingMs(agentMs)}</p>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </section>
 
+        {/* PIÈCES DU DOSSIER : une ligne par pièce, pilier en couleur */}
+        <section aria-labelledby="docs-title" className="xl:col-span-5 surface-panel rounded-2xl overflow-hidden">
+          <header className="px-5 pt-5 pb-3 flex items-center justify-between gap-2">
+            <h3 id="docs-title" className="text-base font-semibold text-main">
+              Pièces du dossier <span className="text-sub font-normal tabular-nums">({docs.length})</span>
+            </h3>
             <button
               type="button"
               onClick={onLoadDemo}
-              className="badge-success inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold hover:opacity-90 transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-hairline hover:border-strong text-xs font-semibold text-main transition cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Démo Valmont</span>
+              Démo Valmont
             </button>
-          </div>
+          </header>
 
-          {/* Zone de dépôt compacte */}
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              e.preventDefault();
-              if (e.dataTransfer.files?.length) {
-                onUploadFiles(e.dataTransfer.files);
-              }
-            }}
-            className="surface-card border-dashed hover:border-[var(--deloitte)] rounded-xl px-4 py-3.5 flex items-center justify-center gap-2.5 cursor-pointer transition"
-          >
-            <Upload className="w-4 h-4 text-accent shrink-0" />
-            <span className="text-xs font-semibold text-main">
-              Déposer des pièces (.md, .txt, .pdf)
-            </span>
-            <span className="text-[10px] font-mono text-dim hidden sm:inline">
-              • DLP auto
-            </span>
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept=".md,.txt,.pdf"
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files?.length) onUploadFiles(e.target.files);
-              }}
-            />
-          </div>
-
-          {/* Liste compacte des pièces */}
           {docs.length === 0 ? (
-            <div className="surface-subtle rounded-xl p-6 text-center">
-              <FolderOpen className="w-5 h-5 text-dim mx-auto mb-1" />
-              <div className="text-xs font-semibold text-sub">
-                Aucune pièce chargée
-              </div>
-            </div>
+            <p className="px-5 pb-2 text-sm text-sub">
+              Déposez les pièces de la mission (PSSI, procès-verbaux, contrats, notes d&apos;entretien) ou chargez la
+              démo pour commencer.
+            </p>
           ) : (
-            <div className="space-y-2 max-h-[290px] overflow-y-auto pr-1">
+            <ul className="border-y border-hairline divide-y divide-[var(--border-subtle)] max-h-[320px] overflow-y-auto">
               {docs.map((doc) => {
                 const isQuar = doc.statut === 'quarantaine';
-                const isDit = doc.nom_fichier.toLowerCase().includes('entretien');
-                const isThirdParty = doc.nom_fichier
-                  .toLowerCase()
-                  .includes('fournisseur');
-                const tagLabel = isQuar
-                  ? 'Adverse'
+                const lower = doc.nom_fichier.toLowerCase();
+                const isDit = lower.includes('entretien');
+                const isThirdParty = lower.includes('fournisseur');
+                const pillar = isQuar
+                  ? { label: 'Quarantaine', color: 'var(--rupture)' }
                   : isDit
-                  ? 'DIT'
+                  ? { label: 'Dit', color: 'var(--dit)' }
                   : isThirdParty
-                  ? 'TIERS'
-                  : 'ÉCRIT';
-
+                  ? { label: 'Tiers', color: 'var(--warning-text)' }
+                  : { label: 'Écrit', color: 'var(--ecrit)' };
+                const clickable = Boolean(doc.contenu_masque);
                 return (
-                  <div
-                    key={doc.nom_fichier}
-                    onClick={() => doc.contenu_masque && onSelectDoc(doc)}
-                    className={`px-3 py-2.5 rounded-xl border transition flex items-center justify-between gap-2.5 ${
-                      doc.contenu_masque ? 'cursor-pointer' : ''
-                    } ${
-                      isQuar
-                        ? 'badge-critical'
-                        : 'surface-card hover:border-strong'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {isQuar ? (
-                        <AlertOctagon className="w-4 h-4 tone-critical shrink-0" />
-                      ) : (
-                        <FileText className="w-4 h-4 text-accent shrink-0" />
-                      )}
-                      <span className="text-xs font-bold text-main truncate">
-                        {doc.nom_fichier}
+                  <li key={doc.nom_fichier}>
+                    <button
+                      type="button"
+                      disabled={!clickable}
+                      onClick={() => clickable && onSelectDoc(doc)}
+                      className="w-full px-5 py-3 flex items-center justify-between gap-3 text-left hover:bg-[var(--bg-hover)] disabled:hover:bg-transparent disabled:cursor-default transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2.5 min-w-0">
+                        {isQuar ? (
+                          <AlertOctagon className="w-4 h-4 shrink-0" style={{ color: pillar.color }} />
+                        ) : (
+                          <FileText className="w-4 h-4 shrink-0 text-sub" />
+                        )}
+                        <span className="text-sm text-main truncate">{doc.nom_fichier}</span>
                       </span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded surface-subtle text-dim">
-                        {tagLabel}
+                      <span className="flex items-center gap-3 shrink-0 text-xs">
+                        <span className="inline-flex items-center gap-1.5 font-semibold" style={{ color: pillar.color }}>
+                          <span className="w-2 h-2 rounded-full" style={{ background: pillar.color }} aria-hidden="true" />
+                          {pillar.label}
+                        </span>
+                        <span className={isQuar ? 'text-[var(--critical-text)] font-semibold' : 'text-sub'}>
+                          {isQuar ? 'Bloquée' : doc.statut === 'nettoye' ? 'DLP appliqué' : 'Prête'}
+                        </span>
                       </span>
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          isQuar
-                            ? 'badge-critical'
-                            : doc.statut === 'nettoye'
-                            ? 'badge-success'
-                            : 'surface-subtle text-sub'
-                        }`}
-                      >
-                        {isQuar
-                          ? 'Bloqué'
-                          : doc.statut === 'nettoye'
-                          ? 'DLP ✓'
-                          : 'Prêt'}
-                      </span>
-                    </div>
-                  </div>
+                    </button>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           )}
-        </div>
+
+          <div className="p-5">
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => fileInputRef.current?.click()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (e.dataTransfer.files?.length) onUploadFiles(e.dataTransfer.files);
+              }}
+              className="rounded-xl border border-dashed border-strong hover:border-[var(--text-primary)] px-4 py-4 flex flex-col items-center justify-center gap-1 text-center cursor-pointer transition"
+            >
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-main">
+                <Upload className="w-4 h-4" />
+                Déposer des pièces
+              </span>
+              <span className="text-xs text-sub">.md, .txt ou .pdf · masquage des données personnelles automatique</span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".md,.txt,.pdf"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files?.length) onUploadFiles(e.target.files);
+                }}
+              />
+            </div>
+          </div>
+        </section>
       </div>
     </motion.div>
   );

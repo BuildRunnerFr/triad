@@ -1698,6 +1698,11 @@ export const App: React.FC = () => {
                 onOpenCockpit={() => setActiveNav('cockpit')}
                 onOpenComparator={() => setActiveNav('compare')}
                 onSelectDoc={(doc) => setDrawer({ type: 'doc', doc })}
+                findingsCount={synthesis?.findings.length || 0}
+                arbitratedCount={arbitratedCount}
+                validated={validated}
+                onOpenInvestigation={synthesis ? () => setActiveNav('triad') : undefined}
+                onOpenDeliverables={synthesis ? openValidationGate : undefined}
               />
             )}
 
