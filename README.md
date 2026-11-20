@@ -150,6 +150,13 @@ Dans l'interface : **Mission → Démo Valmont → Auditer AVANT puis APRÈS**, 
 - Options : IAP, Cloud Armor (OWASP, limitation de débit, filtrage UE), egress VPC, politiques d'organisation, alertes de sécurité, sonde de disponibilité, budget FinOps.
 - **CI/CD** : GitHub Actions (`.github/workflows/ci.yml`) et Cloud Build (`cloudbuild.yaml`).
 
+> **État du déploiement de démonstration.** Le compte du hackathon ne peut pas attribuer de rôles IAM sur le projet : la démo en ligne tourne donc avec le compte de service Compute par défaut, et non avec `triad-auditor`. Un propriétaire du projet peut créer ce compte en une commande, puis redéployer ; `make deploy` le détecte et l'utilise automatiquement :
+>
+> ```bash
+> PROJECT_ID=votre-projet ./scripts/setup_least_privilege_sa.sh
+> ALLOW_UNAUTH=true make deploy && make deploy-check
+> ```
+
 </details>
 
 <details>
@@ -177,5 +184,5 @@ data/             Cas de démonstration (Centre hospitalier de Valmont)
 ---
 
 <div align="center">
-<sub>Projet réalisé pour le Hackathon Deloitte × Google Cloud. Le cas « Centre hospitalier de Valmont » est fictif.</sub>
+<sub>Projet réalisé pour le Hackathon Deloitte × Google Cloud. Le cas « Centre hospitalier de Valmont » est fictif.<br/>© 2026 BuildRunnerFr · tous droits réservés, voir <a href="LICENSE">LICENSE</a>.</sub>
 </div>
