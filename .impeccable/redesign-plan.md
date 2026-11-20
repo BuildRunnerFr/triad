@@ -46,3 +46,4 @@ Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, 
 - 05:21 — Page récapitulative avant/après publiée (artifact privé) ; tiroir : commande gcloud à la ligne ; plan de remédiation : 4 chiffres en ligne à filets (plus de cartes, plus de mono).
 - 05:23 — Comparateur : questions AVANT en titre-phrase + liste numérotée à filets ; posture et vérificateur .zip revus, mono retirée de 13 pastilles d'état.
 - 05:24 — Planche Figma mise à jour (page 2, node 2:2 : captures à jour, couleurs AA). Carnet terminé ; tours suivants = contrôles de santé jusqu'au récapitulatif de 08:30.
+- 06:26 — Investigation › Triangle : sommets aux couleurs de pilier en casse phrase, verdict sans majuscules, 3 colonnes à filets, puces F-00x neutres (rupture en texte vermillon), « Ouvrir le constat » en action secondaire. Vérifié 1440 clair / 390 sombre.

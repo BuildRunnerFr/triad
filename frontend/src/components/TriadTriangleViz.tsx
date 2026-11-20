@@ -45,7 +45,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
   return (
     <div className="surface-panel rounded-2xl p-5">
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-hairline">
-        <h3 className="text-sm font-extrabold text-main">
+        <h3 className="text-base font-semibold text-main">
           Triangulation Dit × Écrit × Réel
         </h3>
 
@@ -59,12 +59,12 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
                 key={f.id}
                 type="button"
                 onClick={() => onSelectFinding(f)}
-                className={`px-2.5 py-1 rounded-lg font-mono text-xs font-bold transition cursor-pointer ${
+                className={`min-h-[28px] px-2.5 py-1 rounded-lg font-mono text-xs font-semibold transition cursor-pointer ${
                   isSelected
                     ? 'seg-active'
                     : isKo
-                    ? 'badge-critical hover:opacity-90'
-                    : 'surface-card text-sub hover:text-main'
+                    ? 'text-[var(--critical-text)] hover:bg-[var(--bg-hover)]'
+                    : 'text-sub hover:text-main hover:bg-[var(--bg-hover)]'
                 }`}
               >
                 {f.id}
@@ -143,10 +143,10 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
                     ? 'var(--accent-text)'
                     : 'var(--text-secondary)',
                 }}
-                fontSize="10.5"
-                fontWeight="800"
+                fontSize="11"
+                fontWeight="640"
               >
-                {active.contradiction || (isClean ? 'ALIGNÉ ✓' : active.statut.toUpperCase())}
+                {active.contradiction || (isClean ? 'Aligné' : active.statut.replace('_', ' '))}
               </text>
             </g>
 
@@ -155,26 +155,26 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               <circle
                 r="27"
                 style={{
-                  fill: 'var(--info-bg)',
-                  stroke: 'var(--info-text)',
+                  fill: 'var(--bg-surface)',
+                  stroke: 'var(--dit)',
                 }}
                 strokeWidth="1.8"
               />
               <text
                 textAnchor="middle"
                 y="-2"
-                style={{ fill: 'var(--info-text)' }}
-                fontSize="10"
-                fontWeight="800"
+                style={{ fill: 'var(--dit)' }}
+                fontSize="11"
+                fontWeight="640"
               >
-                LE DIT
+                Dit
               </text>
               <text
                 textAnchor="middle"
                 y="11"
                 style={{ fill: 'var(--text-secondary)' }}
                 fontSize="8.5"
-                fontWeight="600"
+                fontWeight="500"
               >
                 {mode === 'AVANT' ? 'N/A' : 'Entretien'}
               </text>
@@ -185,26 +185,26 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               <circle
                 r="27"
                 style={{
-                  fill: 'var(--violet-bg)',
-                  stroke: 'var(--violet-text)',
+                  fill: 'var(--bg-surface)',
+                  stroke: 'var(--ecrit)',
                 }}
                 strokeWidth="1.8"
               />
               <text
                 textAnchor="middle"
                 y="-2"
-                style={{ fill: 'var(--violet-text)' }}
-                fontSize="10"
-                fontWeight="800"
+                style={{ fill: 'var(--ecrit)' }}
+                fontSize="11"
+                fontWeight="640"
               >
-                L&apos;ÉCRIT
+                Écrit
               </text>
               <text
                 textAnchor="middle"
                 y="11"
                 style={{ fill: 'var(--text-secondary)' }}
                 fontSize="8.5"
-                fontWeight="600"
+                fontWeight="500"
               >
                 PSSI / PV
               </text>
@@ -215,26 +215,26 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               <circle
                 r="28"
                 style={{
-                  fill: 'var(--accent-soft)',
+                  fill: 'var(--bg-surface)',
                   stroke: 'var(--reel)',
                 }}
-                strokeWidth="2"
+                strokeWidth="1.8"
               />
               <text
                 textAnchor="middle"
                 y="-2"
-                style={{ fill: 'var(--accent-text)' }}
-                fontSize="10"
-                fontWeight="800"
+                style={{ fill: 'var(--reel)' }}
+                fontSize="11"
+                fontWeight="640"
               >
-                LE RÉEL
+                Réel
               </text>
               <text
                 textAnchor="middle"
                 y="11"
                 style={{ fill: 'var(--text-secondary)' }}
                 fontSize="8.5"
-                fontWeight="600"
+                fontWeight="500"
               >
                 Cloud GCP
               </text>
@@ -245,15 +245,15 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
         {/* Synthèse instantanée du contrôle sélectionné (7 cols) */}
         <div className="lg:col-span-7 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-[var(--deloitte)] text-black">
+            <span className="font-mono text-xs font-semibold text-sub">
               {active.id}
             </span>
-            <h4 className="text-base font-extrabold text-main">{active.theme}</h4>
-            <span className="text-xs text-sub">• {active.exigence_nis2}</span>
+            <h4 className="text-base font-semibold text-main">{active.theme}</h4>
+            <span className="text-xs text-sub">{active.exigence_nis2}</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            <div className="surface-card rounded-xl p-3 edge-sky">
+          <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-hairline">
+            <div className="pt-3 pb-1 sm:pr-4 sm:[&:not(:first-child)]:pl-4 sm:[&:not(:first-child)]:border-l border-hairline">
               <div className="text-xs font-semibold text-[var(--dit)] mb-1">
                 Dit
               </div>
@@ -266,7 +266,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               </p>
             </div>
 
-            <div className="surface-card rounded-xl p-3 edge-violet">
+            <div className="pt-3 pb-1 sm:pr-4 sm:[&:not(:first-child)]:pl-4 sm:[&:not(:first-child)]:border-l border-hairline">
               <div className="text-xs font-semibold text-[var(--ecrit)] mb-1">
                 Écrit
               </div>
@@ -275,7 +275,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               </p>
             </div>
 
-            <div className="surface-card rounded-xl p-3 edge-accent">
+            <div className="pt-3 pb-1 sm:pr-4 sm:[&:not(:first-child)]:pl-4 sm:[&:not(:first-child)]:border-l border-hairline">
               <div className="text-xs font-semibold text-[var(--reel)] mb-1">
                 Réel
               </div>
@@ -288,18 +288,18 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
             <div className="flex flex-wrap items-center gap-2 text-xs">
               {active.contradiction ? (
-                <span className="badge-critical inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-bold">
+                <span className="badge-critical inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-semibold">
                   <Zap className="w-3.5 h-3.5" />
                   {active.contradiction}
                 </span>
               ) : (
-                <span className="badge-success inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-bold">
+                <span className="badge-success inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Cohérent
                 </span>
               )}
               {active.commande_correction && (
-                <span className="inline-flex items-center gap-1 font-mono text-[11px] text-sub">
+                <span className="inline-flex items-center gap-1 text-xs text-sub">
                   <Terminal className="w-3.5 h-3.5 text-accent" />
                   gcloud prêt
                 </span>
@@ -309,9 +309,9 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
             <button
               type="button"
               onClick={() => onInspectFinding(active)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition cursor-pointer"
+              className="min-h-[32px] inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-strong text-main hover:bg-[var(--bg-hover)] text-xs font-semibold transition cursor-pointer"
             >
-              <span>Inspecter</span>
+              <span>Ouvrir le constat</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
