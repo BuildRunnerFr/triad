@@ -1788,18 +1788,19 @@ export const App: React.FC = () => {
 
           {/* BARRE DE GOUVERNANCE COMPACTE EN BAS */}
           {synthesis && (
-            <footer className="sticky bottom-0 z-20 surface-panel border-x-0 border-b-0 px-4 sm:px-6 py-2.5 backdrop-blur-md">
-              <div className="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-2.5">
+            <footer className="sticky bottom-0 z-20 surface-panel border-x-0 border-b-0 px-4 sm:px-6 py-2 sm:py-2.5 backdrop-blur-md">
+              <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 min-w-0">
                   {validated ? (
                     <span className="badge-success inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Validé ({mode === 'APRES' ? 'APRÈS' : mode})
                     </span>
                   ) : (
-                    <span className="badge-warning inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold">
+                    <span className="badge-warning inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold whitespace-nowrap">
                       <Lock className="w-3.5 h-3.5" />
-                      Livrables verrouillés ({mode === 'APRES' ? 'APRÈS' : mode})
+                      <span className="hidden sm:inline">Livrables verrouillés</span>
+                      <span className="sm:hidden">Verrouillés</span> ({mode === 'APRES' ? 'APRÈS' : mode})
                     </span>
                   )}
 
@@ -1817,7 +1818,7 @@ export const App: React.FC = () => {
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="hidden sm:flex flex-wrap items-center gap-2">
                   {bothModesReady && activeNav !== 'compare' && (
                     <button
                       type="button"

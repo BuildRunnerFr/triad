@@ -40,7 +40,7 @@ import {
 } from '../utils/grcSimulation';
 import { Nis2RadarChart } from './Nis2RadarChart';
 import CountUp from './reactbits/CountUp';
-import SpotlightCard from './reactbits/SpotlightCard';
+import { ConcordanceRow, RibbonLegend } from './ConcordanceRibbon';
 import { CloudTopologyViz } from './CloudTopologyViz';
 import { Nis2CoverageMatrix } from './Nis2CoverageMatrix';
 import type { ToastTone } from './ToastStack';
@@ -107,7 +107,6 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
   const [copiedQuestions, setCopiedQuestions] = useState(false);
   const [comexModeOpen, setComexModeOpen] = useState(false);
   const [detailsDrawerOpen, setDetailsDrawerOpen] = useState(false);
-  const [expandedRiskIdx, setExpandedRiskIdx] = useState<number | null>(null);
 
   useEffect(() => {
     if (!comexModeOpen && !detailsDrawerOpen) return;
@@ -304,24 +303,46 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
 
   const questionsCount = synthesis.questions_entretien?.length || 0;
 
+  // Sujet du chiffre-titre : affirmations du Dit (APRÈS) ou engagements de l'Écrit (AVANT, sans entretien).
+  const ditBase = findings.filter((f) => Boolean(f.dit));
+  const useDit = ditBase.length > 0;
+  const ledeSubject = useDit
+    ? { unit: 'affirmation', owner: 'de la DSI', base: ditBase.length }
+    : {
+        unit: 'exigence',
+        owner: 'de la PSSI',
+        base: findings.filter((f) => Boolean(f.ecrit)).length || total,
+      };
+  const contradictedList = (useDit ? ditBase : findings.filter((f) => Boolean(f.ecrit))).filter(
+    (f) => f.statut === 'non_conforme' || f.statut === 'partiel'
+  );
+  const contradicted = contradictedList.length;
+  const critiquesContredits = contradictedList.filter((f) => f.gravite === 'critique').length;
+
+  const rankedFindings = [...findings]
+    .filter((f) => f.statut !== 'conforme')
+    .sort(
+      (a, b) =>
+        GRAVITE_RANK[b.gravite] - GRAVITE_RANK[a.gravite] ||
+        (a.statut === 'non_conforme' ? -1 : 0) - (b.statut === 'non_conforme' ? -1 : 0)
+    );
+
+  const fmt1 = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+  const ledeFacts: { label: string; value: string; tone?: string }[] = [
+    { label: 'Maturité NIS2', value: `${maturityScore} %`, tone: maturityScore < 40 ? 'text-[var(--rupture)]' : undefined },
+    { label: 'Constats conformes', value: `${conformes} / ${total}` },
+    { label: 'Citations vérifiées', value: `${verifiedQuotes} / ${total}` },
+    { label: 'Pièces en quarantaine', value: `${quarDocs.length}`, tone: quarDocs.length > 0 ? 'text-[var(--warning-text)]' : undefined },
+    { label: 'Effort de remédiation', value: `${fmt1(comexSimulation.workload_jh.estimated_jh)} j·h` },
+    { label: 'Maturité visée à 90 jours', value: `${comexSimulation.projected_score} %`, tone: 'text-[var(--accent-text)]' },
+  ];
+
   // Le décompte des indicateurs ne se joue qu'une fois par résultat d'audit (pas à chaque retour sur la vue).
   const revealKey = `${mode}:${total}:${nonConformes}:${maturityScore}:${verifiedQuotes}`;
   const [firstReveal] = useState(() => !playedKpiReveals.has(revealKey));
   useEffect(() => {
     playedKpiReveals.add(revealKey);
   }, [revealKey]);
-  const kpiCardProps = {
-    theme: theme === 'dark' ? ('dark' as const) : ('light' as const),
-    spotlightColor: '#86BC25',
-    intensity: theme === 'dark' ? 0.1 : 0.35,
-    borderGlow: 0.5,
-    spotlightSize: 220,
-    style: {
-      '--spotlight-card-surface': 'var(--bg-surface)',
-      '--spotlight-card-border': 'var(--border-subtle)',
-      '--spotlight-card-shadow': 'var(--shadow-panel)',
-    } as React.CSSProperties,
-  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -329,180 +350,139 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
       transition={{ duration: 0.2 }}
       className="space-y-6"
     >
-      {/* BARRE EXÉCUTIVE ÉPURÉE */}
-      <div className="surface-panel rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--accent-soft)] text-accent text-[11px] font-extrabold">
-            <Scale className="w-3.5 h-3.5" />
-            <span>NIS2 Art. 20 &amp; 34</span>
-          </span>
+      {/* CHIFFRE-TITRE ÉDITORIAL : la contradiction dite en une phrase, chiffres intégrés au texte */}
+      <section aria-labelledby="cockpit-lede" className="pt-1 pb-6 border-b border-hairline">
+        <div className="flex flex-wrap items-start justify-between gap-x-10 gap-y-5">
+          <div className="min-w-0 max-w-4xl">
+            <p className="text-sm text-sub">
+              {synthesis.client || 'Centre Hospitalier de Valmont'} · Phase{' '}
+              {mode === 'APRES' ? 'APRÈS' : 'AVANT'} entretiens · {total} constat{total > 1 ? 's' : ''}
+            </p>
+            <h2
+              id="cockpit-lede"
+              className="mt-2 text-[1.75rem] sm:text-[2.35rem] leading-[1.12] font-semibold tracking-[-0.025em] text-main"
+            >
+              <span className="text-[var(--rupture)] font-bold tabular-nums">
+                <CountUp to={contradicted} from={firstReveal ? 0 : contradicted} duration={0.7} trigger="load" />
+              </span>{' '}
+              {ledeSubject.unit}
+              {contradicted > 1 ? 's' : ''} {ledeSubject.owner} sur{' '}
+              <span className="tabular-nums">{ledeSubject.base}</span>{' '}
+              {contradicted > 1 ? 'sont contredites' : 'est contredite'} par la configuration réelle
+              {critiquesContredits > 0 ? (
+                <>
+                  , dont{' '}
+                  <span className="text-[var(--rupture)] font-bold tabular-nums">{critiquesContredits}</span> critique
+                  {critiquesContredits > 1 ? 's' : ''}.
+                </>
+              ) : (
+                '.'
+              )}
+            </h2>
+          </div>
 
-          <span className="font-mono text-xs px-2.5 py-1 rounded-full surface-subtle text-main font-bold tabular-nums">
-            {comexSimulation.workload_jh.estimated_jh} j.h
-          </span>
-
-          <span className="font-mono text-xs px-2.5 py-1 rounded-full surface-subtle text-accent font-extrabold tabular-nums">
-            Cible 90j : {comexSimulation.projected_score}% (+
-            {comexSimulation.score_delta})
-          </span>
-
-          {comparisonSummary && (
+          <div className="flex flex-wrap items-center gap-2">
+            {comparisonSummary && (
+              <button
+                type="button"
+                onClick={onOpenComparator}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline hover:border-strong text-xs font-semibold text-main transition cursor-pointer"
+              >
+                <GitCompareArrows className="w-3.5 h-3.5" />
+                <span className="tabular-nums">
+                  AVANT {comparisonSummary.scoreAvant} % → APRÈS {comparisonSummary.scoreApres} %
+                </span>
+              </button>
+            )}
             <button
               type="button"
-              onClick={onOpenComparator}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full surface-card hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
+              onClick={() => setDetailsDrawerOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline hover:border-strong text-xs font-semibold text-main transition cursor-pointer"
             >
-              <GitCompareArrows className="w-3.5 h-3.5 text-accent" />
-              <span className="font-mono tabular-nums">
-                {comparisonSummary.scoreAvant}% → {comparisonSummary.scoreApres}%
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>
+                Piliers{mode === 'AVANT' && questionsCount > 0 ? ` et trame DSI (${questionsCount})` : ''}
               </span>
-              {comparisonSummary.ditContradictionsCount > 0 && (
-                <span className="badge-critical px-1.5 py-0.2 rounded-full text-[10px] font-extrabold">
-                  +{comparisonSummary.ditContradictionsCount} Dit
-                </span>
-              )}
             </button>
+            <button
+              type="button"
+              onClick={() => setComexModeOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-[#0B100D] text-xs font-bold transition cursor-pointer"
+            >
+              <Presentation className="w-4 h-4" />
+              <span>Présentation COMEX</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Faits secondaires, séparés par des filets (pas de cartes) */}
+        <dl className="mt-6 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 border-t border-hairline">
+          {ledeFacts.map((fact) => (
+            <div
+              key={fact.label}
+              className="pt-3 pr-4 pb-1 border-r border-hairline last:border-r-0 [&:nth-child(2n)]:max-sm:border-r-0 sm:[&:nth-child(3n)]:max-xl:border-r-0"
+            >
+              <dt className="text-xs text-sub">{fact.label}</dt>
+              <dd className={`mt-1 text-xl font-semibold tabular-nums ${fact.tone || 'text-main'}`}>
+                {fact.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* RUPTURES PAR GRAVITÉ (rubans de concordance) + TROIS RISQUES À PORTER AU COMEX */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <section aria-labelledby="ruptures-title" className="xl:col-span-8 surface-panel rounded-2xl overflow-hidden">
+          <header className="px-4 sm:px-5 pt-4 pb-3 border-b border-hairline flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h3 id="ruptures-title" className="text-base font-semibold text-main">
+                Ruptures, par gravité
+              </h3>
+              <RibbonLegend className="mt-1.5" />
+            </div>
+            <button
+              type="button"
+              onClick={onOpenTriadView}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--accent-text)] hover:underline underline-offset-4 cursor-pointer"
+            >
+              <span>Tous les constats ({total})</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </header>
+          {rankedFindings.length > 0 ? (
+            <ul className="divide-y divide-[var(--border-subtle)]">
+              {rankedFindings.slice(0, 6).map((f) => (
+                <ConcordanceRow key={f.id} finding={f} onOpen={onSelectFinding} />
+              ))}
+            </ul>
+          ) : (
+            <p className="px-5 py-8 text-sm text-sub">
+              Aucune rupture : le Dit, l&apos;Écrit et le Réel concordent sur tous les constats.
+            </p>
           )}
-        </div>
+        </section>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setDetailsDrawerOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-accent" />
-            <span>
-              Détails{mode === 'AVANT' && questionsCount > 0 ? ` & Trame DSI (${questionsCount})` : ''}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setComexModeOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold shadow-sm transition cursor-pointer"
-          >
-            <Presentation className="w-4 h-4" />
-            <span>Présentation COMEX</span>
-          </button>
-        </div>
+        <section aria-labelledby="comex-risks-title" className="xl:col-span-4 surface-panel rounded-2xl p-5">
+          <h3 id="comex-risks-title" className="text-base font-semibold text-main">
+            Trois risques à porter au COMEX
+          </h3>
+          {synthesis.top_3_risques && synthesis.top_3_risques.length > 0 ? (
+            <ol className="mt-3 space-y-3">
+              {synthesis.top_3_risques.slice(0, 3).map((risk, idx) => (
+                <li key={idx} className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2 text-sm leading-relaxed text-main">
+                  <span className="font-semibold text-[var(--rupture)] tabular-nums">{idx + 1}.</span>
+                  <span>{risk}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="mt-3 text-sm text-sub">La synthèse ne remonte aucun risque prioritaire.</p>
+          )}
+        </section>
       </div>
 
-      {/* LIGNE 1 : 4 INDICATEURS (lueur React Bits SpotlightCard + décompte CountUp joué une fois par résultat) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-        {/* KPI 1 : Maturité NIS2 */}
-        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-center gap-4">
-          <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-            <svg className="w-16 h-16 -rotate-90" viewBox="0 0 68 68" aria-hidden="true">
-              <circle
-                cx="34"
-                cy="34"
-                r={radius}
-                fill="none"
-                stroke={theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#E2E8F0'}
-                strokeWidth="6"
-              />
-              <motion.circle
-                cx="34"
-                cy="34"
-                r={radius}
-                fill="none"
-                stroke={
-                  maturityScore >= 70
-                    ? '#86BC25'
-                    : maturityScore >= 40
-                    ? '#F59E0B'
-                    : '#F43F5E'
-                }
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                initial={{ strokeDashoffset: firstReveal ? circumference : strokeOffset }}
-                animate={{ strokeDashoffset: strokeOffset }}
-                transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </svg>
-            <span className="absolute text-sm font-extrabold tabular-nums text-main">
-              <CountUp to={maturityScore} from={firstReveal ? 0 : maturityScore} duration={0.75} trigger="load" />%
-            </span>
-          </div>
-          <div>
-            <div className="text-xs font-semibold text-sub">Maturité NIS2</div>
-            <div className="text-sm font-extrabold text-main mt-1 tabular-nums">
-              {conformes}/{total} constats conformes
-            </div>
-            <div className="text-[11px] text-sub mt-0.5 tabular-nums">
-              {partiels} partiel{partiels > 1 ? 's' : ''}
-            </div>
-          </div>
-        </SpotlightCard>
-
-        {/* KPI 2 : Écarts Non Conformes */}
-        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-start justify-between">
-          <div>
-            <div className="text-xs font-semibold text-sub">Écarts majeurs</div>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-3xl font-extrabold tabular-nums tone-critical">
-                <CountUp to={nonConformes} from={firstReveal ? 0 : nonConformes} duration={0.6} trigger="load" />
-              </span>
-              {critiques > 0 && (
-                <span className="text-xs font-bold tabular-nums text-sub">
-                  dont {critiques} critique{critiques > 1 ? 's' : ''}
-                </span>
-              )}
-            </div>
-            <div className="text-[11px] text-sub mt-1">Dit × Écrit × Réel</div>
-          </div>
-          <div className="w-10 h-10 rounded-xl badge-critical flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-5 h-5" />
-          </div>
-        </SpotlightCard>
-
-        {/* KPI 3 : Sas DLP Douanier */}
-        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-start justify-between">
-          <div>
-            <div className="text-xs font-semibold text-sub">Pièces en quarantaine</div>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-3xl font-extrabold tabular-nums tone-warning">
-                <CountUp to={quarDocs.length} from={firstReveal ? 0 : quarDocs.length} duration={0.6} trigger="load" />
-              </span>
-              <span className="text-xs font-semibold text-sub">
-                pièce{quarDocs.length > 1 ? 's' : ''} isolée{quarDocs.length > 1 ? 's' : ''}
-              </span>
-            </div>
-            <div className="text-[11px] text-sub mt-1 tabular-nums">
-              {totalRedactions} donnée{totalRedactions > 1 ? 's' : ''} personnelle{totalRedactions > 1 ? 's' : ''} masquée{totalRedactions > 1 ? 's' : ''} (DLP)
-            </div>
-          </div>
-          <div className="w-10 h-10 rounded-xl badge-warning flex items-center justify-center shrink-0">
-            <FileLock2 className="w-5 h-5" />
-          </div>
-        </SpotlightCard>
-
-        {/* KPI 4 : Preuves Exactes */}
-        <SpotlightCard {...kpiCardProps} className="rounded-2xl p-5 flex items-start justify-between">
-          <div>
-            <div className="text-xs font-semibold text-sub">Citations vérifiées mot à mot</div>
-            <div className="flex items-baseline gap-2 mt-1.5">
-              <span className="text-3xl font-extrabold tabular-nums tone-success">
-                <CountUp to={verifiedQuotes} from={firstReveal ? 0 : verifiedQuotes} duration={0.6} trigger="load" />
-                <span className="text-xl text-sub">/{total}</span>
-              </span>
-            </div>
-            <div className="text-[11px] text-sub mt-1 tabular-nums">
-              {arbitratedCount} arbitrage{arbitratedCount > 1 ? 's' : ''} GRC
-              {elapsedSeconds
-                ? ` • audit en ${elapsedSeconds.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} s`
-                : ''}
-            </div>
-          </div>
-          <div className="w-10 h-10 rounded-xl badge-success flex items-center justify-center shrink-0">
-            <Quote className="w-5 h-5" />
-          </div>
-        </SpotlightCard>
-      </div>
-
-      {/* LIGNE 2 : GRAPHIQUES (RADAR NIS2 + TOPOLOGIE CLOUD GCP) */}
+      {/* GRAPHIQUES : RADAR DÉCLARÉ vs RÉEL + TOPOLOGIE CLOUD GCP */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-5">
           <Nis2RadarChart findings={findings} theme={theme} />
@@ -517,71 +497,6 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           />
         </div>
       </div>
-
-      {/* LIGNE 3 : TOP 3 RISQUES PRIORITAIRES (1 LIGNE CHACUN, DÉPLIABLE AU CLIC) */}
-      {synthesis.top_3_risques && synthesis.top_3_risques.length > 0 && (
-        <div className="surface-panel rounded-2xl p-5 edge-accent space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-accent" />
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-accent">
-                Top 3 Risques Prioritaires
-              </h3>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setDetailsDrawerOpen(true)}
-                className="text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
-              >
-                Détails piliers
-              </button>
-              <button
-                type="button"
-                onClick={onOpenTriadView}
-                className="inline-flex items-center gap-1 text-xs font-bold text-accent hover:underline cursor-pointer"
-              >
-                <span>Constats ({total})</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            {synthesis.top_3_risques.slice(0, 3).map((risk, idx) => {
-              const isExpanded = expandedRiskIdx === idx;
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() =>
-                    setExpandedRiskIdx(isExpanded ? null : idx)
-                  }
-                  className="w-full text-left surface-card hover:border-strong rounded-xl px-3.5 py-2.5 flex items-start justify-between gap-3 transition cursor-pointer"
-                >
-                  <div className="flex items-start gap-3 min-w-0">
-                    <span className="px-2 py-0.5 rounded-md bg-[var(--deloitte)] text-black font-mono font-extrabold text-[11px] shrink-0">
-                      0{idx + 1}
-                    </span>
-                    <span
-                      className={`text-xs text-main font-medium leading-relaxed ${
-                        isExpanded ? '' : 'line-clamp-1'
-                      }`}
-                    >
-                      {risk}
-                    </span>
-                  </div>
-                  <ChevronDown
-                    className={`w-4 h-4 text-dim shrink-0 mt-0.5 transition-transform ${
-                      isExpanded ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* LIGNE 4 : CONFORMITÉ MULTI-RÉFÉRENTIELS PAR SOUS-ONGLETS */}
       <Nis2CoverageMatrix
