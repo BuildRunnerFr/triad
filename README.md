@@ -1,127 +1,181 @@
-# TRIAD — Ce qu'on dit. Ce qu'on écrit. Ce qui est vrai.
+<div align="center">
 
-Plateforme d'audit cyber contradictoire **NIS2** pour les consultants **Deloitte Risk Advisory Cyber** sur **Google Cloud** (Google ADK + Gemini sur Vertex AI).
+# TRIAD
 
-TRIAD croise automatiquement trois dimensions vérifiables :
-1. **Le DIT** : notes d'entretien client (ex. DSI).
-2. **L'ÉCRIT** : documentation interne (PSSI, PV PRA, contrats fournisseurs).
-3. **Le RÉEL** : configuration effective Google Cloud inspectée en lecture seule (5 domaines : Storage IAM public, Pare-feu Compute, Sauvegardes WORM, Privilèges IAM & clés SA, Cloud KMS & rétention Cloud Audit Logs).
+### Ce qu'on dit. Ce qu'on écrit. Ce qui est vrai.
 
----
+**L'audit cyber NIS2 contradictoire : quatre agents IA confrontent les déclarations de la DSI,<br/>sa documentation et la configuration réelle de son cloud, puis scellent les preuves.**
 
-## Installation et lancement rapide (5 commandes)
+[![Démo en ligne](https://img.shields.io/badge/D%C3%A9mo-en%20ligne-7DC42A?style=for-the-badge)](https://triad-311153381291.europe-west9.run.app)
+[![Vidéo](https://img.shields.io/badge/Vid%C3%A9o-35%20s-141A16?style=for-the-badge)](docs/media/triad-demo.mp4)
 
-```bash
-cd triad
-python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env                                 # Renseigner PROJECT_ID, VERTEX_LOCATION, GEMINI_MODEL
-python run_demo.py                                   # Ou : make demo
-```
+![Google ADK](https://img.shields.io/badge/Google%20ADK-multi--agents-4285F4?logo=google&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini-Vertex%20AI-8E75B2?logo=googlegemini&logoColor=white)
+![Cloud Run](https://img.shields.io/badge/Cloud%20Run-europe--west9-4285F4?logo=googlecloud&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Python%203.11-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React%2019-Vite%20·%20Three.js-61DAFB?logo=react&logoColor=black)
 
-L'interface s'ouvre sur **http://localhost:8080** (mode snapshot actif par défaut, sans déploiement GCP requis).
+*Hackathon Deloitte × Google Cloud*
 
----
+<br/>
 
-## Commandes `Makefile` (Build, QA, Conteneur & Cloud Run)
+<img src="docs/media/replay.gif" alt="Rejeu de l'audit : la confrontation Dit, Écrit, Réel fait apparaître les ruptures" width="900"/>
 
-| Commande | Description |
-| :--- | :--- |
-| `make help` | Affiche la liste complète des cibles disponibles. |
-| `make lint` | Compile le bytecode Python (`src/`, `tests/`) et vérifie la syntaxe AST, `pyproject.toml` et JSON. |
-| `make demo` | Démarre TRIAD sur `http://localhost:8080` en mode snapshot GCP. |
-| `make build-ui` | Vérifie le typage TypeScript (`tsc --noEmit`) et compile React 19 + Vite vers `src/triad/web/dist/`. |
-| `make test` | Exécute les tests unitaires, sécurité ADK, multi-sessions et API (`pytest -k "not live"`). |
-| `make test-live` | Exécute l'intégralité des tests incluant le pipeline réel Gemini / Vertex AI. |
-| `make tf-validate` | Vérifie le formatage canonique et la validité de l'IaC Terraform (`infra/terraform/`). |
-| `make sbom-check` | Génère et valide de manière reproductible le SBOM **CycloneDX 1.5 JSON** (`pyproject.toml` + `package-lock.json`, sans polluer le dépôt). |
-| `make ci-validate` | Valide l'IaC Terraform, les pipelines YAML CI/CD, le SBOM CycloneDX 1.5 et le scan pré-vol anti-fuite de secrets. |
-| `make check-all` | Pré-vol complet de bout en bout (`lint` + `test` + `build-ui` + `ci-validate` + `sbom-check` + `predeploy_check.sh`). |
-| `make release-check` | Banc Release Readiness sans Docker : `lint`, SBOM, `pytest`, Uvicorn signé éphémère, `/api/security/sbom`, 12 verrous `403 -> 200`, `verify_bundle.sh` (v6) & `verify_snapshot.sh`. |
-| `make verify-bundle` | Vérifie hors-ligne (`sha256sum -c` + chaîne JSONL + HMAC) un Dossier de Preuve `.zip` v1..v6 (`BUNDLE=...`). |
-| `make verify-snapshot` | Vérifie hors-ligne un Snapshot de session `.json` (`prev_hash -> hash`, `state_sha256` & HMAC, `SNAPSHOT=...`). |
-| `make docker-build` | Construit l'image Docker multi-stage (`node:20-alpine` -> `python:3.11-slim` non-root). |
-| `make docker-smoke` | Cycle E2E conteneur (`--read-only`) : `HEAD`/`GET` `health`, `ready` & `sbom`, 12 verrous `HTTP 403`, `bundle` v6 (12 pièces) & `snapshot` signés. |
-| `make deploy` | Déploie TRIAD sur Cloud Run (`europe-west9`) sous le compte à moindre privilège `triad-auditor`. |
-| `make deploy-check` | Vérifie la disponibilité `HEAD` / `GET /api/health` de l'URL Cloud Run déployée (`gcloud run services describe`). |
+</div>
 
 ---
 
-## Architecture Multi-Agents (Google ADK, Moindre Privilège)
+## Le problème
+
+Dans un audit NIS2, le consultant reçoit trois versions de la vérité : **ce que la DSI dit** en entretien, **ce qui est écrit** dans la PSSI et les procès-verbaux, et **ce qui est réellement configuré** dans le cloud. Les croiser à la main prend des jours, et les écarts les plus graves passent souvent inaperçus.
+
+## La réponse de TRIAD
+
+En un clic, TRIAD confronte les trois sources, constat par constat. Chaque contradiction devient une **rupture** documentée, sourcée et rattachée à l'article NIS2 concerné. Rien ne sort sans la signature d'un consultant, et tout le dossier est scellé par une chaîne d'empreintes SHA-256 vérifiable hors ligne.
+
+| | Source | Comment TRIAD la lit |
+| :---: | :--- | :--- |
+| 🔵 | **Le Dit** | Notes d'entretien avec la DSI, anonymisées à l'entrée |
+| 🟣 | **L'Écrit** | PSSI, PV de test PRA, contrats fournisseurs |
+| 🟢 | **Le Réel** | Configuration Google Cloud, lue **en lecture seule** par 5 sondes : Storage public, pare-feu, sauvegardes WORM, privilèges IAM et clés de comptes de service, Cloud KMS et rétention des journaux |
+
+---
+
+## Aperçu
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/cockpit.webp" alt="Cockpit exécutif"/></td>
+    <td width="50%"><img src="docs/media/carottage.webp" alt="Carottage 3D des constats"/></td>
+  </tr>
+  <tr>
+    <td><b>Cockpit</b> · le verdict en une phrase, les ruptures classées par gravité et les trois risques à porter au COMEX.</td>
+    <td><b>Carottage 3D</b> · chaque constat est un forage dans trois strates (Dit, Écrit, Réel) ; une faille rouge marque une contradiction.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/media/topologie.webp" alt="Topologie 3D de l'infrastructure"/></td>
+    <td><img src="docs/media/comparateur.webp" alt="Comparateur avant / après"/></td>
+  </tr>
+  <tr>
+    <td><b>Topologie 3D</b> · les ressources exposées sur Internet et la propagation possible d'une attaque.</td>
+    <td><b>Rideau avant / après</b> · ce que la DSI déclare d'un côté, ce que les faits montrent de l'autre.</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/media/livrables.webp" alt="Livrables scellés"/></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Livrables scellés</b> · 12 livrables (rapport, pré-notification ANSSI, brief COMEX, Terraform de remédiation…) verrouillés jusqu'à la signature du consultant ; le sceau guilloché est tracé à partir de l'empreinte du registre.</td>
+  </tr>
+</table>
+
+---
+
+## Comment ça marche
+
+Quatre agents [Google ADK](https://google.github.io/adk-docs/) propulsés par Gemini, chacun avec les seuls outils dont il a besoin.
 
 ```mermaid
 flowchart LR
-    RAW["Fichiers bruts (.md, .txt, .pdf)"] --> D["1. Douanier (Gatekeeper)<br/>Masquage PII + Anti-injection"]
-    D -->|"⛔ Suspect"| Q["Quarantaine + Alerte UI"]
-    D -->|"✓ Nettoyé"| A["2. Analyste Conformité<br/>Piliers NIS2 + 5 sondes GCP lecture seule"]
-    GCP["Google Cloud / Snapshot<br/>(Storage, Compute, IAM, KMS, Logs)"] --> A
-    A --> C["3. Contre-Auditeur<br/>verify_quote + gravité + questions"]
-    C --> G["4. Garde du Corps<br/>Synthèse + Hash Chain SHA-256"]
-    G -->|"EN ATTENTE DE VALIDATION (403)"| H["Consultant Deloitte<br/>Clic 'Je valide'"]
-    H -->|"VALIDÉ ✓ + Archive WORM"| EXP["Exports : Rapport A4, Mail, JSON scellé, Playbook .sh Dry-Run"]
+    RAW["Dossier client<br/>(.md, .txt, .pdf)"] --> D["1 · Douanier<br/>masque les données personnelles<br/>bloque les injections de prompt"]
+    D -->|suspect| Q["Quarantaine"]
+    D -->|nettoyé| A["2 · Analyste conformité<br/>exigences NIS2<br/>+ 5 sondes GCP en lecture seule"]
+    GCP[("Google Cloud<br/>configuration réelle")] -.-> A
+    A --> C["3 · Contre-auditeur<br/>vérifie chaque citation<br/>fixe la gravité"]
+    C --> G["4 · Garde du corps<br/>synthèse + chaîne SHA-256"]
+    G -->|"403 tant que non signé"| H(["Consultant<br/>signe"])
+    H --> EXP["12 livrables<br/>+ dossier de preuve .zip"]
 ```
 
----
-
-## Matrice stricte des permissions (`PERMISSIONS`)
-
-| Agent | Outils autorisés | Accès fichiers bruts | Accès écriture GCP |
+| Agent | Outils autorisés | Fichiers bruts | Écriture GCP |
 | :--- | :--- | :---: | :---: |
-| **Douanier** | `read_raw_file`, `redact_pii`, `scan_injection`, `quarantine_file`, `emit_sanitized_doc` | Oui (seul) | Non |
-| **AnalysteConformite** | `read_sanitized_doc`, `get_nis2_requirements`, `gcp_check_public_buckets`, `gcp_check_open_firewall`, `gcp_check_backup_protection`, `gcp_check_iam_privileges`, `gcp_check_kms_and_logging` | Non | Non |
-| **ContreAuditeur** | `verify_quote`, `read_sanitized_doc`, `get_nis2_requirements` | Non | Non |
-| **GardeDuCorps** | `assemble_synthesis`, `verify_chain` | Non | Non |
+| **Douanier** | `read_raw_file`, `redact_pii`, `scan_injection`, `quarantine_file`, `emit_sanitized_doc` | oui (seul) | non |
+| **Analyste conformité** | `read_sanitized_doc`, `get_nis2_requirements`, 5 sondes `gcp_check_*` | non | non |
+| **Contre-auditeur** | `verify_quote`, `read_sanitized_doc`, `get_nis2_requirements` | non | non |
+| **Garde du corps** | `assemble_synthesis`, `verify_chain` | non | non |
 
-Tout appel hors liste est intercepté avant exécution par `before_tool_callback`, journalisé en `VIOLATION` dans le registre JSONL chaîné par **SHA-256** (avec `run_id` et `mode` signés, vérifiables côté navigateur via **WebCrypto**) et stoppe immédiatement le pipeline.
+Tout appel hors de cette liste est intercepté avant exécution, journalisé comme violation dans le registre et arrête le pipeline.
 
----
+## Garanties
 
-## Fonctionnalités Clés de la Plateforme
-
-- **Vue Exécutive & Topologie 2D / 3D WebGL** : jauge de maturité NIS2, ventilation sur les 5 piliers réglementaires (Art. 21 & Art. 23), et scène 3D interactive Three.js matérialisant les vecteurs d'attaque (`0.0.0.0/0`, `allUsers`) et les contrôles conformes.
-- **Investigation TRIAD & Palette `Ctrl+K`** : cartes contradictoires *Dit × Écrit × Réel* doublées d'une grille analytique `@tanstack/react-table` triable/filtrable et navigation clavier instantanée (`Ctrl+K`, `?`, `1`..`5`).
-- **Comparateur `AVANT` vs `APRÈS` entretien** : calcul automatique du delta de maturité, des contradictions verbales dévoilées (`Dit ≠ Réel`, `Dit ≠ Écrit`) et suivi des questions posées au DSI.
-- **Gouvernance, Continuité PCA/PRA, Crosswalk HDS/ISO/RGPD & Dossier de Preuve Scellé (`.zip`)** : feuille de route interactive avec simulateur de score, vérification cryptographique SHA-256 dans le navigateur (et démonstrateur forensique d'altération mémoire), attestation SBOM CycloneDX 1.5 signée (`GET /api/security/sbom`), et verrouillage `HTTP 403` strict des **12 livrables** tant qu'un consultant n'a pas cliqué sur **« Je valide »** :
-  - Archive probatoire **`GET /api/export/bundle` (`.zip`, v6 — 12 pièces)** regroupant `01_Rapport_NIS2.md`, `02_Matrice_GRC.csv` (UTF-8 BOM + anti-injection formules), `03_Synthese_Scellee.json`, `04_Playbook_DryRun.sh`, `05_Mail_DSI.txt`, `06_Audit_Chain.jsonl`, `07_PreNotification_ANSSI_Art23.md`, `08_Brief_COMEX_Art20.md`, `09_Remediation_GitOps.tf`, `10_Guide_Entretien_Contradictoire.md`, `11_Registre_Arbitrages_GRC.md` et `12_Evaluation_CNIL_RGPD_Art33.md`, accompagnés d'un **`MANIFEST_SHA256.txt`** signé HMAC-SHA256 et vérifiable par `sha256sum -c` ou `./scripts/verify_bundle.sh <archive.zip>`.
-- **Durcissement des Imports (`POST /api/upload`), Isolation Multi-Sessions & Persistance Disque** : validation stricte des extensions autorisées (`.md`, `.txt`, `.pdf` — rejet `HTTP 400` sinon), plafond de 20 fichiers et limite stricte de **10 Mo par fichier** (`HTTP 413` par lecture en chunks sans saturer la RAM), cloisonnement complet par `X-Session-Id` / `session_id` (`GET /api/sessions`, `DELETE /api/sessions/{id}`) et télémétrie `timings_ms` par agent.
+- 🔒 **Aucune action corrective sur le cloud.** Les sondes lisent la configuration, elles ne la modifient jamais. Les commandes de remédiation sont livrées en *dry-run*, non exécutées.
+- ✍️ **Verrou humain.** Les 12 routes d'export répondent `403` tant qu'un consultant n'a pas signé.
+- ⛓️ **Preuves scellées.** Registre JSONL chaîné par SHA-256, recalculable dans le navigateur (WebCrypto) ; dossier de preuve `.zip` avec manifeste signé HMAC, vérifiable par `sha256sum -c` ou `scripts/verify_bundle.sh`.
+- 🕵️ **Données personnelles masquées** dès l'entrée (noms, courriels, téléphones, IBAN), y compris les adresses humaines remontées par la sonde IAM.
+- 🎬 **Audit rejouable.** Le bouton « Rejouer l'audit » reconstruit toute la séquence (Réception, Sondes, Confrontation, Scellement) depuis le registre.
 
 ---
 
-## Script de démo minuté (5 minutes)
-
-1. **0:00 – 0:45 | Contexte & Préparation (Mode AVANT)**
-   - Cliquer sur **« Charger le cas démo Hôpital de Valmont »**, sélectionner **AVANT entretien**, puis **Lancer l'audit TRIAD**.
-   - Présenter la **fiche de préparation** et les *Questions à poser au DSI*.
-2. **0:45 – 2:00 | Audit contradictoire complet (Mode APRÈS)**
-   - Basculer sur **APRÈS entretien** (ou lancer la séquence `AVANT → APRÈS`).
-   - Montrer `annexe_fournisseur_maintenance.md` **mis en quarantaine** (injection de prompt bloquée + `[IBAN_1]` masqué) et `PSSI_CH_Valmont.md` anonymisé (`[NOM_1]`, `[EMAIL_1]`, `[TEL_1]`).
-3. **2:00 – 3:30 | Matrice Dit / Écrit / Réel, Topologie 3D & Comparateur**
-   - Explorer les écarts `Dit ≠ Réel` sur les 5 domaines GCP (`export-radiologie` public, `allow-ssh-anywhere` SSH ouvert, `backups-dpi` non protégé vs `archives-pacs` conforme, compte `sa-prestataire-meditech` sur-privilégié avec clé > 90j, clé KMS `key-dpi-patients` sans rotation et rétention `_Default` 30j) ainsi que l'incident **Art. 23** non notifié à l'ANSSI.
-   - Inspecter la preuve JSON brute et la commande `gcloud` **(NON EXÉCUTÉE)**.
-4. **3:30 – 4:15 | Sécurité ADK & Vérification WebCrypto SHA-256**
-   - Cliquer sur **« Simuler une action non autorisée »** (`delete_bucket` bloqué) puis sur **« Recalculer les empreintes dans le navigateur »** pour prouver mathématiquement l'intégrité de la chaîne SHA-256.
-5. **4:15 – 5:00 | Validation humaine & Livrables COMEX**
-   - Constater le verrouillage des exports (`HTTP 403`), cliquer sur **« Je valide (consultant) »**, puis exporter le **Rapport A4**, le **Plan d'Action 30/60/90j**, le **JSON scellé** et le **Script `gcloud` Dry-Run (`.sh`)**.
-
----
-
-## Infrastructure-as-Code Terraform, Sécurité Cloud & CI/CD
-
-Le dossier [`infra/terraform/`](infra/terraform/README.md) fournit le provisionnement complet sur **Google Cloud (`europe-west9` — Paris)** :
-- **Cloud Run v2 (`triad`)** exécuté par un utilisateur conteneur non-root (`UID 10001`) avec accélération au démarrage à froid (`enable_startup_cpu_boost = true` / `--cpu-boost`).
-- **Service Account `triad-auditor` à moindre privilège** : rôle personnalisé `triadMetadataAuditor` + `roles/browser` + `roles/iam.securityReviewer` (exclut strictement `roles/viewer` et `roles/storage.objectViewer` — **`storage.objects.get` retourne `403 Forbidden`** sur les buckets audités).
-- **Bucket GCS immuable WORM** (`uniform_bucket_level_access = true`, `retention_policy` 365 jours, écriture `roles/storage.objectCreator` append-only).
-- **Secret Manager régional** (`europe-west9`, accès scopé au seul secret applicatif, zéro secret en clair dans `tfstate`, rotation automatisée optionnelle `enable_secret_rotation = false` / `secret_rotation_period = "7776000s"` sur `AUDIT_SIGNING_SECRET`).
-- **Durcissement & Observabilité optionnels** : contrôle d'accès Zero-Trust IAM / **Identity-Aware Proxy** (`allow_unauthenticated = false` par défaut), **Direct VPC Egress** Cloud Run (`enable_vpc_egress = false`, `PRIVATE_RANGES_ONLY`), politique WAF **Google Cloud Armor** (`enable_cloud_armor`, OWASP CRS + rate limiting + géo-filtrage souverain UE optionnel `enable_eu_geofencing = false` / `allowed_eu_country_codes` bloquant en `deny(403)` le trafic hors UE), contraintes GCP `enable_org_policies`, journalisation structurée JSON (`LOG_FORMAT=json`) avec métrique Cloud Logging & alerte immédiate sur **`SECURITY_VIOLATION_BLOCKED`** (`enable_security_alert`), sonde **Cloud Monitoring Uptime Check** (`/api/health`), alertes `5xx` / `429` / latence `P95`, et **alerte Budget Mensuel FinOps** (`monthly_budget_amount`).
-- **Pipelines CI/CD** : GitHub Actions (`.github/workflows/ci.yml` avec `pytest`, `tsc && vite build`, `terraform fmt/validate` et `docker-smoke`) et Google Cloud Build (`cloudbuild.yaml`).
+## Démarrage rapide
 
 ```bash
-# Validation locale complète (Terraform HCL + pipelines YAML)
-make ci-validate
-
-# Déploiement Cloud Run direct (authentification IAM requise par défaut)
-PROJECT_ID=votre-projet-gcp make deploy
-
-# Ou via le pipeline complet Google Cloud Build
-gcloud builds submit --config=cloudbuild.yaml --project="${PROJECT_ID}" .
+git clone https://github.com/BuildRunnerFr/triad.git && cd triad
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env        # PROJECT_ID, VERTEX_LOCATION, GEMINI_MODEL
+make demo                   # → http://localhost:8080
 ```
+
+Sans projet Google Cloud, laissez `USE_GCP_SNAPSHOT=true` et `USE_DEMO_CACHE=true` dans `.env` : TRIAD rejoue alors le cas du **Centre hospitalier de Valmont** à partir d'un instantané. En production, les sondes interrogent le vrai projet GCP.
+
+Dans l'interface : **Mission → Démo Valmont → Auditer AVANT puis APRÈS**, puis parcourez Cockpit, Investigation, Comparateur et Livrables.
+
+<details>
+<summary><b>Toutes les commandes <code>make</code></b></summary>
+
+| Commande | Rôle |
+| :--- | :--- |
+| `make demo` | Lance TRIAD sur `http://localhost:8080` |
+| `make build-ui` | `tsc --noEmit` puis build Vite vers `src/triad/web/dist/` |
+| `make test` | Tests unitaires, sécurité ADK, multi-sessions et API |
+| `make test-live` | Ajoute les tests sur le vrai pipeline Gemini / Vertex AI |
+| `make release-check` | Banc complet : lint, SBOM, pytest, serveur signé éphémère, 12 verrous `403 → 200`, vérification du dossier de preuve |
+| `make verify-bundle BUNDLE=…` | Vérifie hors ligne un dossier de preuve `.zip` |
+| `make verify-snapshot SNAPSHOT=…` | Vérifie hors ligne un instantané de session signé |
+| `make tf-validate` | Format et validité du Terraform (`infra/terraform/`) |
+| `make sbom-check` | SBOM CycloneDX 1.5 reproductible |
+| `make docker-build` / `make docker-smoke` | Image multi-stage non-root et test de bout en bout du conteneur |
+| `make deploy` / `make deploy-check` | Déploiement Cloud Run (`europe-west9`) et contrôle de santé |
+
+</details>
+
+<details>
+<summary><b>Infrastructure Google Cloud (Terraform)</b></summary>
+
+[`infra/terraform/`](infra/terraform/README.md) provisionne TRIAD à Paris (`europe-west9`) :
+
+- **Cloud Run v2**, conteneur non-root, démarrage accéléré.
+- **Compte de service à moindre privilège** `triad-auditor` : rôle personnalisé de lecture des métadonnées, sans accès au contenu des objets.
+- **Bucket d'archives WORM** (rétention 365 jours, écriture en ajout seul).
+- **Secret Manager** régional pour la clé de signature.
+- Options : IAP, Cloud Armor (OWASP, limitation de débit, filtrage UE), egress VPC, politiques d'organisation, alertes de sécurité, sonde de disponibilité, budget FinOps.
+- **CI/CD** : GitHub Actions (`.github/workflows/ci.yml`) et Cloud Build (`cloudbuild.yaml`).
+
+</details>
+
+<details>
+<summary><b>Les 12 livrables du dossier de preuve</b></summary>
+
+Rapport NIS2 · Matrice GRC (CSV) · Synthèse scellée (JSON) · Playbook `gcloud` en dry-run · Courriel au DSI · Registre d'audit chaîné · Pré-notification ANSSI (Art. 23) · Brief COMEX (Art. 20) · Remédiation Terraform · Guide d'entretien contradictoire · Registre des arbitrages GRC · Évaluation CNIL (RGPD Art. 33), avec un `MANIFEST_SHA256.txt` signé.
+
+</details>
+
+## Stack
+
+**Backend** : Python 3.11, FastAPI, Google ADK, Gemini sur Vertex AI, SDK Google Cloud (Storage, Compute, IAM, KMS, Logging).<br/>
+**Frontend** : React 19, Vite, Tailwind CSS 4, Three.js (topologie, carottage), GSAP, Framer Motion.<br/>
+**Infra** : Cloud Run, Terraform, Secret Manager, Cloud Build, GitHub Actions.
+
+```
+src/triad/        API FastAPI, agents ADK, sondes GCP, sécurité et rapports
+frontend/         Interface React (build servi par FastAPI)
+infra/terraform/  Infrastructure Google Cloud
+scripts/          Vérification hors ligne des preuves, contrôles pré-déploiement
+tests/            Tests unitaires, API et sécurité
+data/             Cas de démonstration (Centre hospitalier de Valmont)
+```
+
+---
+
+<div align="center">
+<sub>Projet réalisé pour le Hackathon Deloitte × Google Cloud. Le cas « Centre hospitalier de Valmont » est fictif.</sub>
+</div>
