@@ -387,7 +387,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
       elements.push(
         <blockquote
           key={idx}
-          className="border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 rounded-lg text-[11px] text-sub leading-relaxed"
+          className="border border-[var(--warning-border)] bg-[var(--warning-bg)] px-3 py-1.5 rounded-lg text-[11px] text-sub leading-relaxed"
         >
           {renderInlineMarkdown(trimmed.replace(/^>\s*/, ''))}
         </blockquote>
@@ -2095,7 +2095,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {isExportingAnssi ? (
                       <Loader2 className="w-3 h-3 animate-spin text-accent" />
                     ) : (
-                      <ShieldAlert className="w-3 h-3 text-amber-500" />
+                      <ShieldAlert className="w-3 h-3 text-[var(--warning-text)]" />
                     )}
                     <span>Pré-Notification ANSSI (.md)</span>
                   </button>
@@ -2111,7 +2111,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {isExportingCnilDraft ? (
                       <Loader2 className="w-3 h-3 animate-spin text-accent" />
                     ) : (
-                      <FileCheck2 className="w-3 h-3 text-amber-500" />
+                      <FileCheck2 className="w-3 h-3 text-[var(--warning-text)]" />
                     )}
                     <span>Évaluation CNIL Art. 33 (.md)</span>
                   </button>
@@ -2143,7 +2143,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {isExportingTerraform ? (
                       <Loader2 className="w-3 h-3 animate-spin text-accent" />
                     ) : (
-                      <FileCode2 className="w-3 h-3 text-sky-400" />
+                      <FileCode2 className="w-3 h-3 text-[var(--info-text)]" />
                     )}
                     <span>Manifeste Terraform (.tf)</span>
                   </button>
@@ -2355,19 +2355,19 @@ export const SecurityAndDeliverablesView: React.FC<
                               pts)
                             </div>
                           </div>
-                          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
-                            <div className="text-[10px] font-bold uppercase text-rose-700">
+                          <div className="p-3 rounded-xl bg-[var(--critical-bg)] border border-[var(--critical-border)]">
+                            <div className="text-[10px] font-bold uppercase text-[var(--critical-text)]">
                               Ruptures du Dit
                             </div>
-                            <div className="font-mono text-sm font-extrabold text-rose-800 mt-0.5 tabular-nums">
+                            <div className="font-mono text-sm font-extrabold text-[var(--critical-text)] mt-0.5 tabular-nums">
                               {comparisonSummary.ditContradictionsCount} dévoilée(s)
                             </div>
                           </div>
-                          <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
-                            <div className="text-[10px] font-bold uppercase text-amber-800">
+                          <div className="p-3 rounded-xl bg-[var(--warning-bg)] border border-[var(--warning-border)]">
+                            <div className="text-[10px] font-bold uppercase text-[var(--warning-text)]">
                               Nouveaux Écarts
                             </div>
-                            <div className="font-mono text-sm font-extrabold text-amber-900 mt-0.5 tabular-nums">
+                            <div className="font-mono text-sm font-extrabold text-[var(--warning-text)] mt-0.5 tabular-nums">
                               +{comparisonSummary.newGapsCount} post-entretien
                             </div>
                           </div>
@@ -2470,7 +2470,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               </div>
                             )}
                             {f.commande_correction && (
-                              <pre className="p-2.5 rounded-lg bg-slate-900 text-emerald-400 font-mono text-[10px] overflow-x-auto">
+                              <pre className="p-2.5 rounded-lg bg-slate-900 text-[var(--accent-text)] font-mono text-[10px] overflow-x-auto">
                                 {f.commande_correction}
                               </pre>
                             )}
@@ -2672,8 +2672,8 @@ export const SecurityAndDeliverablesView: React.FC<
                     regulatoryDocTab === 'grc'
                       ? 'border-[var(--deloitte)]/35'
                       : regulatoryDocTab === 'terraform'
-                      ? 'border-sky-500/35'
-                      : 'border-amber-500/25'
+                      ? 'border-[var(--info-border)]'
+                      : 'border-[var(--warning-border)]'
                   }`}
                 >
                   {/* Sélecteur de livrable réglementaire, GitOps, Contradictoire, GRC & CNIL (6 onglets) */}
@@ -2689,7 +2689,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('anssi')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'anssi'
-                          ? 'bg-amber-500 text-black shadow-sm'
+                          ? 'bg-[var(--warning-text)] text-black shadow-sm'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2717,7 +2717,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('terraform')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'terraform'
-                          ? 'bg-sky-400 text-black shadow-sm'
+                          ? 'bg-[var(--info-text)] text-black shadow-sm'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2759,7 +2759,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('cnil')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'cnil'
-                          ? 'bg-amber-500 text-black shadow-sm'
+                          ? 'bg-[var(--warning-text)] text-black shadow-sm'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2773,15 +2773,15 @@ export const SecurityAndDeliverablesView: React.FC<
                       {regulatoryDocTab === 'comex' ? (
                         <Scale className="w-4 h-4 text-accent shrink-0" />
                       ) : regulatoryDocTab === 'terraform' ? (
-                        <FileCode2 className="w-4 h-4 text-sky-400 shrink-0" />
+                        <FileCode2 className="w-4 h-4 text-[var(--info-text)] shrink-0" />
                       ) : regulatoryDocTab === 'interview' ? (
                         <MessageSquareQuote className="w-4 h-4 text-accent shrink-0" />
                       ) : regulatoryDocTab === 'grc' ? (
                         <ClipboardList className="w-4 h-4 text-accent shrink-0" />
                       ) : regulatoryDocTab === 'cnil' ? (
-                        <FileCheck2 className="w-4 h-4 text-amber-500 shrink-0" />
+                        <FileCheck2 className="w-4 h-4 text-[var(--warning-text)] shrink-0" />
                       ) : (
-                        <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
+                        <ShieldAlert className="w-4 h-4 text-[var(--warning-text)] shrink-0" />
                       )}
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
@@ -3012,14 +3012,14 @@ export const SecurityAndDeliverablesView: React.FC<
                           Art. 20 • Direction Générale
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--rupture)]" />
                           Art. 34 §4 • 10 M€ / 2 % CA
                         </span>
                       </>
                     ) : regulatoryDocTab === 'terraform' ? (
                       <>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--info-text)]" />
                           Revue PR GitOps &amp; terraform plan
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
@@ -3034,7 +3034,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           DSI • Admin Cloud • RSSI / DPO • Achats
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           Preuves attendues
                         </span>
                       </>
@@ -3045,29 +3045,29 @@ export const SecurityAndDeliverablesView: React.FC<
                           Art. 20 &amp; 21 §1 • Homologation
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           Risques résiduels &amp; échéances
                         </span>
                       </>
                     ) : regulatoryDocTab === 'cnil' ? (
                       <>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--rupture)]" />
                           RGPD Art. 33 ≤ 72 h
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           Art. 34 • HDS Art. 9
                         </span>
                       </>
                     ) : (
                       <>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--rupture)]" />
                           24 h • Alerte précoce
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           72 h • Évaluation
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
@@ -3134,7 +3134,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             onClick={exportTerraformManifest}
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
                           >
-                            <Download className="w-3.5 h-3.5 text-sky-400" />
+                            <Download className="w-3.5 h-3.5 text-[var(--info-text)]" />
                             <span>Manifeste Terraform (.tf)</span>
                           </button>
                         </div>
@@ -3231,7 +3231,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             onClick={exportCnilDraft}
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
                           >
-                            <Download className="w-3.5 h-3.5 text-amber-500" />
+                            <Download className="w-3.5 h-3.5 text-[var(--warning-text)]" />
                             <span>Évaluation CNIL Art. 33 (.md)</span>
                           </button>
                         </div>
@@ -3381,7 +3381,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       className={`text-left surface-card hover:border-strong rounded-xl p-3 border transition cursor-pointer ${
                         barrier.active
                           ? 'border-hairline'
-                          : 'border-amber-500/30'
+                          : 'border-[var(--warning-border)]'
                       } space-y-1.5`}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -3932,7 +3932,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               #{String(blockNum).padStart(2, '0')}
                             </span>
                             {isTamperedTarget && (
-                              <span className="px-2 py-0.5 rounded-full bg-rose-600 text-white text-[10px] font-sans font-extrabold">
+                              <span className="px-2 py-0.5 rounded-full bg-[var(--rupture)] text-white text-[10px] font-sans font-extrabold">
                                 ALTÉRÉ
                               </span>
                             )}

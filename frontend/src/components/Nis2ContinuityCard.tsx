@@ -305,7 +305,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
                     <div
                       className={`rounded-lg p-2.5 border ${
                         proc.rto_gap
-                          ? 'border-rose-500/35 surface-subtle'
+                          ? 'border-[var(--critical-border)] surface-subtle'
                           : 'border-[var(--deloitte)]/35 surface-subtle'
                       } space-y-1`}
                     >
@@ -338,7 +338,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
                     <div
                       className={`rounded-lg p-2.5 border ${
                         proc.rpo_gap
-                          ? 'border-rose-500/35 surface-subtle'
+                          ? 'border-[var(--critical-border)] surface-subtle'
                           : 'border-[var(--deloitte)]/35 surface-subtle'
                       } space-y-1`}
                     >

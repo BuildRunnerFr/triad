@@ -69,13 +69,13 @@ const STATUS_META: Record<
     label: 'Non conforme',
     badge: 'badge-critical',
     border: 'border-l-rose-500',
-    dot: 'bg-rose-500',
+    dot: 'bg-[var(--rupture)]',
   },
   partiel: {
     label: 'Partiel',
     badge: 'badge-warning',
     border: 'border-l-amber-500',
-    dot: 'bg-amber-500',
+    dot: 'bg-[var(--warning-text)]',
   },
   conforme: {
     label: 'Conforme',
@@ -92,7 +92,7 @@ const STATUS_META: Record<
 };
 
 const GRAVITE_META: Record<GraviteFinding, { label: string; cls: string }> = {
-  critique: { label: 'Critique', cls: 'bg-rose-600 text-white' },
+  critique: { label: 'Critique', cls: 'bg-[var(--rupture)] text-white' },
   haute: { label: 'Haute', cls: 'badge-high' },
   moyenne: { label: 'Moyenne', cls: 'badge-warning' },
   faible: {

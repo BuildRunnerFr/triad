@@ -8,7 +8,6 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { Activity, TrendingDown } from 'lucide-react';
 import type { Finding, ThemeMode } from '../types';
 
 interface Nis2RadarChartProps {
@@ -73,25 +72,21 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
     return Math.round(data.reduce((s, d) => s + d.ecart, 0) / data.length);
   }, [data]);
 
-  const gridStroke = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.13)';
-  const labelFill = theme === 'dark' ? '#CBD5E1' : '#1E293B';
-  const declareStroke = theme === 'dark' ? '#38BDF8' : '#0284C7';
-  const reelStroke = theme === 'dark' ? '#86BC25' : '#659416';
+  const gridStroke = theme === 'dark' ? 'rgba(238,242,238,0.12)' : 'rgba(20,26,22,0.14)';
+  const labelFill = theme === 'dark' ? '#A9B5AD' : '#46504A';
+  // Déclaré = couleur du Dit ; Réel vérifié = couleur du Réel (teintes des piliers)
+  const declareStroke = theme === 'dark' ? '#7EA4FF' : '#2350B8';
+  const reelStroke = theme === 'dark' ? '#9BD03A' : '#2D7A0C';
 
   return (
     <div className="surface-panel rounded-2xl p-5 flex flex-col justify-between h-full">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-accent" />
-          <h3 className="text-sm font-extrabold tracking-tight text-main">
-            Radar Déclaré vs Réel
-          </h3>
-        </div>
+        <h3 className="text-base font-semibold text-main">Déclaré face au réel</h3>
 
-        <div className="badge-critical inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
-          <TrendingDown className="w-3.5 h-3.5" />
-          <span className="tabular-nums">-{avgGap} pts</span>
-        </div>
+        <p className="text-xs text-sub">
+          Écart moyen{' '}
+          <span className="text-[var(--rupture)] font-bold tabular-nums text-sm">−{avgGap} pts</span>
+        </p>
       </div>
 
       <div className="w-full h-[270px]">
@@ -122,16 +117,16 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
               dataKey="reel"
               stroke={reelStroke}
               strokeWidth={2.5}
-              fill="#86BC25"
+              fill={reelStroke}
               fillOpacity={0.32}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: theme === 'dark' ? '#0C101B' : '#FFFFFF',
-                borderColor: theme === 'dark' ? 'rgba(255,255,255,0.14)' : '#CBD5E1',
-                borderRadius: '12px',
+                backgroundColor: theme === 'dark' ? '#1A231E' : '#FFFFFF',
+                borderColor: theme === 'dark' ? 'rgba(238,242,238,0.2)' : 'rgba(20,26,22,0.24)',
+                borderRadius: '8px',
                 fontSize: '12px',
-                color: theme === 'dark' ? '#F8FAFC' : '#0F172A',
+                color: theme === 'dark' ? '#EEF2EE' : '#141A16',
               }}
               formatter={(value, name) => [`${value ?? 0}/100`, String(name ?? '')]}
             />
@@ -143,11 +138,11 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
       <div className="pt-3 border-t border-hairline flex flex-wrap items-center justify-between gap-2 text-[11px]">
         <div className="flex items-center gap-4">
           <span className="inline-flex items-center gap-1.5 text-sub font-medium">
-            <span className="w-3 h-0.5 border-t-2 border-dashed border-sky-500 inline-block" />
+            <span className="w-3 h-0.5 border-t-2 border-dashed border-[var(--dit)] inline-block" />
             Déclaré
           </span>
           <span className="inline-flex items-center gap-1.5 text-main font-semibold">
-            <span className="w-3 h-2 rounded-xs bg-[var(--deloitte)]/60 border border-[var(--deloitte)] inline-block" />
+            <span className="w-3 h-2 rounded-xs bg-[var(--reel)]/40 border border-[var(--reel)] inline-block" />
             Réel vérifié
           </span>
         </div>

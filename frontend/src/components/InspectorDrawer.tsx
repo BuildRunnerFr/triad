@@ -862,7 +862,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                               )}
                             </button>
                           </div>
-                          <pre className="p-4 text-xs font-mono text-emerald-400 overflow-x-auto leading-relaxed">
+                          <pre className="p-4 text-xs font-mono text-[var(--accent-text)] overflow-x-auto leading-relaxed">
                             {content.finding.commande_correction}
                           </pre>
                         </div>

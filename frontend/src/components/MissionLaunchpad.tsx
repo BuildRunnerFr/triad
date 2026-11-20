@@ -374,7 +374,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                 onClick={() => onDeleteSession(activeSessionId)}
                 aria-label={`Supprimer la session ${activeSessionId}`}
                 title="Supprimer cette session secondaire"
-                className="min-h-[34px] inline-flex items-center gap-1 px-2.5 py-1 rounded-xl surface-card text-xs font-semibold text-sub hover:text-rose-500 hover:border-rose-500/40 transition cursor-pointer"
+                className="min-h-[34px] inline-flex items-center gap-1 px-2.5 py-1 rounded-xl surface-card text-xs font-semibold text-sub hover:text-[var(--critical-text)] hover:border-[var(--critical-border)] transition cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -394,12 +394,12 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
         {importErrorBanner && (
           <div
             role="alert"
-            className="rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 py-2 flex items-start justify-between gap-3"
+            className="rounded-xl border border-[var(--critical-border)] bg-[var(--critical-bg)] px-3.5 py-2 flex items-start justify-between gap-3"
           >
             <div className="flex items-start gap-2 min-w-0 text-xs">
-              <ShieldAlert className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+              <ShieldAlert className="w-4 h-4 text-[var(--critical-text)] shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <span className="font-extrabold text-rose-500">
+                <span className="font-extrabold text-[var(--critical-text)]">
                   Import refusé
                   {importErrorBanner.status
                     ? ` (HTTP ${importErrorBanner.status})`

@@ -937,7 +937,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-amber-500 text-xs font-bold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--warning-border)] text-xs font-bold text-main transition cursor-pointer"
                   >
                     <span className="font-mono text-[10px] px-1.5 py-0.2 rounded badge-warning">
                       {it.finding.id}

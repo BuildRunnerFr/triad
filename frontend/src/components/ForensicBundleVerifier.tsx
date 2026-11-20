@@ -72,7 +72,7 @@ const SIGNATURE_STATUS_META: Record<
     badgeLabel: 'HMAC-SHA256 : INVALID ✕',
     cardLabel: 'INVALID • Sceau falsifié ✕',
     detail: 'Signature émetteur HMAC-SHA256 invalide ou altérée',
-    pillCls: 'bg-rose-700 text-white border border-rose-300/50',
+    pillCls: 'bg-[var(--rupture)] text-white border border-[var(--critical-border)]',
     textCls: 'tone-critical',
   },
 };
@@ -356,7 +356,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold ${
                   certificate.authentic
                     ? 'bg-[var(--deloitte)] text-black'
-                    : 'bg-rose-600 text-white'
+                    : 'bg-[var(--rupture)] text-white'
                 }`}
               >
                 {certificate.authentic ? 'AUTHENTIQUE ✓' : 'ALTÉRÉ ✕'}

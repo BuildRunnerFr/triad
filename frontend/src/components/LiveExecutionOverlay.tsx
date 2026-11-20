@@ -132,7 +132,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
             {/* Barre de progression fluide */}
             <div className="h-1 w-full bg-white/5 overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[var(--deloitte)] via-emerald-400 to-[var(--deloitte)]"
+                className="h-full bg-gradient-to-r from-[var(--deloitte)] via-[var(--reel)] to-[var(--deloitte)]"
                 animate={{ width: `${progressPct}%` }}
                 transition={{ duration: 0.35 }}
               />
@@ -154,7 +154,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                         isRunning
                           ? 'bg-[var(--deloitte)]/12 border-[var(--deloitte)] shadow-[0_0_24px_rgba(134,188,37,0.2)]'
                           : isDone
-                          ? 'bg-emerald-500/[0.07] border-emerald-500/35'
+                          ? 'bg-[var(--reel)]/[0.07] border-[var(--accent-border)]'
                           : 'bg-white/[0.02] border-white/8 opacity-60'
                       }`}
                     >
@@ -164,7 +164,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                             isRunning
                               ? 'bg-[var(--deloitte)] text-black'
                               : isDone
-                              ? 'bg-emerald-500/20 text-emerald-400'
+                              ? 'bg-[var(--accent-soft)] text-[var(--accent-text)]'
                               : 'bg-white/8 text-slate-400'
                           }`}
                         >
@@ -181,7 +181,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                             isRunning
                               ? 'bg-[var(--deloitte)] text-black'
                               : isDone
-                              ? 'bg-emerald-500/20 text-emerald-300'
+                              ? 'bg-[var(--accent-soft)] text-[var(--accent-text)]'
                               : 'bg-white/8 text-slate-400'
                           }`}
                         >
@@ -230,13 +230,13 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                           animate={{ opacity: 1, x: 0 }}
                           className={`flex flex-wrap items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg ${
                             isQuar
-                              ? 'bg-amber-500/15 text-amber-200 border border-amber-500/30'
+                              ? 'bg-[var(--warning-bg)] text-[var(--warning-text)] border border-[var(--warning-border)]'
                               : 'bg-white/[0.025] text-slate-300'
                           }`}
                         >
                           <div className="flex items-center gap-2 min-w-0">
                             {isQuar && (
-                              <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                              <AlertTriangle className="w-3.5 h-3.5 text-[var(--warning-text)] shrink-0" />
                             )}
                             <span className="text-[var(--accent-text)] font-bold">
                               [{entry.agent}]

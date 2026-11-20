@@ -77,7 +77,7 @@ const GRAVITE_PILL: Record<
   GraviteFinding | 'conforme',
   { label: string; cls: string }
 > = {
-  critique: { label: 'Critique', cls: 'bg-rose-600 text-white' },
+  critique: { label: 'Critique', cls: 'bg-[var(--rupture)] text-white' },
   haute: { label: 'Haute', cls: 'badge-high' },
   moyenne: { label: 'Moyenne', cls: 'badge-warning' },
   faible: {
@@ -612,7 +612,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                       />
                       <div
                         title={`Déclaré : ${p.declaredScore}%`}
-                        className="absolute top-0 bottom-0 w-0.5 bg-sky-400/80"
+                        className="absolute top-0 bottom-0 w-0.5 bg-[var(--info-bg)]"
                         style={{ left: `${p.declaredScore}%` }}
                       />
                     </div>
@@ -737,7 +737,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                 </div>
               </div>
 
-              <div className="surface-panel rounded-2xl p-5 space-y-2 border border-rose-500/25">
+              <div className="surface-panel rounded-2xl p-5 space-y-2 border border-[var(--critical-border)]">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-extrabold uppercase tracking-wider tone-critical">
                     Exposition Art. 34

@@ -59,37 +59,36 @@ export const CloudTopologyViz: React.FC<CloudTopologyVizProps> = ({
     <div className="surface-panel rounded-2xl p-5 flex flex-col justify-between h-full">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
-          <Globe className="w-4 h-4 tone-critical" />
-          <h3 className="text-sm font-extrabold tracking-tight text-main">
+          <h3 className="text-base font-semibold text-main">
             Topologie Cloud GCP
           </h3>
         </div>
 
         {/* Bascule fluide Vue 3D WebGL / Vue 2D */}
-        <div className="flex surface-subtle p-0.5 rounded-xl">
+        <div role="group" aria-label="Mode de vue de la topologie" className="flex surface-subtle p-0.5 rounded-lg">
           <button
             type="button"
             onClick={() => setTopoMode('3d')}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
               topoMode === '3d'
-                ? 'bg-[var(--deloitte)] text-black shadow-xs'
+                ? 'seg-active'
                 : 'text-sub hover:text-main'
             }`}
           >
             <Box className="w-3.5 h-3.5" />
-            <span>3D WebGL</span>
+            <span>3D</span>
           </button>
           <button
             type="button"
             onClick={() => setTopoMode('2d')}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
               topoMode === '2d'
-                ? 'bg-[var(--deloitte)] text-black shadow-xs'
+                ? 'seg-active'
                 : 'text-sub hover:text-main'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>2D</span>
+            <span>Plan</span>
           </button>
         </div>
       </div>

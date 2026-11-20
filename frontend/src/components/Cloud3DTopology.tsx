@@ -115,21 +115,21 @@ function createLabelSprite(
   if (ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const bg = isDark ? 'rgba(9, 13, 24, 0.9)' : 'rgba(255, 255, 255, 0.94)';
-    const textMain = isDark ? '#F8FAFC' : '#0F172A';
-    const textSub = isDark ? '#94A3B8' : '#475569';
+    const bg = isDark ? 'rgba(18, 25, 21, 0.94)' : 'rgba(251, 251, 248, 0.96)';
+    const textMain = isDark ? '#EEF2EE' : '#141A16';
+    const textSub = isDark ? '#A9B5AD' : '#46504A';
 
     const x = 24;
     const y = 18;
     const w = canvas.width - 48;
     const h = canvas.height - 36;
-    const r = 24;
+    const r = 12;
 
     ctx.beginPath();
     ctx.roundRect(x, y, w, h, r);
     ctx.fillStyle = bg;
     ctx.fill();
-    ctx.lineWidth = 3.5;
+    ctx.lineWidth = 2;
     ctx.strokeStyle = accentHex;
     ctx.stroke();
 
@@ -138,11 +138,11 @@ function createLabelSprite(
     ctx.fillStyle = accentHex;
     ctx.fill();
 
-    ctx.font = '700 25px "JetBrains Mono", monospace';
+    ctx.font = '600 24px "JetBrains Mono", monospace';
     ctx.fillStyle = textMain;
     ctx.fillText(title.slice(0, 26), x + 48, y + 46);
 
-    ctx.font = '600 20px "Inter", sans-serif';
+    ctx.font = '500 21px "Schibsted Grotesk", sans-serif';
     ctx.fillStyle = textSub;
     ctx.fillText(subtitle.slice(0, 34), x + 24, y + 84);
   }
@@ -160,19 +160,19 @@ function createLabelSprite(
 }
 
 const STATUS_HEX: Record<NodeStatus, string> = {
-  attacker: '#F43F5E',
-  critical: '#F43F5E',
-  warning: '#F59E0B',
+  attacker: '#D2452A',
+  critical: '#D2452A',
+  warning: '#D99A1E',
   compliant: '#86BC25',
-  auditor: '#86BC25',
+  auditor: '#2350B8',
 };
 
 const STATUS_BADGE: Record<NodeStatus, { label: string; cls: string; dot: string }> = {
-  attacker: { label: 'Externe', cls: 'badge-critical', dot: 'bg-rose-500' },
-  critical: { label: 'Critique', cls: 'badge-critical', dot: 'bg-rose-500' },
-  warning: { label: 'Partiel', cls: 'badge-warning', dot: 'bg-amber-400' },
-  compliant: { label: 'Conforme ✓', cls: 'badge-success', dot: 'bg-[var(--deloitte)]' },
-  auditor: { label: 'Sonde 403 ✓', cls: 'badge-success', dot: 'bg-[var(--deloitte)]' },
+  attacker: { label: 'Externe', cls: 'badge-critical', dot: 'bg-[var(--rupture)]' },
+  critical: { label: 'Critique', cls: 'badge-critical', dot: 'bg-[var(--rupture)]' },
+  warning: { label: 'Partiel', cls: 'badge-warning', dot: 'bg-[var(--warning-text)]' },
+  compliant: { label: 'Conforme', cls: 'badge-success', dot: 'bg-[var(--deloitte)]' },
+  auditor: { label: 'Sonde lecture seule', cls: 'badge-info', dot: 'bg-[var(--dit)]' },
 };
 
 export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
@@ -192,7 +192,8 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
     typeof window !== 'undefined' &&
     Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
 
-  const autoRotateRef = useRef<boolean>(!prefersReducedInitial);
+  // Rotation désactivée par défaut : l'écran d'analyse reste stable (activable à la demande).
+  const autoRotateRef = useRef<boolean>(false);
   const reducedMotionRef = useRef<boolean>(prefersReducedInitial);
   const hudFilterRef = useRef<HudFilter>('ALL');
   const simStepRef = useRef<number | null>(null);
@@ -204,7 +205,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
   } | null>(null);
 
   const [renderMode, setRenderMode] = useState<RenderMode>('3d');
-  const [autoRotate, setAutoRotate] = useState<boolean>(!prefersReducedInitial);
+  const [autoRotate, setAutoRotate] = useState<boolean>(false);
   const [hudFilter, setHudFilter] = useState<HudFilter>('ALL');
   const [simStep, setSimStep] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -584,14 +585,14 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
     const height = container.clientHeight || 340;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(width, height);
-    renderer.setClearColor(isDark ? 0x07090f : 0xeef2f7, 1);
+    renderer.setClearColor(isDark ? 0x0c110f : 0xf2f3ef, 1);
 
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(isDark ? 0x07090f : 0xeef2f7, 0.032);
+    scene.fog = new THREE.FogExp2(isDark ? 0x0c110f : 0xf2f3ef, 0.03);
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 100);
@@ -616,26 +617,26 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
     dirLight.position.set(5, 10, 7);
     scene.add(dirLight);
 
-    const greenPoint = new THREE.PointLight(0x86bc25, isDark ? 1.4 : 0.7, 14);
+    const greenPoint = new THREE.PointLight(0x86bc25, isDark ? 0.6 : 0.22, 14);
     greenPoint.position.set(3.2, 2.2, 0.2);
     scene.add(greenPoint);
 
-    const redPoint = new THREE.PointLight(0xf43f5e, isDark ? 1.5 : 0.75, 14);
+    const redPoint = new THREE.PointLight(0xd2452a, isDark ? 0.7 : 0.25, 14);
     redPoint.position.set(-3.5, 2.0, 0);
     scene.add(redPoint);
 
     const grid = new THREE.GridHelper(
       18,
       24,
-      isDark ? 0x1e293b : 0x94a3b8,
-      isDark ? 0x111827 : 0xcbd5e1
+      isDark ? 0x252d29 : 0xb3bfb7,
+      isDark ? 0x161c19 : 0xdce2dc
     );
     grid.position.y = -1.55;
     scene.add(grid);
 
     const platformGeo = new THREE.CylinderGeometry(3.85, 4.05, 0.12, 6);
     const platformMat = new THREE.MeshStandardMaterial({
-      color: isDark ? 0x0f172a : 0xdbe4f0,
+      color: isDark ? 0x121915 : 0xe6eae5,
       transparent: true,
       opacity: isDark ? 0.58 : 0.72,
       roughness: 0.4,
@@ -694,7 +695,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       const mat = new THREE.MeshStandardMaterial({
         color,
         emissive: color,
-        emissiveIntensity: isDark ? 0.34 : 0.16,
+        emissiveIntensity: isDark ? 0.18 : 0.04,
         roughness: 0.28,
         metalness: 0.45,
         wireframe: spec.status === 'attacker',
@@ -751,7 +752,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       if (spec.status === 'critical' || spec.status === 'attacker') {
         const haloGeo = new THREE.RingGeometry(0.62, 0.78, 32);
         const haloMat = new THREE.MeshBasicMaterial({
-          color: 0xf43f5e,
+          color: 0xd2452a,
           side: THREE.DoubleSide,
           transparent: true,
           opacity: 0.65,
@@ -771,7 +772,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
 
         const tubeGeo = new THREE.TubeGeometry(curve, 44, 0.036, 8, false);
         const tubeMat = new THREE.MeshBasicMaterial({
-          color: 0xf43f5e,
+          color: 0xd2452a,
           transparent: true,
           opacity: attackTubeBaseOpacity,
         });
@@ -781,7 +782,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
 
         for (let p = 0; p < 2; p += 1) {
           const pulseGeo = new THREE.SphereGeometry(0.095, 12, 12);
-          const pulseMat = new THREE.MeshBasicMaterial({ color: 0xff6b81 });
+          const pulseMat = new THREE.MeshBasicMaterial({ color: 0xe8735a });
           const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
           pulseMesh.position.copy(curve.getPointAt(p * 0.5 + 0.25));
           scene.add(pulseMesh);
@@ -819,7 +820,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       const pts = lateralCurve.getPoints(32);
       const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
       const lineMat = new THREE.LineDashedMaterial({
-        color: 0xf59e0b,
+        color: 0xd99a1e,
         dashSize: 0.22,
         gapSize: 0.14,
       });
@@ -1308,8 +1309,8 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           const active = simStep === null && hudFilter === key;
           const activeCls =
             key === 'CRITICAL'
-              ? 'bg-rose-500 text-white border border-rose-400'
-              : 'bg-[var(--deloitte)] text-black border border-[var(--deloitte)]';
+              ? 'bg-[var(--rupture)] text-white border border-[var(--rupture)]'
+              : 'seg-active border border-transparent';
           return (
             <button
               key={key}
@@ -1337,7 +1338,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
             onClick={toggleAttackSimulation}
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-extrabold transition cursor-pointer ${
               simStep !== null
-                ? 'bg-rose-600 text-white border border-rose-400'
+                ? 'bg-[var(--rupture)] text-white border border-[var(--rupture)]'
                 : 'badge-critical hover:opacity-90'
             }`}
             title="Animer le chemin d'attaque"
@@ -1350,46 +1351,6 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
 
       {/* Contrôles flottants minimalistes — Haut droite : Bascule 2D/3D + Caméra */}
       <div className="absolute top-2.5 right-2.5 flex items-center gap-1 z-10">
-        {!webglError && (
-          <div
-            role="group"
-            aria-label="Bascule rendu 3D ou 2D"
-            className="inline-flex surface-panel/90 backdrop-blur-xs p-0.5 rounded-lg"
-          >
-            <button
-              type="button"
-              aria-pressed={effectiveMode === '3d'}
-              onClick={() => setRenderMode('3d')}
-              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-extrabold transition cursor-pointer ${
-                effectiveMode === '3d'
-                  ? 'bg-[var(--deloitte)] text-black'
-                  : 'text-sub hover:text-main'
-              }`}
-              title="Vue 3D WebGL"
-            >
-              <Box className="w-3 h-3" />
-              <span>3D</span>
-            </button>
-            <button
-              type="button"
-              aria-pressed={effectiveMode === '2d'}
-              onClick={() => {
-                setSimStep(null);
-                setRenderMode('2d');
-              }}
-              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-extrabold transition cursor-pointer ${
-                effectiveMode === '2d'
-                  ? 'bg-[var(--deloitte)] text-black'
-                  : 'text-sub hover:text-main'
-              }`}
-              title="Repli 2D accessible"
-            >
-              <Layers className="w-3 h-3" />
-              <span>2D</span>
-            </button>
-          </div>
-        )}
-
         {effectiveMode === '3d' && (
           <>
             <button
@@ -1438,7 +1399,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
               onClick={() => setIsExpanded((v) => !v)}
               className={`p-1.5 rounded-lg transition cursor-pointer ${
                 isExpanded
-                  ? 'bg-[var(--deloitte)] text-black'
+                  ? 'seg-active'
                   : 'surface-panel/90 backdrop-blur-xs text-sub hover:text-main'
               }`}
               title={isExpanded ? 'Réduire (Échap)' : 'Plein cadre'}
@@ -1505,7 +1466,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                   type="button"
                   aria-label="Arrêter la simulation"
                   onClick={toggleAttackSimulation}
-                  className="p-1 rounded-lg surface-subtle text-sub hover:text-rose-400 cursor-pointer"
+                  className="p-1 rounded-lg surface-subtle text-sub hover:text-[var(--critical-text)] cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -1555,7 +1516,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           ) : (
             <div className="surface-panel/85 backdrop-blur-xs rounded-lg px-2.5 py-1 text-[10px] text-sub inline-flex items-center gap-2.5">
               <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-rose-500" />
+                <span className="w-2 h-2 rounded-full bg-[var(--rupture)]" />
                 <span>Exposé</span>
               </span>
               <span className="inline-flex items-center gap-1">

@@ -1208,7 +1208,7 @@ export const App: React.FC = () => {
       icon: Triangle,
       disabled: !synthesis,
       badge: nonConformesCount > 0 ? `${nonConformesCount}` : undefined,
-      badgeTone: 'bg-rose-500/20 text-rose-300',
+      badgeTone: 'bg-[#FF7A5C]/20 text-[#FFA28C]',
     },
     {
       id: 'compare',
@@ -1226,7 +1226,7 @@ export const App: React.FC = () => {
       badge: validated ? 'Validé' : 'À signer',
       badgeTone: validated
         ? 'bg-[var(--deloitte)] text-black'
-        : 'bg-amber-500/20 text-amber-300',
+        : 'bg-[#F2C14E]/20 text-[#F2C14E]',
     },
   ];
 
@@ -1353,7 +1353,7 @@ export const App: React.FC = () => {
                     </div>
                     {item.badge && (
                       <span
-                        className={`text-[10px] font-mono font-extrabold px-2 py-0.5 rounded-full shrink-0 tabular-nums ${item.badgeTone}`}
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 tabular-nums ${item.badgeTone}`}
                       >
                         {item.badge}
                       </span>
@@ -1374,7 +1374,7 @@ export const App: React.FC = () => {
                 className={`font-bold ${
                   statusData?.chain?.valide !== false
                     ? 'text-[var(--accent-text)]'
-                    : 'text-rose-400'
+                    : 'text-[#FFA28C]'
                 }`}
               >
                 {statusData?.chain?.valide !== false ? 'Intègre ✓' : 'Altéré !'}
@@ -1384,7 +1384,7 @@ export const App: React.FC = () => {
             <button
               type="button"
               onClick={handleSimulateViolation}
-              className="w-full inline-flex items-center gap-2 text-left text-[11px] text-slate-400 hover:text-rose-400 transition px-2 py-1 rounded-lg hover:bg-white/[0.03] cursor-pointer"
+              className="w-full inline-flex items-center gap-2 text-left text-[11px] text-slate-400 hover:text-[#FFA28C] transition px-2 py-1 rounded-lg hover:bg-white/[0.03] cursor-pointer"
             >
               <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate">Tester Garde du Corps</span>
@@ -1602,7 +1602,7 @@ export const App: React.FC = () => {
                     className="min-h-[36px] min-w-[36px] inline-flex items-center justify-center p-2 rounded-xl surface-card text-sub hover:text-main transition cursor-pointer"
                   >
                     {theme === 'dark' ? (
-                      <Sun className="w-4 h-4 text-amber-400" />
+                      <Sun className="w-4 h-4 text-[var(--warning-text)]" />
                     ) : (
                       <Moon className="w-4 h-4 text-slate-700" />
                     )}
@@ -1615,7 +1615,7 @@ export const App: React.FC = () => {
                     type="button"
                     aria-label="Réinitialiser toute la session"
                     onClick={handleReset}
-                    className="min-h-[36px] min-w-[36px] inline-flex items-center justify-center p-2 rounded-xl surface-card text-sub hover:text-rose-500 transition cursor-pointer"
+                    className="min-h-[36px] min-w-[36px] inline-flex items-center justify-center p-2 rounded-xl surface-card text-sub hover:text-[var(--critical-text)] transition cursor-pointer"
                   >
                     <RotateCcw className="w-4 h-4" />
                   </button>
@@ -1626,10 +1626,10 @@ export const App: React.FC = () => {
 
           {/* ALERTE ROUGE SI VIOLATION DÉTECTÉE PAR LE GARDE DU CORPS */}
           {statusData?.security_alert && (
-            <div className="bg-rose-600 text-white px-6 py-2.5 shadow-md">
+            <div className="bg-[var(--rupture)] text-white px-6 py-2.5 shadow-md">
               <div className="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 text-xs font-bold">
-                  <span className="inline-flex items-center gap-1 bg-white text-rose-700 px-2 py-0.5 rounded-md font-extrabold uppercase text-[10px]">
+                  <span className="inline-flex items-center gap-1 bg-white text-[var(--critical-text)] px-2 py-0.5 rounded-md font-extrabold uppercase text-[10px]">
                     <ShieldAlert className="w-3.5 h-3.5" /> Garde du Corps — Action Bloquée
                   </span>
                   <span>{statusData.security_alert}</span>
