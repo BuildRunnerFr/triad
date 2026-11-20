@@ -582,7 +582,7 @@ const ConcordancePrism3D: React.FC<ConcordancePrism3DProps> = ({
     const applyPalette = () => {
       const p = readPalette();
       s.palette = p;
-      paperMat.uniforms.uPaper.value.copy(p.paper.color);
+      paperMat.uniforms.uPaper.value.copy(p.surface.color);
       paperMat.uniforms.uDit.value.copy(p.dit.color);
       paperMat.uniforms.uEcrit.value.copy(p.ecrit.color);
       paperMat.uniforms.uReel.value.copy(p.reel.color);
