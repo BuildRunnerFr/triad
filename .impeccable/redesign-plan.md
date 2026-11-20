@@ -21,7 +21,7 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - [x] Comparateur : section « Questions d'audition Phase AVANT » (tuile icône) → titre simple + liste à filets.
 - [x] Vérificateur .zip (ForensicBundleVerifier) : revue visuelle et alignement (filets, pas de mono costume).
 - [x] Posture et permissions : revue visuelle et alignement.
-- [ ] Rafraîchir la planche Figma (captures comparateur/couverture/remédiation à jour).
+- [x] Rafraîchir la planche Figma (captures comparateur/couverture/remédiation à jour).
 - [ ] 08:30 : récapitulatif final (republier la page récap si besoin), notification, arrêt de la boucle.
 Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, dist lié) ; scripts de capture dans scratchpad (shots.cjs, delivtabs.cjs, coverage.cjs, a11y.cjs) ; page récap : https://claude.ai/artifact/T8H2DtYCZis8VPj7HcuYUm (fichier scratchpad/recap/index.html).
 
@@ -45,3 +45,4 @@ Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, 
 - 05:17 — Overlay d'audit en langage consultant (« Audit en cours », statuts En cours / Terminé / En attente) ; lignes du comparateur allégées (statuts, charge et catégorie en texte coloré, actions en liens).
 - 05:21 — Page récapitulative avant/après publiée (artifact privé) ; tiroir : commande gcloud à la ligne ; plan de remédiation : 4 chiffres en ligne à filets (plus de cartes, plus de mono).
 - 05:23 — Comparateur : questions AVANT en titre-phrase + liste numérotée à filets ; posture et vérificateur .zip revus, mono retirée de 13 pastilles d'état.
+- 05:24 — Planche Figma mise à jour (page 2, node 2:2 : captures à jour, couleurs AA). Carnet terminé ; tours suivants = contrôles de santé jusqu'au récapitulatif de 08:30.
