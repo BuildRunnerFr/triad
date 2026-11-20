@@ -397,10 +397,10 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <div className="w-9 h-9 rounded-xl badge-success flex items-center justify-center shrink-0">
               <TrendingUp className="w-4 h-4" />
             </div>
-            <h3 className="text-sm sm:text-base font-extrabold text-main">
+            <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
               Trajectoire &amp; ROI 30/60/90j
             </h3>
-            <span className="badge-success font-mono text-[11px] font-extrabold px-2.5 py-0.5 rounded-full tabular-nums">
+            <span className="badge-success font-mono text-[13px] font-bold px-2.5 py-0.5 rounded-full tabular-nums">
               {currentScore}% → {simulatedScore}% (+
               {Math.max(0, activeSim.score_delta)} pts)
             </span>
@@ -427,7 +427,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     ? 'Télécharger le script Bash dry-run scellé SHA-256'
                     : 'Validation humaine consultant requise (verrou 403)'
                 }
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold transition cursor-pointer ${
                   validated
                     ? 'surface-card hover:border-[var(--deloitte)] text-main'
                     : 'badge-warning hover:opacity-90'
@@ -444,7 +444,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <button
               type="button"
               onClick={exportRoadmapCsv}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-strong text-xs font-bold text-main transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-strong text-[13px] font-semibold text-main transition cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-accent" />
               <span>CSV (.csv)</span>
@@ -452,7 +452,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <button
               type="button"
               onClick={exportRoadmapMarkdown}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-[13px] font-bold transition cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Markdown (.md)</span>
@@ -463,28 +463,28 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
         {/* Barre de scénarios rapides */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-hairline">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] font-bold text-sub mr-1 inline-flex items-center gap-1">
+            <span className="text-[13px] font-semibold text-sub mr-1 inline-flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-accent" />
               Scénarios :
             </span>
             <button
               type="button"
               onClick={() => selectScenarioPreset('0_30')}
-              className="px-2.5 py-1 rounded-lg surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
+              className="px-2.5 py-1 rounded-lg surface-card hover:border-[var(--deloitte)] text-[13px] font-semibold text-main transition cursor-pointer"
             >
               J+30 Quick-Wins
             </button>
             <button
               type="button"
               onClick={() => selectScenarioPreset('0_60')}
-              className="px-2.5 py-1 rounded-lg surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
+              className="px-2.5 py-1 rounded-lg surface-card hover:border-[var(--deloitte)] text-[13px] font-semibold text-main transition cursor-pointer"
             >
               J+60 Consolidation
             </button>
             <button
               type="button"
               onClick={() => selectScenarioPreset('ALL')}
-              className="px-2.5 py-1 rounded-lg bg-[var(--accent-soft)] border border-[var(--deloitte)]/45 hover:bg-[var(--deloitte)] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-[var(--accent-soft)] border border-[var(--deloitte)]/45 hover:bg-[var(--deloitte)] hover:text-black text-[13px] font-bold text-accent transition cursor-pointer"
             >
               Plan 90j (100%)
             </button>
@@ -513,7 +513,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               <span className="text-xs font-semibold text-sub">
                 Score Projeté
               </span>
-              <span className="badge-success text-[10px] font-semibold px-2 py-0.5 rounded-full tabular-nums">
+              <span className="badge-success text-xs font-semibold px-2 py-0.5 rounded-full tabular-nums">
                 +{Math.max(0, activeSim.score_delta)} pts
               </span>
             </div>
@@ -550,7 +550,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 <Clock className="w-3.5 h-3.5 text-accent" />
                 Charge j.h
               </span>
-              <span className="font-mono text-[10px] px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
+              <span className="font-mono text-xs px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
                 {activeSim.workload_jh.estimated_jh > 0
                   ? `${String(activeSim.workload_jh.min_jh).replace('.', ',')}–${String(
                       activeSim.workload_jh.max_jh
@@ -561,7 +561,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <div className="text-2xl font-semibold text-main tabular-nums">
               {String(activeSim.workload_jh.estimated_jh).replace('.', ',')} j.h
             </div>
-            <div className="text-[11px] text-sub">
+            <div className="text-xs text-sub">
               {activeSim.remediated_ids.length > 0
                 ? `${activeSim.remediated_ids.length} chantier(s) chiffré(s)`
                 : 'Cochez un chantier pour chiffrer'}
@@ -576,7 +576,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 Exposition Art. 34
               </span>
               <span
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                   activeSim.art34_exposure.risk_level_after === 'MAÎTRISÉ'
                     ? 'badge-success'
                     : activeSim.art34_exposure.risk_level_after === 'MODÉRÉ'
@@ -594,12 +594,12 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               <span className="text-2xl font-semibold text-accent tabular-nums">
                 -{String(activeSim.art34_exposure.exposure_reduction_pct).replace('.', ',')}%
               </span>
-              <span className="text-[11px] text-sub tabular-nums">
+              <span className="text-xs text-sub tabular-nums">
                 ({activeSim.art34_exposure.critical_gaps_before}→
                 {activeSim.art34_exposure.critical_gaps_after} crit.)
               </span>
             </div>
-            <div className="text-[11px] text-dim truncate">
+            <div className="text-xs text-dim truncate">
               {activeSim.art34_exposure.plafond_label}
             </div>
           </div>
@@ -611,7 +611,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 <Zap className="w-3.5 h-3.5 text-accent" />
                 Quick-Wins
               </span>
-              <span className="badge-success text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="badge-success text-[13px] font-semibold px-2 py-0.5 rounded-full">
                 Effort Faible
               </span>
             </div>
@@ -619,11 +619,11 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               <span className="text-2xl font-semibold text-main tabular-nums">
                 {quickWins.length}
               </span>
-              <span className="text-[11px] text-sub">
+              <span className="text-xs text-sub">
                 action(s) J+30
               </span>
             </div>
-            <div className="text-[11px] text-sub tabular-nums">
+            <div className="text-xs text-sub tabular-nums">
               {activeSim.workload_jh.quick_wins_count} activé(s) en simulation
             </div>
           </div>
@@ -637,11 +637,11 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 <div className="flex items-center justify-between gap-2 text-xs">
                   <div className="min-w-0 truncate">
                     <span className="font-bold text-main">{p.title}</span>{' '}
-                    <span className="text-[10px] font-mono text-dim">
+                    <span className="text-xs font-mono text-dim">
                       ({p.article})
                     </span>
                   </div>
-                  <div className="font-mono text-[11px] shrink-0 tabular-nums">
+                  <div className="font-mono text-xs shrink-0 tabular-nums">
                     <span className="text-sub">{p.current_score}%</span>
                     {p.gain > 0 && (
                       <>
@@ -696,18 +696,18 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     <span className="font-mono text-xs font-semibold text-sub text-accent">
                       {meta.badge}
                     </span>
-                    <h4 className="text-xs font-extrabold text-main">
+                    <h4 className="text-[15px] font-semibold text-main">
                       {meta.title}
                     </h4>
                   </div>
                 </div>
-                <span className="font-mono text-[11px] font-extrabold px-2.5 py-0.5 rounded-full surface-subtle text-main tabular-nums">
+                <span className="font-mono text-[13px] font-bold px-2.5 py-0.5 rounded-full surface-subtle text-main tabular-nums">
                   {items.length}
                 </span>
               </div>
 
               {items.length === 0 ? (
-                <div className="surface-subtle rounded-xl p-4 text-center text-[11px] text-dim">
+                <div className="surface-subtle rounded-xl p-4 text-center text-xs text-dim">
                   Aucun chantier sur cet horizon.
                 </div>
               ) : (
@@ -759,11 +759,11 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                                   className="accent-[var(--deloitte)] rounded cursor-pointer shrink-0"
                                 />
                               )}
-                              <span className="font-mono text-[11px] font-bold px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main shrink-0">
+                              <span className="font-mono text-[13px] font-semibold px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main shrink-0">
                                 {it.finding.id}
                               </span>
                               <span
-                                className={`text-xs font-extrabold text-main truncate ${
+                                className={`text-[13px] font-bold text-main truncate ${
                                   isDone ? 'line-through' : ''
                                 }`}
                               >
@@ -787,28 +787,28 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                           <div className="flex flex-wrap items-center justify-between gap-1.5">
                             <div className="flex flex-wrap items-center gap-1.5">
                               {isAlreadyCompliant ? (
-                                <span className="badge-success text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                <span className="badge-success text-[13px] font-semibold px-2 py-0.5 rounded-full">
                                   Conforme ✓
                                 </span>
                               ) : (
                                 <span
-                                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${gravMeta.cls}`}
+                                  className={`text-[13px] font-semibold px-2 py-0.5 rounded-full ${gravMeta.cls}`}
                                 >
                                   {gravMeta.label}
                                 </span>
                               )}
-                              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full surface-subtle text-main tabular-nums">
+                              <span className="font-mono text-[13px] font-semibold px-2 py-0.5 rounded-full surface-subtle text-main tabular-nums">
                                 {it.workloadEstimate}
                               </span>
                               {it.finding.commande_correction && (
-                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded surface-subtle font-mono text-[10px] font-bold text-accent">
+                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded surface-subtle font-mono text-[13px] font-semibold text-accent">
                                   <Terminal className="w-2.5 h-2.5" />
                                   CLI
                                 </span>
                               )}
                             </div>
 
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-sub">
+                            <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-sub">
                               <span>Détails</span>
                               <ChevronDown
                                 className={`w-3.5 h-3.5 transition-transform ${
@@ -821,14 +821,14 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
 
                         {/* Accordéon Détails (Dit / Écrit / Réel, recommandation, gcloud) */}
                         {isExpanded && (
-                          <div className="px-3 pb-3 pt-2.5 border-t border-hairline surface-subtle space-y-2 text-[11px]">
-                            <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] font-mono text-sub">
+                          <div className="px-3 pb-3 pt-2.5 border-t border-hairline surface-subtle space-y-2 text-xs">
+                            <div className="flex flex-wrap items-center justify-between gap-1 text-xs font-mono text-sub">
                               <span>{it.finding.exigence_nis2}</span>
                               <span>{it.ownerRole}</span>
                             </div>
 
                             {(it.finding.dit || it.finding.ecrit || it.finding.reel) && (
-                              <div className="space-y-1 rounded-lg surface-card p-2 border border-hairline text-[10px]">
+                              <div className="space-y-1 rounded-lg surface-card p-2 border border-hairline text-xs">
                                 {it.finding.dit && (
                                   <div className="text-sub line-clamp-2">
                                     <strong className="text-main">Dit :</strong> «{' '}
@@ -856,7 +856,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                             </p>
 
                             {it.finding.commande_correction && (
-                              <pre className="p-2 rounded-lg surface-card border border-hairline font-mono text-[10px] text-accent overflow-x-auto">
+                              <pre className="p-2 rounded-lg surface-card border border-hairline font-mono text-xs text-accent overflow-x-auto">
                                 {it.finding.commande_correction}
                               </pre>
                             )}
@@ -877,11 +877,11 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-accent" />
-            <h3 className="text-sm font-extrabold text-main">
+            <h3 className="text-base font-semibold text-main">
               Matrice Effort × Impact NIS2
             </h3>
           </div>
-          <span className="text-[11px] font-mono text-dim">
+          <span className="text-xs font-mono text-dim">
             4 quadrants d&apos;arbitrage
           </span>
         </div>
@@ -890,25 +890,25 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* Quadrant 1 */}
           <div className="surface-card rounded-xl p-3.5 edge-accent space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-extrabold text-main">
+              <span className="text-[13px] font-bold text-main">
                 1. Quick-Wins Prioritaires
               </span>
-              <span className="badge-success text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="badge-success text-[13px] font-semibold px-2 py-0.5 rounded-full">
                 Impact Fort • Effort Faible
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {quickWins.length === 0 ? (
-                <span className="text-[11px] text-dim">Aucun élément</span>
+                <span className="text-xs text-dim">Aucun élément</span>
               ) : (
                 quickWins.map((it) => (
                   <button
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[13px] font-semibold text-main transition cursor-pointer"
                   >
-                    <span className="font-mono text-[10px] px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main">
+                    <span className="font-mono text-xs px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main">
                       {it.finding.id}
                     </span>
                     <span>{it.finding.theme}</span>
@@ -921,25 +921,25 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* Quadrant 2 */}
           <div className="surface-card rounded-xl p-3.5 edge-amber space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-extrabold text-main">
+              <span className="text-[13px] font-bold text-main">
                 2. Chantiers Structurants
               </span>
-              <span className="badge-warning text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="badge-warning text-[13px] font-semibold px-2 py-0.5 rounded-full">
                 Impact Fort • Effort Modéré+
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {majorProjects.length === 0 ? (
-                <span className="text-[11px] text-dim">Aucun élément</span>
+                <span className="text-xs text-dim">Aucun élément</span>
               ) : (
                 majorProjects.map((it) => (
                   <button
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--warning-border)] text-xs font-bold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--warning-border)] text-[13px] font-semibold text-main transition cursor-pointer"
                   >
-                    <span className="font-mono text-[10px] px-1.5 py-0.2 rounded badge-warning">
+                    <span className="font-mono text-xs px-1.5 py-0.2 rounded badge-warning">
                       {it.finding.id}
                     </span>
                     <span>{it.finding.theme}</span>
@@ -952,16 +952,16 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* Quadrant 3 */}
           <div className="surface-card rounded-xl p-3.5 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-extrabold text-main">
+              <span className="text-[13px] font-bold text-main">
                 3. Hygiène Opérationnelle
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded surface-subtle text-sub">
+              <span className="text-xs font-mono px-2 py-0.5 rounded surface-subtle text-sub">
                 Effort Faible
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {hygieneItems.length === 0 ? (
-                <span className="text-[11px] text-dim">Aucun élément</span>
+                <span className="text-xs text-dim">Aucun élément</span>
               ) : (
                 hygieneItems.map((it) => (
                   <button
@@ -970,7 +970,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     onClick={() => onSelectFinding(it.finding)}
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle text-xs font-semibold text-main cursor-pointer"
                   >
-                    <span className="font-mono text-[10px]">{it.finding.id}</span>
+                    <span className="font-mono text-xs">{it.finding.id}</span>
                     <span>{it.finding.theme}</span>
                   </button>
                 ))
@@ -981,16 +981,16 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* Quadrant 4 */}
           <div className="surface-card rounded-xl p-3.5 space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-extrabold text-main">
+              <span className="text-[13px] font-bold text-main">
                 4. Maintien &amp; PRA
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded surface-subtle text-sub">
+              <span className="text-xs font-mono px-2 py-0.5 rounded surface-subtle text-sub">
                 Amélioration continue
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {govItems.length === 0 ? (
-                <span className="text-[11px] text-dim">Aucun élément</span>
+                <span className="text-xs text-dim">Aucun élément</span>
               ) : (
                 govItems.map((it) => (
                   <button
@@ -1000,7 +1000,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-strong text-xs font-semibold text-main cursor-pointer"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
-                    <span className="font-mono text-[10px]">{it.finding.id}</span>
+                    <span className="font-mono text-xs">{it.finding.id}</span>
                     <span>{it.finding.theme}</span>
                   </button>
                 ))

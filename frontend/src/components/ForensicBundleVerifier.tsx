@@ -213,14 +213,14 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
             <FolderArchive className="w-4 h-4 text-accent" />
           </div>
           <div>
-            <h3 className="text-sm sm:text-base font-extrabold text-main">
+            <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
               Vérificateur d&apos;Archive Probatoire (.zip)
             </h3>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
-              <span className="badge-success px-2 py-0.5 rounded-full text-[10px] font-extrabold">
+              <span className="badge-success px-2 py-0.5 rounded-full text-[13px] font-bold">
                 v1..v6 • 12 pièces • HMAC-SHA256
               </span>
-              <span className="px-2 py-0.5 rounded-full surface-subtle text-[10px] font-semibold text-sub">
+              <span className="px-2 py-0.5 rounded-full surface-subtle text-xs font-semibold text-sub">
                 Anti-ZipSlip &amp; 0 écriture disque
               </span>
             </div>
@@ -231,7 +231,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
           <button
             type="button"
             onClick={resetVerifier}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-strong text-xs font-bold text-sub hover:text-main transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-strong text-[13px] font-semibold text-sub hover:text-main transition cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Réinitialiser</span>
@@ -287,18 +287,18 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
             )}
           </div>
           <div>
-            <div className="text-xs font-extrabold text-main">
+            <div className="text-[13px] font-bold text-main">
               {isVerifying
                 ? 'Vérification cryptographique en cours…'
                 : 'Déposez une archive .zip ou cliquez pour parcourir'}
             </div>
-            <div className="text-[11px] font-mono text-sub mt-0.5">
+            <div className="text-xs font-mono text-sub mt-0.5">
               MANIFEST_SHA256.txt • 06_Audit_Chain.jsonl • ≤ 20 Mo
             </div>
           </div>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition shrink-0">
+        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-[13px] font-bold transition shrink-0">
           <ShieldCheck className="w-4 h-4" />
           <span>Choisir une archive (.zip)</span>
         </span>
@@ -342,7 +342,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
 
             <div className="flex flex-wrap items-center gap-2 shrink-0">
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[13px] font-bold ${
                   SIGNATURE_STATUS_META[certificate.signature_status].pillCls
                 }`}
                 title={SIGNATURE_STATUS_META[certificate.signature_status].detail}
@@ -353,7 +353,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 </span>
               </span>
               <span
-                className={`px-3 py-1 rounded-full text-xs font-extrabold ${
+                className={`px-3 py-1 rounded-full text-[13px] font-bold ${
                   certificate.authentic
                     ? 'seg-active'
                     : 'badge-critical'
@@ -366,7 +366,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
 
           <div className="p-4 sm:p-5 space-y-4">
             {/* Métadonnées compactes */}
-            <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-sub">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-sub">
               {certificate.metadata?.client && (
                 <span className="px-2.5 py-1 rounded-lg surface-subtle font-semibold text-main">
                   {certificate.metadata.client}
@@ -409,11 +409,11 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
             {/* 5 piliers KPI de contrôle */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold text-sub">
+                <div className="text-[13px] font-semibold text-sub">
                   Anti-ZipSlip
                 </div>
                 <div
-                  className={`text-xs font-extrabold mt-1 ${
+                  className={`text-[13px] font-bold mt-1 ${
                     certificate.zip_slip_safe ? 'text-accent' : 'tone-critical'
                   }`}
                 >
@@ -422,11 +422,11 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold text-sub">
+                <div className="text-[13px] font-semibold text-sub">
                   Manifeste SHA-256
                 </div>
                 <div
-                  className={`text-xs font-extrabold mt-1 tabular-nums ${
+                  className={`text-[13px] font-bold mt-1 tabular-nums ${
                     certificate.manifest_valid ? 'text-accent' : 'tone-critical'
                   }`}
                 >
@@ -439,11 +439,11 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold text-sub">
+                <div className="text-[13px] font-semibold text-sub">
                   Chaîne Audit
                 </div>
                 <div
-                  className={`text-xs font-extrabold mt-1 tabular-nums ${
+                  className={`text-[13px] font-bold mt-1 tabular-nums ${
                     certificate.chain_valid ? 'text-accent' : 'tone-critical'
                   }`}
                 >
@@ -454,11 +454,11 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold text-sub">
+                <div className="text-[13px] font-semibold text-sub">
                   Synthèse Scellée
                 </div>
                 <div
-                  className={`text-xs font-extrabold mt-1 ${
+                  className={`text-[13px] font-bold mt-1 ${
                     certificate.sealed_json_match
                       ? 'text-accent'
                       : 'tone-critical'
@@ -471,7 +471,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline col-span-2 sm:col-span-1">
-                <div className="text-[10px] font-bold text-sub">
+                <div className="text-[13px] font-semibold text-sub">
                   Sceau HMAC
                 </div>
                 <div
@@ -489,7 +489,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               <div className="flex items-center gap-2 min-w-0">
                 <Link2 className="w-4 h-4 text-accent shrink-0" />
                 <div className="min-w-0 font-mono text-xs truncate">
-                  <span className="text-[10px] font-sans font-bold text-sub mr-2">
+                  <span className="text-xs font-sans font-bold text-sub mr-2">
                     Tête SHA-256 :
                   </span>
                   <span className="font-bold text-main">
@@ -502,7 +502,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 <button
                   type="button"
                   onClick={() => copyHeadHash(certificate.head_hash!)}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg surface-card text-sub hover:text-main transition cursor-pointer shrink-0"
+                  className="inline-flex items-center gap-1 text-[13px] font-semibold px-2.5 py-1 rounded-lg surface-card text-sub hover:text-main transition cursor-pointer shrink-0"
                 >
                   {copiedHash ? (
                     <>
@@ -522,7 +522,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
             {/* Anomalies forensiques éventuelles */}
             {certificate.errors.length > 0 && (
               <div className="rounded-xl p-3.5 border badge-critical space-y-1">
-                <div className="text-xs font-extrabold flex items-center gap-1.5">
+                <div className="text-[13px] font-bold flex items-center gap-1.5">
                   <ShieldAlert className="w-4 h-4 shrink-0" />
                   <span>Anomalies relevées ({certificate.errors.length})</span>
                 </div>
@@ -543,7 +543,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                   type="button"
                   aria-expanded={filesAccordionOpen}
                   onClick={() => setFilesAccordionOpen((prev) => !prev)}
-                  className="w-full px-4 py-2.5 surface-subtle hover:bg-[var(--bg-hover)] flex items-center justify-between gap-2 text-xs font-bold text-main transition cursor-pointer"
+                  className="w-full px-4 py-2.5 surface-subtle hover:bg-[var(--bg-hover)] flex items-center justify-between gap-2 text-[13px] font-semibold text-main transition cursor-pointer"
                 >
                   <span className="inline-flex items-center gap-2">
                     <FileCheck2 className="w-4 h-4 text-accent shrink-0" />
@@ -552,7 +552,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                       {certificate.files_checked.length})
                     </span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] text-sub">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-sub">
                     <span>{filesAccordionOpen ? 'Masquer' : 'Afficher'}</span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
@@ -565,7 +565,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 {filesAccordionOpen && (
                   <div className="overflow-x-auto border-t border-hairline">
                     <table className="w-full text-left text-xs">
-                      <thead className="surface-subtle text-[10px] text-sub border-b border-hairline">
+                      <thead className="surface-subtle text-xs text-sub border-b border-hairline">
                         <tr>
                           <th className="p-2.5">Pièce</th>
                           <th className="p-2.5">Taille</th>
@@ -590,17 +590,17 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                                       {f.filename}
                                     </div>
                                     {desc && (
-                                      <div className="text-[11px] text-sub">
+                                      <div className="text-xs text-sub">
                                         {desc}
                                       </div>
                                     )}
                                   </div>
                                 </div>
                               </td>
-                              <td className="p-2.5 font-mono text-[11px] text-sub whitespace-nowrap tabular-nums">
+                              <td className="p-2.5 font-mono text-xs text-sub whitespace-nowrap tabular-nums">
                                 {formatBytesFr(f.size_bytes)}
                               </td>
-                              <td className="p-2.5 font-mono text-[11px]">
+                              <td className="p-2.5 font-mono text-xs">
                                 {f.actual_sha256 ? (
                                   <div className="space-y-0.5">
                                     <div
@@ -624,7 +624,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                               </td>
                               <td className="p-2.5 text-right whitespace-nowrap">
                                 <span
-                                  className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                                  className={`inline-block px-2.5 py-0.5 rounded-full text-[13px] font-bold ${
                                     f.valid ? 'badge-success' : 'badge-critical'
                                   }`}
                                 >

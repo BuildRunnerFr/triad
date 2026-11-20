@@ -105,15 +105,15 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
 
       <dl className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-xl overflow-hidden border border-hairline bg-[var(--border-subtle)]">
         <div className="surface-card px-4 py-3">
-          <dt className="text-[11px] text-sub">Constats revus</dt>
+          <dt className="text-xs text-sub">Constats revus</dt>
           <dd className="text-xl font-extrabold text-main tabular-nums">{summary.total}</dd>
         </div>
         <div className="surface-card px-4 py-3">
-          <dt className="text-[11px] text-sub">Écarts</dt>
+          <dt className="text-xs text-sub">Écarts</dt>
           <dd className="text-xl font-extrabold text-main tabular-nums">{summary.gaps}</dd>
         </div>
         <div className="surface-card px-4 py-3">
-          <dt className="text-[11px] text-sub">À confirmer</dt>
+          <dt className="text-xs text-sub">À confirmer</dt>
           <dd
             className={`text-xl font-extrabold tabular-nums ${
               summary.toConfirm > 0 ? 'tone-warning' : 'text-main'
@@ -123,7 +123,7 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
           </dd>
         </div>
         <div className="surface-card px-4 py-3">
-          <dt className="text-[11px] text-sub">Arbitrages GRC</dt>
+          <dt className="text-xs text-sub">Arbitrages GRC</dt>
           <dd className="text-xl font-extrabold text-main tabular-nums">{summary.arbitrated}</dd>
         </div>
       </dl>
@@ -312,7 +312,7 @@ export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealed
 
       {shortHash && (
         <div data-seal-detail className="min-w-0">
-          <p className="text-[11px] text-sub">Empreinte de tête du registre</p>
+          <p className="text-xs text-sub">Empreinte de tête du registre</p>
           <p className="font-mono text-xs text-main inline-block w-[26ch] whitespace-nowrap overflow-hidden">
             <span aria-hidden="true">
               {animate && !decrypting && !staticOpen ? (
@@ -338,8 +338,8 @@ export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealed
 
       {sealedAt && (
         <div data-seal-detail>
-          <p className="text-[11px] text-sub">Signée le</p>
-          <p className="text-xs font-bold text-main tabular-nums">
+          <p className="text-xs text-sub">Signée le</p>
+          <p className="text-[13px] font-semibold text-main tabular-nums">
             {sealedAt.toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}
           </p>
         </div>
@@ -389,7 +389,7 @@ const DELIVERABLE_GROUPS: { title: string; items: { name: string; detail: string
 
 export const LockedDeliverablesList: React.FC = () => (
   <section aria-labelledby="locked-list-title" className="surface-panel rounded-2xl p-5 sm:p-6">
-    <h3 id="locked-list-title" className="text-base font-semibold text-main">
+    <h3 id="locked-list-title" className="text-lg font-semibold text-main">
       Ce que la signature débloque
     </h3>
     <p className="mt-1 text-xs text-sub">
@@ -398,7 +398,7 @@ export const LockedDeliverablesList: React.FC = () => (
     <div className="mt-4 space-y-4">
       {DELIVERABLE_GROUPS.map((group) => (
         <div key={group.title}>
-          <h4 className="text-xs font-semibold text-sub">{group.title}</h4>
+          <h4 className="text-[13px] font-semibold text-sub">{group.title}</h4>
           <ul className="mt-1.5 divide-y divide-[var(--border-subtle)] border-y border-hairline">
             {group.items.map((item) => (
               <li key={item.name} className="py-2 flex items-center justify-between gap-3">

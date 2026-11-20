@@ -73,6 +73,7 @@ import {
   type Nis2CoverageReport,
 } from '../utils/nis2Coverage';
 import { ForensicBundleVerifier } from './ForensicBundleVerifier';
+import { CustodyStrand } from './CustodyStrand';
 import { LockedDeliverablesList, SealBanner, ValidationAttestation } from './ValidationSeal';
 import type { ToastTone } from './ToastStack';
 
@@ -236,7 +237,7 @@ function renderInlineMarkdown(text: string): React.ReactNode {
       return (
         <code
           key={idx}
-          className="font-mono text-[11px] px-1.5 py-0.5 rounded surface-subtle text-accent break-all"
+          className="font-mono text-xs px-1.5 py-0.5 rounded surface-subtle text-accent break-all"
         >
           {token.slice(1, -1)}
         </code>
@@ -302,8 +303,8 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
           key={`tbl-${idx}`}
           className="overflow-x-auto rounded-xl border border-hairline my-2"
         >
-          <table className="w-full text-left text-[11px]">
-            <thead className="surface-subtle text-[10px] text-sub border-b border-hairline">
+          <table className="w-full text-left text-xs">
+            <thead className="surface-subtle text-xs text-sub border-b border-hairline">
               <tr>
                 {headers.map((h, hIdx) => (
                   <th key={hIdx} className="p-2 font-extrabold">
@@ -339,7 +340,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
       elements.push(
         <div
           key={idx}
-          className="text-xs font-bold text-main surface-subtle px-2.5 py-1.5 rounded-lg border border-hairline mt-2"
+          className="text-[13px] font-semibold text-main surface-subtle px-2.5 py-1.5 rounded-lg border border-hairline mt-2"
         >
           {renderInlineMarkdown(trimmed.slice(5))}
         </div>
@@ -350,7 +351,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
 
     if (trimmed.startsWith('### ')) {
       elements.push(
-        <h5 key={idx} className="text-xs font-extrabold text-main pt-1.5">
+        <h5 key={idx} className="text-[13px] font-bold text-main pt-1.5">
           {renderInlineMarkdown(trimmed.slice(4))}
         </h5>
       );
@@ -387,7 +388,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
       elements.push(
         <blockquote
           key={idx}
-          className="border border-[var(--warning-border)] bg-[var(--warning-bg)] px-3 py-1.5 rounded-lg text-[11px] text-sub leading-relaxed"
+          className="border border-[var(--warning-border)] bg-[var(--warning-bg)] px-3 py-1.5 rounded-lg text-xs text-sub leading-relaxed"
         >
           {renderInlineMarkdown(trimmed.replace(/^>\s*/, ''))}
         </blockquote>
@@ -410,7 +411,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
           key={idx}
           className="flex items-start gap-2 text-xs text-sub leading-relaxed pl-1"
         >
-          <span className="text-accent font-bold mt-0.5 shrink-0 font-mono text-[11px]">
+          <span className="text-accent font-bold mt-0.5 shrink-0 font-mono text-xs">
             {isCheckboxChecked ? '☑' : isCheckboxUnchecked ? '☐' : '•'}
           </span>
           <span className="min-w-0 break-words">
@@ -429,7 +430,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
           key={idx}
           className="flex items-start gap-2 text-xs text-sub leading-relaxed pl-1"
         >
-          <span className="font-mono text-[11px] font-extrabold text-accent mt-0.5 shrink-0 tabular-nums">
+          <span className="font-mono text-[13px] font-bold text-accent mt-0.5 shrink-0 tabular-nums">
             {numberedMatch[1]}.
           </span>
           <span className="min-w-0 break-words">
@@ -555,7 +556,7 @@ function renderTerraformHclPreview(hcl: string): React.ReactNode {
           return (
             <div
               key={sIdx}
-              className="rounded-xl p-3 surface-subtle edge-accent space-y-1 text-[11px] text-sub"
+              className="rounded-xl p-3 surface-subtle edge-accent space-y-1 text-xs text-sub"
             >
               {sec.comments.map((c, cIdx) => (
                 <div key={cIdx} className="leading-snug font-mono break-words">
@@ -573,23 +574,23 @@ function renderTerraformHclPreview(hcl: string): React.ReactNode {
           >
             <div className="px-3 py-2 surface-subtle border-b border-hairline flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                <span className="px-2 py-0.5 rounded surface-subtle border border-hairline text-main font-mono text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded surface-subtle border border-hairline text-main font-mono text-[13px] font-semibold">
                   {sec.blockType}
                 </span>
                 {sec.resourceType && (
-                  <span className="font-mono text-[11px] font-bold text-accent truncate">
+                  <span className="font-mono text-[13px] font-semibold text-accent truncate">
                     {sec.resourceType}
                   </span>
                 )}
                 {sec.resourceName && (
-                  <span className="font-mono text-[11px] text-main truncate">
+                  <span className="font-mono text-xs text-main truncate">
                     &quot;{sec.resourceName}&quot;
                   </span>
                 )}
               </div>
             </div>
             {sec.comments.length > 0 && (
-              <div className="px-3 py-2 border-b border-hairline text-[11px] text-sub space-y-0.5 bg-black/10">
+              <div className="px-3 py-2 border-b border-hairline text-xs text-sub space-y-0.5 bg-black/10">
                 {sec.comments.map((c, cIdx) => (
                   <div key={cIdx} className="leading-snug">
                     {c}
@@ -597,7 +598,7 @@ function renderTerraformHclPreview(hcl: string): React.ReactNode {
                 ))}
               </div>
             )}
-            <pre className="p-3 font-mono text-[11px] text-main overflow-x-auto leading-relaxed">
+            <pre className="p-3 font-mono text-xs text-main overflow-x-auto leading-relaxed">
               {sec.codeLines.join('\n')}
             </pre>
           </div>
@@ -1811,7 +1812,7 @@ export const SecurityAndDeliverablesView: React.FC<
           {!synthesis ? (
             <div className="surface-panel rounded-2xl p-8 text-center space-y-2">
               <Lock className="w-7 h-7 text-dim mx-auto" />
-              <h3 className="text-base font-extrabold text-main">
+              <h3 className="text-lg font-semibold text-main">
                 Aucun livrable ({mode})
               </h3>
               <p className="text-xs text-sub">
@@ -1834,7 +1835,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   type="button"
                   aria-expanded={showLockTests}
                   onClick={() => setShowLockTests((prev) => !prev)}
-                  className="w-full px-4 py-2.5 surface-subtle hover:bg-[var(--bg-hover)] flex items-center justify-between gap-2 text-xs font-bold text-sub hover:text-main transition cursor-pointer"
+                  className="w-full px-4 py-2.5 surface-subtle hover:bg-[var(--bg-hover)] flex items-center justify-between gap-2 text-[13px] font-semibold text-sub hover:text-main transition cursor-pointer"
                 >
                   <span className="inline-flex items-center gap-2">
                     <Lock className="w-3.5 h-3.5 tone-warning" />
@@ -1856,104 +1857,104 @@ export const SecurityAndDeliverablesView: React.FC<
                       type="button"
                       disabled={isExportingBundle}
                       onClick={exportProofBundle}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Dossier de Preuve (.zip)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       disabled={isExportingAnssi}
                       onClick={exportAnssiDraft}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Pré-Notification ANSSI (.md)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       disabled={isExportingCnilDraft}
                       onClick={exportCnilDraft}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Évaluation CNIL Art. 33 (.md)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       disabled={isExportingComex}
                       onClick={exportComexBrief}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Brief COMEX Art. 20 (.md)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       disabled={isExportingTerraform}
                       onClick={exportTerraformManifest}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Manifeste Terraform (.tf)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       disabled={isExportingInterviewGuide}
                       onClick={exportInterviewGuide}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Guide d&apos;Entretien (.md)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       disabled={isExportingRiskRegister}
                       onClick={exportRiskRegister}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Registre GRC (.md)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => void testLockedExport('report', 'Rapport Markdown (.md)')}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Rapport Exécutif (.md)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => void testLockedExport('mail', 'Courriel DSI (.txt)')}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Courriel DSI (.txt)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => void testLockedExport('csv', 'Matrice CSV (.csv)')}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Matrice GRC (.csv)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => void testLockedExport('json', 'Synthèse JSON (.json)')}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Synthèse Scellée (.json)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => void testLockedExport('playbook', 'Playbook gcloud (.sh)')}
-                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-bold text-xs px-3 py-2 rounded-lg transition cursor-pointer"
+                      className="inline-flex items-center justify-between gap-2 surface-card hover:border-strong text-sub hover:text-main font-semibold text-[13px] px-3 py-2 rounded-lg transition cursor-pointer"
                     >
                       <span className="truncate">Playbook gcloud (.sh)</span>
-                      <span className="font-mono text-[10px] tone-warning shrink-0">403</span>
+                      <span className="font-mono text-xs tone-warning shrink-0">403</span>
                     </button>
                   </div>
                 )}
@@ -1976,7 +1977,7 @@ export const SecurityAndDeliverablesView: React.FC<
               <div className="surface-panel rounded-2xl p-4 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-semibold text-main">Exporter les livrables</h3>
+                    <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">Exporter les livrables</h3>
                   </div>
 
                   {/* Groupe principal mis en avant */}
@@ -1985,7 +1986,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       type="button"
                       disabled={isExportingBundle}
                       onClick={exportProofBundle}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black text-xs font-extrabold transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black text-[13px] font-bold transition cursor-pointer"
                       title="Télécharger l'archive ZIP complète (12 pièces + MANIFEST_SHA256.txt)"
                     >
                       {isExportingBundle ? (
@@ -1999,7 +2000,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     <button
                       type="button"
                       onClick={() => window.print()}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[var(--deloitte)]/50 bg-[var(--accent-soft)] hover:bg-[var(--deloitte)] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[var(--deloitte)]/50 bg-[var(--accent-soft)] hover:bg-[var(--deloitte)] hover:text-black text-[13px] font-bold text-accent transition cursor-pointer"
                     >
                       <Printer className="w-3.5 h-3.5" />
                       <span>Imprimer / PDF</span>
@@ -2016,7 +2017,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }, 80);
                       }}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-semibold text-main transition cursor-pointer"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-accent" />
                       <span>Vérifier une archive (.zip)</span>
@@ -2027,7 +2028,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 {/* Exports unitaires regroupés (11) — le dossier de preuve complet est l'action principale */}
                 <div className="pt-3 border-t border-hairline grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-3">
                   <div>
-                    <h4 className="px-3 text-xs font-semibold text-sub">Réglementaire</h4>
+                    <h4 className="px-3 text-[13px] font-semibold text-sub">Réglementaire</h4>
                     <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
@@ -2080,7 +2081,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     </div>
                   </div>
                   <div>
-                    <h4 className="px-3 text-xs font-semibold text-sub">Mission</h4>
+                    <h4 className="px-3 text-[13px] font-semibold text-sub">Mission</h4>
                     <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
@@ -2145,7 +2146,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     </div>
                   </div>
                   <div>
-                    <h4 className="px-3 text-xs font-semibold text-sub">Données et preuves</h4>
+                    <h4 className="px-3 text-[13px] font-semibold text-sub">Données et preuves</h4>
                     <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
@@ -2166,7 +2167,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     </div>
                   </div>
                   <div>
-                    <h4 className="px-3 text-xs font-semibold text-sub">Remédiation</h4>
+                    <h4 className="px-3 text-[13px] font-semibold text-sub">Remédiation</h4>
                     <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
@@ -2208,7 +2209,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   role="tab"
                   aria-selected={previewSection === 'regulatory'}
                   onClick={() => setPreviewSection('regulatory')}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                     previewSection === 'regulatory'
                       ? 'seg-active'
                       : 'text-sub hover:text-main'
@@ -2222,7 +2223,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   role="tab"
                   aria-selected={previewSection === 'report'}
                   onClick={() => setPreviewSection('report')}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                     previewSection === 'report'
                       ? 'seg-active'
                       : 'text-sub hover:text-main'
@@ -2236,7 +2237,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   role="tab"
                   aria-selected={previewSection === 'mail'}
                   onClick={() => setPreviewSection('mail')}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                     previewSection === 'mail'
                       ? 'seg-active'
                       : 'text-sub hover:text-main'
@@ -2269,10 +2270,10 @@ export const SecurityAndDeliverablesView: React.FC<
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-[var(--deloitte)] text-black">
+                      <span className="inline-block px-3 py-1 rounded-full text-[13px] font-bold bg-[var(--deloitte)] text-black">
                         VALIDÉ PAR CONSULTANT ✓
                       </span>
-                      <div className="text-[10px] font-mono text-slate-400 mt-2">
+                      <div className="text-xs font-mono text-slate-400 mt-2">
                         Empreinte : #{latestHash.slice(0, 16)}
                       </div>
                     </div>
@@ -2307,7 +2308,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                           <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                            <div className="text-[10px] font-bold text-slate-500">
+                            <div className="text-[13px] font-semibold text-slate-500">
                               Indice Maturité
                             </div>
                             <div className="font-mono text-sm font-extrabold text-slate-900 mt-0.5 tabular-nums">
@@ -2319,7 +2320,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             </div>
                           </div>
                           <div className="p-3 rounded-xl bg-[var(--critical-bg)] border border-[var(--critical-border)]">
-                            <div className="text-[10px] font-bold text-[var(--critical-text)]">
+                            <div className="text-[13px] font-semibold text-[var(--critical-text)]">
                               Ruptures du Dit
                             </div>
                             <div className="font-mono text-sm font-extrabold text-[var(--critical-text)] mt-0.5 tabular-nums">
@@ -2327,7 +2328,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             </div>
                           </div>
                           <div className="p-3 rounded-xl bg-[var(--warning-bg)] border border-[var(--warning-border)]">
-                            <div className="text-[10px] font-bold text-[var(--warning-text)]">
+                            <div className="text-[13px] font-semibold text-[var(--warning-text)]">
                               Nouveaux Écarts
                             </div>
                             <div className="font-mono text-sm font-extrabold text-[var(--warning-text)] mt-0.5 tabular-nums">
@@ -2335,7 +2336,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             </div>
                           </div>
                           <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                            <div className="text-[10px] font-bold text-slate-500">
+                            <div className="text-[13px] font-semibold text-slate-500">
                               Écarts Confirmés
                             </div>
                             <div className="font-mono text-sm font-extrabold text-slate-900 mt-0.5 tabular-nums">
@@ -2345,8 +2346,8 @@ export const SecurityAndDeliverablesView: React.FC<
                         </div>
 
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
-                          <table className="w-full text-left text-[11px]">
-                            <thead className="bg-[var(--bg-subtle)] text-[10px] text-slate-600 border-b border-slate-200">
+                          <table className="w-full text-left text-xs">
+                            <thead className="bg-[var(--bg-subtle)] text-xs text-slate-600 border-b border-slate-200">
                               <tr>
                                 <th className="p-2.5">Réf.</th>
                                 <th className="p-2.5">Domaine NIS2</th>
@@ -2363,7 +2364,7 @@ export const SecurityAndDeliverablesView: React.FC<
                                   <td className="p-2.5 font-semibold text-slate-800">
                                     {item.theme}
                                   </td>
-                                  <td className="p-2.5 font-mono text-[10px] text-slate-600">
+                                  <td className="p-2.5 font-mono text-xs text-slate-600">
                                     {item.avant ? item.avant.statut : 'absent'} →{' '}
                                     {item.apres ? item.apres.statut : 'absent'}
                                   </td>
@@ -2396,11 +2397,11 @@ export const SecurityAndDeliverablesView: React.FC<
                                   ({f.exigence_nis2})
                                 </span>
                               </div>
-                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-900 text-white">
+                              <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-900 text-white">
                                 {f.statut} • {f.gravite}
                               </span>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-slate-700 pt-1">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-slate-700 pt-1">
                               <div className="bg-slate-50 p-2.5 rounded-lg">
                                 <strong className="text-slate-900">Dit :</strong>{' '}
                                 {f.dit ? `« ${f.dit.extrait} »` : 'N/A'}
@@ -2418,7 +2419,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               <strong>Action corrective :</strong> {f.recommandation}
                             </div>
                             {f.decision_grc && (
-                              <div className="text-[11px] bg-[var(--bg-subtle)] border border-slate-200 rounded-lg px-3 py-2 text-slate-800">
+                              <div className="text-xs bg-[var(--bg-subtle)] border border-slate-200 rounded-lg px-3 py-2 text-slate-800">
                                 <strong>Arbitrage GRC :</strong>{' '}
                                 {f.decision_grc.decision_label}
                                 {f.decision_grc.porteur
@@ -2433,7 +2434,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               </div>
                             )}
                             {f.commande_correction && (
-                              <pre className="p-2.5 rounded-lg bg-slate-900 text-[var(--accent-text)] font-mono text-[10px] overflow-x-auto">
+                              <pre className="p-2.5 rounded-lg bg-slate-900 text-[var(--accent-text)] font-mono text-xs overflow-x-auto">
                                 {f.commande_correction}
                               </pre>
                             )}
@@ -2449,8 +2450,8 @@ export const SecurityAndDeliverablesView: React.FC<
                           {comparisonSummary ? '4.' : '3.'} Feuille de Route Opérationnelle 30 / 60 / 90 Jours
                         </h3>
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
-                          <table className="w-full text-left text-[11px]">
-                            <thead className="bg-[var(--bg-subtle)] text-[10px] text-slate-600 border-b border-slate-200">
+                          <table className="w-full text-left text-xs">
+                            <thead className="bg-[var(--bg-subtle)] text-xs text-slate-600 border-b border-slate-200">
                               <tr>
                                 <th className="p-2.5">Horizon</th>
                                 <th className="p-2.5">Constat</th>
@@ -2461,22 +2462,22 @@ export const SecurityAndDeliverablesView: React.FC<
                             <tbody className="divide-y divide-slate-200">
                               {printableRoadmapItems.map((it) => (
                                 <tr key={it.finding.id} className="print-avoid-break">
-                                  <td className="p-2.5 font-mono font-extrabold text-[10px] whitespace-nowrap text-[#457009]">
+                                  <td className="p-2.5 font-mono font-bold text-[13px] whitespace-nowrap text-[#457009]">
                                     {HORIZON_META[it.horizon].badge}
                                   </td>
                                   <td className="p-2.5 font-semibold text-slate-900">
                                     <div>
                                       {it.finding.id} — {it.finding.theme}
                                     </div>
-                                    <div className="text-[10px] text-slate-500 font-normal">
+                                    <div className="text-xs text-slate-500 font-normal">
                                       {it.finding.exigence_nis2}
                                     </div>
                                   </td>
                                   <td className="p-2.5 text-slate-700 whitespace-nowrap">
-                                    <div className="font-mono font-bold text-[10px]">
+                                    <div className="font-mono font-semibold text-[13px]">
                                       {it.workloadEstimate}
                                     </div>
-                                    <div className="text-[10px] text-slate-500">
+                                    <div className="text-xs text-slate-500">
                                       {it.ownerRole}
                                     </div>
                                   </td>
@@ -2505,7 +2506,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               : '3.'}{' '}
                             Synthèse de Couverture Réglementaire NIS2 (Art. 21 &amp; 23)
                           </h3>
-                          <span className="font-mono text-[11px] font-extrabold text-[#457009] tabular-nums">
+                          <span className="font-mono text-[13px] font-bold text-[#457009] tabular-nums">
                             Couverture : {nis2CoverageReport.coverageRatePct}% (
                             {nis2CoverageReport.coveredCount}/
                             {nis2CoverageReport.totalRequirements} exigences évaluées)
@@ -2513,8 +2514,8 @@ export const SecurityAndDeliverablesView: React.FC<
                         </div>
 
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
-                          <table className="w-full text-left text-[11px]">
-                            <thead className="bg-[var(--bg-subtle)] text-[10px] text-slate-600 border-b border-slate-200">
+                          <table className="w-full text-left text-xs">
+                            <thead className="bg-[var(--bg-subtle)] text-xs text-slate-600 border-b border-slate-200">
                               <tr>
                                 <th className="p-2">Article</th>
                                 <th className="p-2">Exigence Directive (UE) 2022/2555</th>
@@ -2535,12 +2536,12 @@ export const SecurityAndDeliverablesView: React.FC<
                                     </td>
                                     <td className="p-2 whitespace-nowrap">
                                       <span
-                                        className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${meta.printCls}`}
+                                        className={`inline-block px-2 py-0.5 rounded-full text-[13px] font-semibold ${meta.printCls}`}
                                       >
                                         {meta.label}
                                       </span>
                                     </td>
-                                    <td className="p-2 text-right font-mono text-[10px] font-bold text-slate-700 whitespace-nowrap">
+                                    <td className="p-2 text-right font-mono text-[13px] font-semibold text-slate-700 whitespace-nowrap">
                                       {item.finding_ids.length > 0
                                         ? item.finding_ids.join(', ')
                                         : '—'}
@@ -2555,7 +2556,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     )}
 
                     {/* Pied de page de scellement cryptographique */}
-                    <div className="print-avoid-break pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500">
+                    <div className="print-avoid-break pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500">
                       <span>
                         Registre d&apos;audit SHA-256 : {auditLog.length} bloc(s) vérifié(s) • Aucune écriture Cloud exécutée
                       </span>
@@ -2570,7 +2571,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   <div className="p-4 border-b border-hairline flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-accent" />
-                      <h3 className="text-sm font-extrabold text-main">
+                      <h3 className="text-base font-semibold text-main">
                         Courriel DSI ({synthesis.client || 'CH de Valmont'})
                       </h3>
                     </div>
@@ -2578,7 +2579,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       <button
                         type="button"
                         onClick={() => copyText('mail', mailText)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-card text-xs font-bold text-main cursor-pointer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-card text-[13px] font-semibold text-main cursor-pointer"
                       >
                         {copiedKey === 'mail' ? (
                           <>
@@ -2610,7 +2611,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   </div>
 
                   <div className="px-4 py-2.5 surface-subtle border-b border-hairline text-xs flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-[10px] font-bold text-dim">
+                    <span className="font-mono text-[13px] font-semibold text-dim">
                       Objet :
                     </span>
                     <span className="font-semibold text-main">
@@ -2650,7 +2651,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       role="tab"
                       aria-selected={regulatoryDocTab === 'anssi'}
                       onClick={() => setRegulatoryDocTab('anssi')}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[13px] font-bold transition cursor-pointer ${
                         regulatoryDocTab === 'anssi'
                           ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
@@ -2664,7 +2665,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       role="tab"
                       aria-selected={regulatoryDocTab === 'comex'}
                       onClick={() => setRegulatoryDocTab('comex')}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[13px] font-bold transition cursor-pointer ${
                         regulatoryDocTab === 'comex'
                           ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
@@ -2678,7 +2679,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       role="tab"
                       aria-selected={regulatoryDocTab === 'terraform'}
                       onClick={() => setRegulatoryDocTab('terraform')}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[13px] font-bold transition cursor-pointer ${
                         regulatoryDocTab === 'terraform'
                           ? 'bg-[var(--info-text)] text-black shadow-sm'
                           : 'surface-card text-sub hover:text-main'
@@ -2692,7 +2693,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       role="tab"
                       aria-selected={regulatoryDocTab === 'interview'}
                       onClick={() => setRegulatoryDocTab('interview')}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[13px] font-bold transition cursor-pointer ${
                         regulatoryDocTab === 'interview'
                           ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
@@ -2706,7 +2707,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       role="tab"
                       aria-selected={regulatoryDocTab === 'grc'}
                       onClick={() => setRegulatoryDocTab('grc')}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[13px] font-bold transition cursor-pointer ${
                         regulatoryDocTab === 'grc'
                           ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
@@ -2720,7 +2721,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       role="tab"
                       aria-selected={regulatoryDocTab === 'cnil'}
                       onClick={() => setRegulatoryDocTab('cnil')}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[13px] font-bold transition cursor-pointer ${
                         regulatoryDocTab === 'cnil'
                           ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
@@ -2748,7 +2749,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       )}
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <h3 className="text-sm font-extrabold text-main truncate">
+                          <h3 className="text-base font-semibold text-main truncate">
                             {regulatoryDocTab === 'comex'
                               ? 'Brief COMEX — Gouvernance Art. 20'
                               : regulatoryDocTab === 'terraform'
@@ -2770,7 +2771,7 @@ export const SecurityAndDeliverablesView: React.FC<
                                 : regulatoryDocTab === 'terraform'
                                 ? 'badge-info'
                                 : 'badge-warning'
-                            } px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0`}
+                            } px-2 py-0.5 rounded-full text-[13px] font-bold shrink-0`}
                           >
                             {regulatoryDocTab === 'comex'
                               ? 'Art. 20 & 34'
@@ -2798,7 +2799,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           type="button"
                           aria-pressed={anssiViewMode === 'formatted'}
                           onClick={() => setAnssiViewMode('formatted')}
-                          className={`px-2 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
+                          className={`px-2 py-1 rounded-md text-[13px] font-semibold transition cursor-pointer ${
                             anssiViewMode === 'formatted'
                               ? 'seg-active'
                               : 'text-sub hover:text-main'
@@ -2810,7 +2811,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           type="button"
                           aria-pressed={anssiViewMode === 'raw'}
                           onClick={() => setAnssiViewMode('raw')}
-                          className={`px-2 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
+                          className={`px-2 py-1 rounded-md text-[13px] font-semibold transition cursor-pointer ${
                             anssiViewMode === 'raw'
                               ? 'seg-active'
                               : 'text-sub hover:text-main'
@@ -2874,7 +2875,7 @@ export const SecurityAndDeliverablesView: React.FC<
                                 'Brouillon de pré-notification ANSSI Art. 23 prêt à être collé'
                               )
                         }
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-card disabled:opacity-50 text-xs font-bold text-main cursor-pointer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-card disabled:opacity-50 text-[13px] font-semibold text-main cursor-pointer"
                       >
                         {copiedKey === regulatoryDocTab ? (
                           <>
@@ -2970,70 +2971,70 @@ export const SecurityAndDeliverablesView: React.FC<
                   <div className="px-4 py-2 surface-subtle border-b border-hairline flex flex-wrap items-center gap-1.5">
                     {regulatoryDocTab === 'comex' ? (
                       <>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)]" />
                           Art. 20 • Direction Générale
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--rupture)]" />
                           Art. 34 §4 • 10 M€ / 2 % CA
                         </span>
                       </>
                     ) : regulatoryDocTab === 'terraform' ? (
                       <>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--info-text)]" />
                           Revue PR GitOps &amp; terraform plan
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)]" />
                           0 terraform apply auto
                         </span>
                       </>
                     ) : regulatoryDocTab === 'interview' ? (
                       <>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)]" />
                           DSI • Admin Cloud • RSSI / DPO • Achats
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           Preuves attendues
                         </span>
                       </>
                     ) : regulatoryDocTab === 'grc' ? (
                       <>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)]" />
                           Art. 20 &amp; 21 §1 • Homologation
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           Risques résiduels &amp; échéances
                         </span>
                       </>
                     ) : regulatoryDocTab === 'cnil' ? (
                       <>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--rupture)]" />
                           RGPD Art. 33 ≤ 72 h
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           Art. 34 • HDS Art. 9
                         </span>
                       </>
                     ) : (
                       <>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--rupture)]" />
                           24 h • Alerte précoce
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning-text)]" />
                           72 h • Évaluation
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[10px] font-bold text-main">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md surface-card text-[13px] font-semibold text-main">
                           <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)]" />
                           1 mois • Rapport final
                         </span>
@@ -3052,7 +3053,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         anssiViewMode === 'formatted' ? (
                           renderAnssiMarkdownPreview(effectiveComexBrief)
                         ) : (
-                          <pre className="font-mono text-[11px] text-main whitespace-pre-wrap break-words leading-relaxed">
+                          <pre className="font-mono text-xs text-main whitespace-pre-wrap break-words leading-relaxed">
                             {effectiveComexBrief}
                           </pre>
                         )
@@ -3065,7 +3066,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             type="button"
                             disabled={isExportingComex}
                             onClick={exportComexBrief}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-bold text-main transition cursor-pointer"
                           >
                             <Download className="w-3.5 h-3.5 text-accent" />
                             <span>Brief COMEX Art. 20 (.md)</span>
@@ -3082,7 +3083,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         anssiViewMode === 'formatted' ? (
                           renderTerraformHclPreview(effectiveTerraformHcl)
                         ) : (
-                          <pre className="font-mono text-[11px] text-main whitespace-pre-wrap break-words leading-relaxed">
+                          <pre className="font-mono text-xs text-main whitespace-pre-wrap break-words leading-relaxed">
                             {effectiveTerraformHcl}
                           </pre>
                         )
@@ -3095,7 +3096,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             type="button"
                             disabled={isExportingTerraform}
                             onClick={exportTerraformManifest}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-bold text-main transition cursor-pointer"
                           >
                             <Download className="w-3.5 h-3.5 text-[var(--info-text)]" />
                             <span>Manifeste Terraform (.tf)</span>
@@ -3115,7 +3116,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         anssiViewMode === 'formatted' ? (
                           renderAnssiMarkdownPreview(effectiveInterviewGuide)
                         ) : (
-                          <pre className="font-mono text-[11px] text-main whitespace-pre-wrap break-words leading-relaxed">
+                          <pre className="font-mono text-xs text-main whitespace-pre-wrap break-words leading-relaxed">
                             {effectiveInterviewGuide}
                           </pre>
                         )
@@ -3128,7 +3129,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             type="button"
                             disabled={isExportingInterviewGuide}
                             onClick={exportInterviewGuide}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-bold text-main transition cursor-pointer"
                           >
                             <Download className="w-3.5 h-3.5 text-accent" />
                             <span>Guide d&apos;Entretien (.md)</span>
@@ -3147,7 +3148,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         anssiViewMode === 'formatted' ? (
                           renderAnssiMarkdownPreview(effectiveRiskRegister)
                         ) : (
-                          <pre className="font-mono text-[11px] text-main whitespace-pre-wrap break-words leading-relaxed">
+                          <pre className="font-mono text-xs text-main whitespace-pre-wrap break-words leading-relaxed">
                             {effectiveRiskRegister}
                           </pre>
                         )
@@ -3160,7 +3161,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             type="button"
                             disabled={isExportingRiskRegister}
                             onClick={exportRiskRegister}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-bold text-main transition cursor-pointer"
                           >
                             <Download className="w-3.5 h-3.5 text-accent" />
                             <span>Registre GRC (.md)</span>
@@ -3179,7 +3180,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         anssiViewMode === 'formatted' ? (
                           renderAnssiMarkdownPreview(effectiveCnilDraft)
                         ) : (
-                          <pre className="font-mono text-[11px] text-main whitespace-pre-wrap break-words leading-relaxed">
+                          <pre className="font-mono text-xs text-main whitespace-pre-wrap break-words leading-relaxed">
                             {effectiveCnilDraft}
                           </pre>
                         )
@@ -3192,7 +3193,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             type="button"
                             disabled={isExportingCnilDraft}
                             onClick={exportCnilDraft}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-bold text-main transition cursor-pointer"
                           >
                             <Download className="w-3.5 h-3.5 text-[var(--warning-text)]" />
                             <span>Évaluation CNIL Art. 33 (.md)</span>
@@ -3208,7 +3209,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       anssiViewMode === 'formatted' ? (
                         renderAnssiMarkdownPreview(effectiveAnssiDraft)
                       ) : (
-                        <pre className="font-mono text-[11px] text-main whitespace-pre-wrap break-words leading-relaxed">
+                        <pre className="font-mono text-xs text-main whitespace-pre-wrap break-words leading-relaxed">
                           {effectiveAnssiDraft}
                         </pre>
                       )
@@ -3221,7 +3222,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           type="button"
                           disabled={isExportingAnssi}
                           onClick={exportAnssiDraft}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-[13px] font-bold text-main transition cursor-pointer"
                         >
                           <Download className="w-3.5 h-3.5 text-accent" />
                           <span>Pré-Notification ANSSI (.md)</span>
@@ -3260,21 +3261,21 @@ export const SecurityAndDeliverablesView: React.FC<
           >
             <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-hairline">
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-sm sm:text-base font-extrabold text-main">
+                <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
                   Posture d&apos;Auto-Sécurité
                 </h3>
                 {securityPosture && (
-                  <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
+                  <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[13px] font-bold">
                     <ShieldCheck className="w-3 h-3" />
                     {securityPosture.status}
                   </span>
                 )}
-                <span className="badge-warning px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
+                <span className="badge-warning px-2.5 py-0.5 rounded-full text-[13px] font-bold">
                   {securityPosture?.locked_exports_count ?? 12} verrous humains HTTP 403
                 </span>
                 {securityPosture && (
                   <span
-                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[13px] font-bold ${
                       securityPosture.hmac_signing_enabled
                         ? 'badge-success'
                         : 'surface-subtle text-sub border border-hairline'
@@ -3296,7 +3297,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   disabled={isDownloadingSbom}
                   onClick={() => void downloadRuntimeSbom()}
                   title="Télécharger l'attestation logicielle SBOM CycloneDX 1.5 (.json) (/api/security/sbom)"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-xs font-extrabold text-main transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[13px] font-bold text-main transition cursor-pointer"
                 >
                   {isDownloadingSbom ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
@@ -3309,7 +3310,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   type="button"
                   disabled={isLoadingPosture}
                   onClick={() => void refreshSecurityPosture()}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-xs font-bold text-main transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[13px] font-semibold text-main transition cursor-pointer"
                 >
                   <RefreshCw
                     className={`w-3.5 h-3.5 text-accent ${
@@ -3353,7 +3354,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         </span>
                         <div className="flex items-center gap-1.5 shrink-0">
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                            className={`px-2 py-0.5 rounded-full text-[13px] font-bold ${
                               barrier.active
                                 ? 'badge-success'
                                 : 'surface-subtle text-sub border border-hairline'
@@ -3370,11 +3371,11 @@ export const SecurityAndDeliverablesView: React.FC<
                           )}
                         </div>
                       </div>
-                      <div className="text-xs font-extrabold text-main leading-snug">
+                      <div className="text-[13px] font-bold text-main leading-snug">
                         {barrier.label}
                       </div>
                       {isOpen && barrier.detail && (
-                        <p className="text-[11px] text-sub pt-2 border-t border-hairline leading-relaxed">
+                        <p className="text-xs text-sub pt-2 border-t border-hairline leading-relaxed">
                           {barrier.detail}
                         </p>
                       )}
@@ -3400,7 +3401,7 @@ export const SecurityAndDeliverablesView: React.FC<
               role="tab"
               aria-selected={douanierInnerTab === 'dlp'}
               onClick={() => setDouanierInnerTab('dlp')}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                 douanierInnerTab === 'dlp'
                   ? 'seg-active'
                   : 'text-sub hover:text-main'
@@ -3414,7 +3415,7 @@ export const SecurityAndDeliverablesView: React.FC<
               role="tab"
               aria-selected={douanierInnerTab === 'matrix'}
               onClick={() => setDouanierInnerTab('matrix')}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                 douanierInnerTab === 'matrix'
                   ? 'seg-active'
                   : 'text-sub hover:text-main'
@@ -3428,10 +3429,10 @@ export const SecurityAndDeliverablesView: React.FC<
           {douanierInnerTab === 'dlp' ? (
             <div className="surface-panel rounded-2xl p-5 space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm sm:text-base font-extrabold text-main">
+                <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
                   Pièces Filtrées par le Douanier ({docs.length})
                 </h3>
-                <span className="text-[11px] font-mono text-dim">
+                <span className="text-xs font-mono text-dim">
                   DLP &amp; Anti-Injection
                 </span>
               </div>
@@ -3467,10 +3468,10 @@ export const SecurityAndDeliverablesView: React.FC<
                               <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
                             )}
                             <div className="min-w-0">
-                              <div className="text-xs font-extrabold text-main truncate">
+                              <div className="text-[13px] font-bold text-main truncate">
                                 {doc.nom_fichier}
                               </div>
-                              <div className="text-[11px] text-sub truncate">
+                              <div className="text-xs text-sub truncate">
                                 {isQuar
                                   ? doc.raison_quarantaine || 'Quarantaine injection'
                                   : 'Assaini ✓'}
@@ -3479,7 +3480,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           </div>
 
                           {doc.contenu_masque && (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-accent shrink-0">
+                            <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-accent shrink-0">
                               <Eye className="w-3.5 h-3.5" /> Inspecter
                             </span>
                           )}
@@ -3490,7 +3491,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             {maskEntries.map(([k, count]) => (
                               <span
                                 key={k}
-                                className="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold surface-subtle text-main"
+                                className="px-2 py-0.5 rounded-md font-mono text-[13px] font-semibold surface-subtle text-main"
                               >
                                 [{k}] ×{count}
                               </span>
@@ -3506,17 +3507,17 @@ export const SecurityAndDeliverablesView: React.FC<
           ) : (
             <div className="surface-panel rounded-2xl p-5 space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm sm:text-base font-extrabold text-main">
+                <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
                   Matrice des Droits par Agent
                 </h3>
-                <span className="badge-critical px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
+                <span className="badge-critical px-2.5 py-0.5 rounded-full text-[13px] font-bold">
                   0 écriture GCP
                 </span>
               </div>
 
               <div className="overflow-x-auto rounded-xl border border-hairline">
                 <table className="w-full text-left text-xs">
-                  <thead className="surface-subtle text-[10px] text-sub border-b border-hairline">
+                  <thead className="surface-subtle text-xs text-sub border-b border-hairline">
                     <tr>
                       <th className="p-3">Agent</th>
                       <th className="p-3">Outils Autorisés</th>
@@ -3528,7 +3529,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {PERMISSION_MATRIX.map((row) => (
                       <tr key={row.agent}>
                         <td className="p-3 font-extrabold text-main">{row.agent}</td>
-                        <td className="p-3 font-mono text-[11px] text-sub">
+                        <td className="p-3 font-mono text-xs text-sub">
                           {row.tools}
                         </td>
                         <td className="p-3 text-center font-bold">
@@ -3566,7 +3567,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 role="tab"
                 aria-selected={chainInnerTab === 'ledger'}
                 onClick={() => setChainInnerTab('ledger')}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                   chainInnerTab === 'ledger'
                     ? 'seg-active'
                     : 'text-sub hover:text-main'
@@ -3575,7 +3576,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 <Link2 className="w-3.5 h-3.5" />
                 <span>Registre SHA-256</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[10px] tabular-nums ${
+                  className={`px-1.5 py-0.5 rounded-full text-xs tabular-nums ${
                     chainInnerTab === 'ledger'
                       ? 'bg-black/20'
                       : 'surface-subtle text-sub'
@@ -3590,7 +3591,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 role="tab"
                 aria-selected={chainInnerTab === 'verifier'}
                 onClick={() => setChainInnerTab('verifier')}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold transition cursor-pointer ${
                   chainInnerTab === 'verifier'
                     ? 'seg-active'
                     : 'text-sub hover:text-main'
@@ -3599,7 +3600,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 <FolderArchive className="w-3.5 h-3.5" />
                 <span>Vérificateur .zip</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[10px] ${
+                  className={`px-1.5 py-0.5 rounded-full text-xs ${
                     chainInnerTab === 'verifier'
                       ? 'bg-black/20'
                       : 'surface-subtle text-sub'
@@ -3611,14 +3612,14 @@ export const SecurityAndDeliverablesView: React.FC<
             </div>
 
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-bold ${
                 globalChainValid ? 'badge-success' : 'badge-critical'
               }`}
             >
               {globalChainValid ? (
                 <>
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Chaîne ({totalChainEntries}) : INTÈGRE ✓</span>
+                  <span>Chaîne intègre · {totalChainEntries} maillons</span>
                 </>
               ) : (
                 <>
@@ -3635,11 +3636,11 @@ export const SecurityAndDeliverablesView: React.FC<
             <div className="surface-panel rounded-2xl p-5 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="text-sm sm:text-base font-extrabold text-main">
-                    Registre Chaîné SHA-256
+                  <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
+                    Registre chaîné SHA-256
                   </h3>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold tabular-nums ${
+                    className={`px-2.5 py-0.5 rounded-full text-[13px] font-bold tabular-nums ${
                       hasActiveLogFilters
                         ? 'seg-active'
                         : 'surface-subtle text-main'
@@ -3654,7 +3655,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     type="button"
                     disabled={auditLog.length === 0 || isVerifyingCrypto}
                     onClick={handleVerifyInBrowser}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-45 disabled:cursor-not-allowed text-xs font-extrabold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-45 disabled:cursor-not-allowed text-[13px] font-bold text-main transition cursor-pointer"
                   >
                     {isVerifyingCrypto ? (
                       <Loader2 className="w-3.5 h-3.5 text-accent animate-spin" />
@@ -3669,7 +3670,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       type="button"
                       disabled={isVerifyingCrypto}
                       onClick={handleRestoreIntegrity}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-[13px] font-bold transition cursor-pointer"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Restaurer</span>
@@ -3679,7 +3680,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       type="button"
                       disabled={auditLog.length === 0 || isVerifyingCrypto}
                       onClick={handleSimulateForensicTamper}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl badge-warning hover:opacity-90 disabled:opacity-45 disabled:cursor-not-allowed text-xs font-extrabold transition cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl badge-warning hover:opacity-90 disabled:opacity-45 disabled:cursor-not-allowed text-[13px] font-bold transition cursor-pointer"
                       title="Altère 1 octet en mémoire locale pour démontrer la détection SHA-256"
                     >
                       <FlaskConical className="w-3.5 h-3.5" />
@@ -3699,7 +3700,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         key={k}
                         type="button"
                         onClick={() => setChainFilter(k)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg text-[13px] font-semibold transition cursor-pointer ${
                           chainFilter === k
                             ? 'seg-active'
                             : 'text-sub hover:text-main'
@@ -3798,7 +3799,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     disabled={!hasActiveLogFilters}
                     onClick={resetLogFilters}
                     title="Réinitialiser les filtres"
-                    className={`inline-flex items-center justify-center p-1.5 rounded-lg text-xs font-bold transition ${
+                    className={`inline-flex items-center justify-center p-1.5 rounded-lg text-[13px] font-semibold transition ${
                       hasActiveLogFilters
                         ? 'surface-card hover:border-[var(--deloitte)] text-main cursor-pointer'
                         : 'surface-card text-dim opacity-50 cursor-not-allowed'
@@ -3817,7 +3818,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     <span className="font-extrabold">
                       Altération mémoire Bloc #{String(forensicTamper.blockNum).padStart(2, '0')}
                     </span>
-                    <span className="font-mono text-[11px] opacity-90">
+                    <span className="font-mono text-xs opacity-90">
                       ({forensicTamper.fieldLabel} :{' '}
                       <span className="line-through">{forensicTamper.beforeSnippet}</span> →{' '}
                       <strong>{forensicTamper.afterSnippet}</strong> • serveur intact)
@@ -3826,7 +3827,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   <button
                     type="button"
                     onClick={handleRestoreIntegrity}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition cursor-pointer shrink-0"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-[13px] font-bold transition cursor-pointer shrink-0"
                   >
                     <RotateCcw className="w-3 h-3" />
                     <span>Restaurer</span>
@@ -3856,14 +3857,41 @@ export const SecurityAndDeliverablesView: React.FC<
                           'Discordance WebCrypto SHA-256 détectée'}
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] px-2.5 py-0.5 rounded-lg bg-black/15">
+                  <span className="font-mono text-xs px-2.5 py-0.5 rounded-lg bg-black/15">
                     #{browserVerifyReport.headHash.slice(0, 18)}…
                   </span>
                 </div>
               )}
 
+              {displayedAuditLog.length > 0 && (
+                <section aria-labelledby="custody-strand-title" className="space-y-3 pt-1">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h4 id="custody-strand-title" className="text-[15px] font-semibold text-main">
+                      Chaîne de garde
+                    </h4>
+                    <p className="text-xs text-sub">
+                      De la genèse au dernier maillon, lecture en serpentin
+                    </p>
+                  </div>
+                  <CustodyStrand
+                    entries={displayedAuditLog}
+                    report={browserVerifyReport}
+                    tamperedBlock={forensicTamper?.blockNum ?? null}
+                    serverValid={forensicTamper ? true : globalChainValid}
+                    matched={
+                      hasActiveLogFilters
+                        ? new Set(reversedChain.map(({ blockNum }) => blockNum))
+                        : null
+                    }
+                  />
+                  <h4 className="text-[15px] font-semibold text-main pt-3">
+                    Registre détaillé
+                  </h4>
+                </section>
+              )}
+
               {reversedChain.length === 0 ? (
-                <p className="text-xs text-dim py-8 text-center">
+                <p className="text-[13px] text-sub py-8 text-center">
                   Aucun bloc correspondant.
                 </p>
               ) : (
@@ -3879,7 +3907,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     return (
                       <div
                         key={`${entry.hash}-${blockNum}`}
-                        className={`p-3 rounded-xl border font-mono text-xs ${
+                        className={`p-3.5 rounded-xl border text-[13px] ${
                           isTamperedTarget || isCryptoInvalid || isViolation
                             ? 'badge-critical'
                             : isQuar
@@ -3891,48 +3919,48 @@ export const SecurityAndDeliverablesView: React.FC<
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="px-2 py-0.5 rounded surface-subtle text-[10px] font-bold text-sub">
+                            <span className="px-2 py-0.5 rounded surface-subtle text-xs font-semibold text-sub tabular-nums">
                               #{String(blockNum).padStart(2, '0')}
                             </span>
                             {isTamperedTarget && (
-                              <span className="px-2 py-0.5 rounded-full badge-critical text-[10px] font-sans font-extrabold">
-                                ALTÉRÉ
+                              <span className="px-2 py-0.5 rounded-full badge-critical text-xs font-bold">
+                                Altéré
                               </span>
                             )}
                             {entry.mode && (
-                              <span className="px-1.5 py-0.5 rounded surface-subtle text-[10px] font-bold text-main">
+                              <span className="px-1.5 py-0.5 rounded surface-subtle text-xs font-semibold text-main">
                                 {entry.mode}
                               </span>
                             )}
                             {entry.run_id && (
-                              <span className="px-1.5 py-0.5 rounded surface-subtle text-[10px] text-dim">
+                              <span className="px-1.5 py-0.5 rounded surface-subtle font-mono text-xs text-sub">
                                 lot:{entry.run_id.slice(0, 8)}
                               </span>
                             )}
-                            <span className="font-extrabold text-accent">
+                            <span className="text-[14px] font-semibold text-accent">
                               {entry.agent}
                             </span>
-                            <span className="font-bold text-main">
+                            <span className="text-[14px] font-semibold text-main">
                               → {entry.action}
                             </span>
                           </div>
-                          <span className="text-[10px] text-dim">
+                          <span className="text-xs text-sub tabular-nums">
                             {entry.ts?.slice(11, 19)} UTC
                           </span>
                         </div>
 
-                        <div className="text-[11px] text-sub mt-1 break-all line-clamp-2">
+                        <div className="font-mono text-xs text-sub mt-1.5 break-all">
                           {typeof entry.details === 'object'
                             ? JSON.stringify(entry.details)
                             : String(entry.details)}
                         </div>
 
-                        <div className="mt-2 pt-1.5 border-t border-hairline flex flex-wrap items-center justify-between gap-2 text-[10px] text-dim">
-                          <span>préc.: {entry.prev_hash.slice(0, 18)}…</span>
+                        <div className="mt-2 pt-1.5 border-t border-hairline flex flex-wrap items-center justify-between gap-2 text-xs text-sub">
+                          <span>précédent <span className="font-mono">{entry.prev_hash.slice(0, 18)}…</span></span>
                           <div className="flex flex-wrap items-center gap-2">
                             {blockProof && (
                               <span
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold font-sans ${
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
                                   blockProof.valid
                                     ? 'badge-success'
                                     : 'badge-critical'
@@ -3960,8 +3988,8 @@ export const SecurityAndDeliverablesView: React.FC<
                                 )}
                               </span>
                             )}
-                            <span className="text-accent font-semibold">
-                              sha256: {entry.hash.slice(0, 20)}…
+                            <span className="text-accent font-semibold font-mono">
+                              sha256 {entry.hash.slice(0, 20)}…
                             </span>
                           </div>
                         </div>
