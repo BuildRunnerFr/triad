@@ -49,3 +49,4 @@ Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, 
 - 06:26 — Investigation › Triangle : sommets aux couleurs de pilier en casse phrase, verdict sans majuscules, 3 colonnes à filets, puces F-00x neutres (rupture en texte vermillon), « Ouvrir le constat » en action secondaire. Vérifié 1440 clair / 390 sombre.
 - 06:27 — Balayage mobile 390 (5 vues, clair) : aucune casse, plus aucune majuscule décorative dans le code.
 - 07:27 — Couverture › Continuité / Prestataires / Référentiels : libellés de niveau en casse phrase (Critique, Exposé, Immuable…), pastilles rouge plein → badge-critical, valeurs RTO/RPO en grotesque sur 2 lignes au lieu de mono tronquée.
+- 07:29 — Référentiels HDS/ISO/RGPD : intitulé d'exigence complet (plus de troncature), article en sous-ligne, citations en grotesque au lieu de mono.

@@ -323,17 +323,19 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                       className="row-interactive cursor-pointer"
                     >
                       <td className="py-2.5 px-3 align-middle max-w-[270px]">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-start gap-1.5">
                           {isOpen ? (
                             <ChevronDown className="w-3.5 h-3.5 text-accent shrink-0" />
                           ) : (
                             <ChevronRight className="w-3.5 h-3.5 text-dim shrink-0" />
                           )}
-                          <span className="font-mono text-[10px] font-extrabold px-1.5 py-0.5 rounded surface-subtle text-accent shrink-0">
-                            {entry.nis2_article}
-                          </span>
-                          <span className="font-bold text-main truncate">
-                            {entry.nis2_title}
+                          <span className="min-w-0">
+                            <span className="block font-semibold text-main leading-snug">
+                              {entry.nis2_title}
+                            </span>
+                            <span className="block text-[11px] text-sub tabular-nums">
+                              {entry.nis2_article}
+                            </span>
                           </span>
                         </div>
                       </td>
@@ -341,7 +343,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                       {(frameworkFilter === 'ALL' ||
                         frameworkFilter === 'HDS') && (
                         <td className="py-2.5 px-3 align-middle">
-                          <span className="font-mono text-[11px] font-bold text-main">
+                          <span className="text-xs text-main">
                             {entry.hds_ref}
                           </span>
                         </td>
@@ -350,7 +352,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                       {(frameworkFilter === 'ALL' ||
                         frameworkFilter === 'ISO27001') && (
                         <td className="py-2.5 px-3 align-middle">
-                          <span className="font-mono text-[11px] font-bold tone-info">
+                          <span className="text-xs tone-info">
                             {entry.iso27001_ref}
                           </span>
                         </td>
@@ -360,7 +362,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                         frameworkFilter === 'RGPD') && (
                         <td className="py-2.5 px-3 align-middle">
                           <div className="flex flex-wrap items-center gap-1">
-                            <span className="font-mono text-[11px] font-bold text-main">
+                            <span className="text-xs text-main">
                               {entry.rgpd_ref}
                             </span>
                             {entry.cnil_applicable && (
@@ -431,7 +433,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                           className="px-4 py-3 bg-[var(--bg-subtle)] space-y-2.5"
                         >
                           <div className="space-y-1">
-                            <div className="text-[10px] font-mono font-bold text-dim">
+                            <div className="text-[11px] font-semibold text-dim">
                               {entry.id} • {entry.domain} — {entry.nis2_title}
                             </div>
                             {entry.summary && (
