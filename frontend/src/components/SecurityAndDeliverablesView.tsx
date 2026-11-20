@@ -1840,8 +1840,8 @@ export const SecurityAndDeliverablesView: React.FC<
                     <Lock className="w-3.5 h-3.5 tone-warning" />
                     <span>Vérifier les verrous un par un (HTTP 403)</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[10px]">
-                    <span>12 routes</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs tabular-nums">
+                    <span>12 exports</span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
                         showLockTests ? 'rotate-180 text-accent' : ''

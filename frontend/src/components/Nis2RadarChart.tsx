@@ -72,6 +72,8 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
     return Math.round(data.reduce((s, d) => s + d.ecart, 0) / data.length);
   }, [data]);
 
+  // Écran étroit : rayon réduit pour que les libellés d'axes ne soient pas rognés
+  const narrow = typeof window !== 'undefined' && window.innerWidth < 640;
   const gridStroke = theme === 'dark' ? 'rgba(238,242,238,0.12)' : 'rgba(20,26,22,0.14)';
   const labelFill = theme === 'dark' ? '#A9B5AD' : '#46504A';
   // Déclaré = couleur du Dit ; Réel vérifié = couleur du Réel (teintes des piliers)
@@ -79,7 +81,7 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
   const reelStroke = theme === 'dark' ? '#9BD03A' : '#2D7A0C';
 
   return (
-    <div className="surface-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+    <section className="pt-5 border-t border-hairline flex flex-col justify-between h-full">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <h3 className="text-base font-semibold text-main">Déclaré face au réel</h3>
 
@@ -91,11 +93,11 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
 
       <div className="w-full h-[270px]">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="52%" outerRadius="72%" data={data}>
+          <RadarChart cx="50%" cy="52%" outerRadius={narrow ? '52%' : '72%'} data={data}>
             <PolarGrid stroke={gridStroke} />
             <PolarAngleAxis
               dataKey="domain"
-              tick={{ fill: labelFill, fontSize: 11, fontWeight: 600 }}
+              tick={{ fill: labelFill, fontSize: narrow ? 10 : 11, fontWeight: 600 }}
             />
             <PolarRadiusAxis
               angle={90}
@@ -104,6 +106,7 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
               axisLine={false}
             />
             <Radar
+              isAnimationActive={false}
               name="Déclaré (Dit & Écrit)"
               dataKey="declare"
               stroke={declareStroke}
@@ -113,6 +116,7 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
               fillOpacity={0.14}
             />
             <Radar
+              isAnimationActive={false}
               name="Vérifié (Réel Cloud & Preuves)"
               dataKey="reel"
               stroke={reelStroke}
@@ -148,6 +152,6 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
         </div>
         <span className="font-mono text-dim">Art. 21 &amp; 23</span>
       </div>
-    </div>
+    </section>
   );
 };

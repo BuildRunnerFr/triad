@@ -176,7 +176,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
           {syncState === 'synced' && (
             <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
               <ShieldCheck className="w-3 h-3" />
-              <span>API synchronisée</span>
+              <span>Données serveur à jour</span>
             </span>
           )}
           {syncState === 'loading' && (

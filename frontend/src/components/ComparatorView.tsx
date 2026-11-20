@@ -254,8 +254,8 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                   : 'En attente'}
               </div>
             </div>
-            <span className="font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full surface-subtle text-main">
-              {avantSynthesis ? 'Prête ✓' : 'Requise'}
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full surface-subtle text-main">
+              {avantSynthesis ? 'Prête' : 'À lancer'}
             </span>
           </div>
 
@@ -272,8 +272,8 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                   : 'En attente'}
               </div>
             </div>
-            <span className="font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full surface-subtle text-main">
-              {apresSynthesis ? 'Prête ✓' : 'Requise'}
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full surface-subtle text-main">
+              {apresSynthesis ? 'Prête' : 'À lancer'}
             </span>
           </div>
         </div>

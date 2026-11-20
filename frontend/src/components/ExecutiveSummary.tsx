@@ -347,32 +347,38 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
       {/* CHIFFRE-TITRE ÉDITORIAL : la contradiction dite en une phrase, chiffres intégrés au texte */}
       <section aria-labelledby="cockpit-lede" className="pt-1 pb-6 border-b border-hairline">
         <div className="flex flex-wrap items-start justify-between gap-x-10 gap-y-5">
-          <div className="min-w-0 max-w-4xl">
-            <p className="text-sm text-sub">
-              {synthesis.client || 'Centre Hospitalier de Valmont'} · Phase{' '}
-              {mode === 'APRES' ? 'APRÈS' : 'AVANT'} entretiens · {total} constat{total > 1 ? 's' : ''}
-            </p>
-            <h2
-              id="cockpit-lede"
-              className="mt-2 text-[1.75rem] sm:text-[2.35rem] leading-[1.12] font-semibold tracking-[-0.025em] text-main"
-            >
-              <span className="text-[var(--rupture)] font-bold tabular-nums">
-                <CountUp to={contradicted} from={firstReveal ? 0 : contradicted} duration={0.7} trigger="load" />
-              </span>{' '}
-              {ledeSubject.unit}
-              {contradicted > 1 ? 's' : ''} {ledeSubject.owner} sur{' '}
-              <span className="tabular-nums">{ledeSubject.base}</span>{' '}
-              {contradicted > 1 ? 'sont contredites' : 'est contredite'} par la configuration réelle
-              {critiquesContredits > 0 ? (
-                <>
-                  , dont{' '}
-                  <span className="text-[var(--rupture)] font-bold tabular-nums">{critiquesContredits}</span> critique
-                  {critiquesContredits > 1 ? 's' : ''}.
-                </>
-              ) : (
-                '.'
+          <div className="min-w-0 max-w-5xl flex items-start gap-5 sm:gap-7">
+            {/* Numéral autonome + annotation reliée par un filet (geste éditorial) */}
+            <div className="shrink-0 flex flex-col items-start">
+              <span
+                aria-hidden="true"
+                className="block text-[5.5rem] sm:text-[7.5rem] leading-[0.82] font-semibold tracking-[-0.05em] text-[var(--rupture)] tabular-nums"
+              >
+                {contradicted}
+              </span>
+              {critiquesContredits > 0 && (
+                <span className="mt-2 flex items-center gap-2 text-xs font-semibold text-[var(--rupture)]">
+                  <span aria-hidden="true" className="w-6 h-px bg-[var(--rupture)]" />
+                  dont {critiquesContredits} critique{critiquesContredits > 1 ? 's' : ''}
+                </span>
               )}
-            </h2>
+            </div>
+            <div className="min-w-0 pt-1">
+              <h2
+                id="cockpit-lede"
+                className="text-[1.6rem] sm:text-[2.6rem] leading-[1.08] font-semibold tracking-[-0.028em] text-main"
+              >
+                <span className="sr-only">{contradicted} </span>
+                {ledeSubject.unit}
+                {contradicted > 1 ? 's' : ''} {ledeSubject.owner} sur{' '}
+                <span className="tabular-nums">{ledeSubject.base}</span>{' '}
+                {contradicted > 1 ? 'sont contredites' : 'est contredite'} par la configuration réelle.
+              </h2>
+              <p className="mt-3 text-sm text-sub">
+                {synthesis.client || 'Centre Hospitalier de Valmont'} · phase {mode === 'APRES' ? 'APRÈS' : 'AVANT'}{' '}
+                entretiens · {total} constat{total > 1 ? 's' : ''}
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -429,7 +435,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         <section aria-labelledby="ruptures-title" className="xl:col-span-8 surface-panel rounded-2xl overflow-hidden">
           <header className="px-4 sm:px-5 pt-4 pb-3 border-b border-hairline flex flex-wrap items-end justify-between gap-3">
-            <div>
+            <div className="min-w-0">
               <h3 id="ruptures-title" className="text-base font-semibold text-main">
                 Ruptures, par gravité
               </h3>
@@ -650,13 +656,13 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           <div className="max-w-[1320px] mx-auto px-6 py-8 lg:px-12 lg:py-12 space-y-10">
             <header className="flex flex-wrap items-start justify-between gap-6 pb-6 border-b border-hairline">
               <div className="min-w-0">
-                <p className="text-base text-sub">
-                  Présentation au comité de direction · {comexSimulation.art34_exposure.entity_category} · Phase{' '}
-                  {mode === 'APRES' ? 'APRÈS' : 'AVANT'} entretiens
-                </p>
-                <h2 className="mt-1 text-3xl lg:text-4xl font-semibold tracking-[-0.025em] text-main">
+                <h2 className="text-3xl lg:text-4xl font-semibold tracking-[-0.025em] text-main">
                   {synthesis.client || 'Centre Hospitalier de Valmont'} — arbitrage NIS2
                 </h2>
+                <p className="mt-1 text-base text-sub">
+                  Présentation au comité de direction · {comexSimulation.art34_exposure.entity_category} · phase{' '}
+                  {mode === 'APRES' ? 'APRÈS' : 'AVANT'} entretiens
+                </p>
               </div>
               <button
                 type="button"

@@ -989,7 +989,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                               setFocusedFinding(f);
                               onSelectFinding(f);
                             }}
-                            className={`row-interactive cursor-pointer border-l-4 ${meta.border} ${
+                            className={`row-interactive cursor-pointer ${
                               isFocused ? 'bg-[var(--accent-soft)]/30' : ''
                             }`}
                           >
@@ -1007,7 +1007,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                             <tr className="surface-card">
                               <td
                                 colSpan={row.getVisibleCells().length}
-                                className="px-4 pb-4 border-l-4 border-l-[var(--deloitte)]"
+                                className="px-4 pb-4 bg-[var(--bg-subtle)]"
                               >
                                 {renderEvidenceBlock(f)}
                               </td>

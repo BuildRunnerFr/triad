@@ -149,7 +149,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
           {syncState === 'synced' && (
             <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
               <ShieldCheck className="w-3 h-3" />
-              <span>API synchronisée</span>
+              <span>Données serveur à jour</span>
             </span>
           )}
           {syncState === 'loading' && (
@@ -428,7 +428,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                       <tr className="surface-subtle">
                         <td
                           colSpan={visibleColsCount}
-                          className="px-4 py-3 border-l-4 border-l-[var(--deloitte)] space-y-2.5"
+                          className="px-4 py-3 bg-[var(--bg-subtle)] space-y-2.5"
                         >
                           <div className="space-y-1">
                             <div className="text-[10px] font-mono font-bold text-dim">

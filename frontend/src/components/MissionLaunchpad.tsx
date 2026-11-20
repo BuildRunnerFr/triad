@@ -320,15 +320,14 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
       <section aria-labelledby="mission-title" className="pt-1 pb-6 border-b border-hairline">
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
           <div className="min-w-0">
-            <p className="text-sm text-sub">Mission NIS2 · entité essentielle, secteur santé</p>
             <h2
               id="mission-title"
-              className="mt-1 text-[1.9rem] sm:text-[2.4rem] leading-[1.1] font-semibold tracking-[-0.025em] text-main"
+              className="text-[1.9rem] sm:text-[2.4rem] leading-[1.1] font-semibold tracking-[-0.025em] text-main"
             >
               {clientName || 'Centre Hospitalier de Valmont'}
             </h2>
             <p className="mt-2 text-sm text-sub">
-              Directive NIS2, articles 21 et 23 · Sondes Google Cloud en lecture seule
+              Mission NIS2 · entité essentielle, secteur santé · articles 21 et 23 · sondes Google Cloud en lecture seule
             </p>
           </div>
 

@@ -56,7 +56,7 @@ export const CloudTopologyViz: React.FC<CloudTopologyVizProps> = ({
     findByKeyword('audit log');
 
   return (
-    <div className="surface-panel rounded-2xl p-5 flex flex-col justify-between h-full">
+    <div className="pt-5 border-t border-hairline flex flex-col justify-between h-full">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
           <h3 className="text-base font-semibold text-main">
@@ -288,8 +288,8 @@ export const CloudTopologyViz: React.FC<CloudTopologyVizProps> = ({
             {proof?.service_account || 'triad-auditor@gcp.iam'}
           </code>
         </div>
-        <span className="badge-success font-mono text-[10px] px-2 py-0.5 rounded font-semibold">
-          403 lecture métier ✓
+        <span className="badge-success text-xs px-2 py-0.5 rounded font-semibold" title="La sonde lit la configuration, jamais les données (accès métier refusé, HTTP 403)">
+          Lecture seule vérifiée
         </span>
       </div>
     </div>

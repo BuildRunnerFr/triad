@@ -1286,8 +1286,8 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
               <Lock className="w-3 h-3 text-accent shrink-0" />
               <span>{proof?.service_account || 'triad-auditor@gcp.iam'}</span>
             </span>
-            <span className="badge-success px-2 py-0.5 rounded font-bold">
-              403 lecture métier ✓
+            <span className="badge-success px-2 py-0.5 rounded font-semibold" title="La sonde lit la configuration, jamais les données (accès métier refusé, HTTP 403)">
+              Lecture seule vérifiée
             </span>
           </div>
         </div>
@@ -1297,7 +1297,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       <div
         role="group"
         aria-label="Filtrer les actifs de la topologie"
-        className="absolute top-2.5 left-2.5 flex flex-wrap items-center gap-1 z-10"
+        className="absolute top-2.5 left-2.5 right-36 sm:right-auto flex flex-wrap items-center gap-1 z-10"
       >
         {(
           [

@@ -291,28 +291,28 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
               <h3 className="text-sm sm:text-base font-extrabold text-main">
                 Couverture NIS2 — Art. 21 &amp; 23
               </h3>
-              <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
+              <span className="text-xs text-sub tabular-nums">
                 {report.totalRequirements} exigences • {mode}
               </span>
             </div>
 
             {syncState === 'synced' && (
-              <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+              <span className="inline-flex items-center gap-1 text-xs text-sub">
                 <ShieldCheck className="w-3 h-3" />
-                <span>API synchronisée</span>
+                <span>Données serveur à jour</span>
               </span>
             )}
             {syncState === 'loading' && (
-              <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono">
+              <span className="inline-flex items-center gap-1 text-xs text-sub">
                 <RefreshCw className="w-3 h-3 animate-spin" />
                 <span>Sync…</span>
               </span>
             )}
           </div>
 
-          {/* Barre KPI compacte aérée */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="surface-card rounded-xl p-3.5 space-y-1.5">
+          {/* Chiffres de couverture séparés par des filets (pas de cartes) */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 border-t border-hairline">
+            <div className="pt-3 pb-1 pr-4 pl-4 first:pl-0 border-l border-hairline first:border-l-0 [&:nth-child(3)]:max-lg:border-l-0 [&:nth-child(3)]:max-lg:pl-0 space-y-1">
               <div className="flex items-baseline justify-between gap-2">
                 <span className="text-xs font-semibold text-sub">
                   Exigences évaluées
@@ -337,21 +337,21 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
               </div>
             </div>
 
-            <div className="surface-card rounded-xl p-3.5 space-y-1">
+            <div className="pt-3 pb-1 pr-4 pl-4 first:pl-0 border-l border-hairline first:border-l-0 [&:nth-child(3)]:max-lg:border-l-0 [&:nth-child(3)]:max-lg:pl-0 space-y-1">
               <div className="text-xs font-semibold text-sub">
                 Conformes
               </div>
-              <div className="text-xl font-extrabold font-mono tone-success tabular-nums">
+              <div className="text-xl font-semibold tone-success tabular-nums">
                 {report.counts.conforme}
               </div>
               <div className="text-[11px] text-sub">Validées par preuve</div>
             </div>
 
-            <div className="surface-card rounded-xl p-3.5 space-y-1">
+            <div className="pt-3 pb-1 pr-4 pl-4 first:pl-0 border-l border-hairline first:border-l-0 [&:nth-child(3)]:max-lg:border-l-0 [&:nth-child(3)]:max-lg:pl-0 space-y-1">
               <div className="text-xs font-semibold text-sub">
                 Partiels
               </div>
-              <div className="text-xl font-extrabold font-mono tone-warning tabular-nums">
+              <div className="text-xl font-semibold tone-warning tabular-nums">
                 {partielsCount}
               </div>
               <div className="text-[11px] text-sub tabular-nums">
@@ -359,11 +359,11 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
               </div>
             </div>
 
-            <div className="surface-card rounded-xl p-3.5 space-y-1">
+            <div className="pt-3 pb-1 pr-4 pl-4 first:pl-0 border-l border-hairline first:border-l-0 [&:nth-child(3)]:max-lg:border-l-0 [&:nth-child(3)]:max-lg:pl-0 space-y-1">
               <div className="text-xs font-semibold text-sub">
                 Écarts
               </div>
-              <div className="text-xl font-extrabold font-mono tone-critical tabular-nums">
+              <div className="text-xl font-semibold tone-critical tabular-nums">
                 {gapsCount}
               </div>
               <div className="text-[11px] text-sub tabular-nums">
@@ -422,7 +422,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
           ) : (
             <div className="overflow-x-auto rounded-xl border border-hairline">
               <table className="w-full text-left text-xs">
-                <thead className="surface-subtle text-[10px] uppercase tracking-wider text-sub border-b border-hairline">
+                <thead className="surface-subtle text-xs font-semibold text-sub border-b border-hairline">
                   <tr>
                     <th className="py-2.5 px-3 whitespace-nowrap">Article</th>
                     <th className="py-2.5 px-3">Intitulé</th>
@@ -453,7 +453,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                                 e.stopPropagation();
                                 toggleRow(item.id);
                               }}
-                              className="inline-flex items-center gap-1.5 font-mono font-extrabold text-main text-xs cursor-pointer"
+                              className="inline-flex items-center gap-1.5 font-semibold text-main text-sm tabular-nums cursor-pointer"
                             >
                               {isExpanded ? (
                                 <ChevronDown className="w-3.5 h-3.5 text-accent shrink-0" />
@@ -521,7 +521,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                           <tr className="surface-subtle">
                             <td
                               colSpan={4}
-                              className="px-4 py-3 border-l-4 border-l-[var(--deloitte)]"
+                              className="px-4 py-3 bg-[var(--bg-subtle)]"
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                                 <div className="space-y-1">
