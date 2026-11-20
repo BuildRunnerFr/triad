@@ -51,3 +51,4 @@ Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, 
 - 07:27 — Couverture › Continuité / Prestataires / Référentiels : libellés de niveau en casse phrase (Critique, Exposé, Immuable…), pastilles rouge plein → badge-critical, valeurs RTO/RPO en grotesque sur 2 lignes au lieu de mono tronquée.
 - 07:29 — Référentiels HDS/ISO/RGPD : intitulé d'exigence complet (plus de troncature), article en sous-ligne, citations en grotesque au lieu de mono.
 - 08:26 — Fin de la boucle : 30 commits sur redesign/nuit, release-check vert. Non poussé, non déployé (décision utilisateur).
+- 11:27 — Lot 1 (agents) : relevé topographique en shader derrière le chiffre du Cockpit ; Livrables au plancher 12 px + brin de la chaîne de garde SHA-256 (maillons emboîtés, rupture fendue en vermillon). Déployé.
