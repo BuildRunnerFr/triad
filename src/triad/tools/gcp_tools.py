@@ -156,6 +156,15 @@ def gcp_check_backup_protection() -> list[dict[str, Any]]:
     return results
 
 
+def _mask_human_member(member: str) -> str:
+    """Masque l'adresse des comptes humains (user:/group:) : la preuve reste exploitable sans exposer de donnée personnelle."""
+    kind, sep, ident = member.partition(":")
+    if not sep or kind not in {"user", "group"} or "@" not in ident:
+        return member
+    local, _, domain = ident.partition("@")
+    return f"{kind}:{local[:1]}***@{domain}"
+
+
 def gcp_check_iam_privileges() -> dict[str, Any]:
     """Détecte les rôles primitifs excessifs (owner/editor) et clés SA non tournées (NIS2 Art. 21 §2 i/j)."""
     settings = get_settings()
@@ -189,7 +198,7 @@ def gcp_check_iam_privileges() -> dict[str, Any]:
                     overprivileged.append(
                         {
                             "role": role,
-                            "member": member,
+                            "member": _mask_human_member(member),
                             "non_conforme": True,
                             "raison": f"Rôle primitif excessif ({role}) accordé sur le projet",
                         }

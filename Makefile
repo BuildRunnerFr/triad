@@ -11,6 +11,8 @@ VERTEX_LOCATION ?= global
 GEMINI_MODEL    ?= gemini-4-hydrogen
 SERVICE_NAME    ?= triad
 SA_NAME      ?= triad-auditor
+# Sondes GCP réelles en production (false) ; true = instantané figé de secours (data/gcp_snapshot.json)
+USE_GCP_SNAPSHOT ?= false
 ALLOW_UNAUTH ?= false
 SMOKE_PORT   ?= 18080
 BUNDLE       ?=
@@ -191,7 +193,7 @@ deploy: ## Déploie TRIAD sur Cloud Run (europe-west9) via Cloud Build & Dockerf
 		--port 8080 \
 		--cpu-boost \
 		$$SA_FLAG \
-		--set-env-vars "PROJECT_ID=$(PROJECT_ID),VERTEX_LOCATION=$(VERTEX_LOCATION),GEMINI_MODEL=$(GEMINI_MODEL),LOG_FORMAT=json" \
+		--set-env-vars "PROJECT_ID=$(PROJECT_ID),VERTEX_LOCATION=$(VERTEX_LOCATION),GEMINI_MODEL=$(GEMINI_MODEL),USE_GCP_SNAPSHOT=$(USE_GCP_SNAPSHOT),LOG_FORMAT=json" \
 		$(AUTH_FLAG)
 
 deploy-check: ## Vérifie la santé HTTP (accès public direct prioritaire puis IAM ID_TOKEN) du service Cloud Run déployé
