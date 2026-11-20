@@ -347,3 +347,71 @@ export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealed
     </div>
   );
 };
+
+/* -------------------------------------------------------------------------- */
+/* Ce que la signature débloque (12 livrables verrouillés)                    */
+/* -------------------------------------------------------------------------- */
+
+const DELIVERABLE_GROUPS: { title: string; items: { name: string; detail: string }[] }[] = [
+  {
+    title: 'Réglementaire',
+    items: [
+      { name: 'Pré-notification ANSSI', detail: 'NIS2 Art. 23' },
+      { name: 'Évaluation CNIL', detail: 'RGPD Art. 33 et 34' },
+      { name: 'Brief COMEX', detail: 'NIS2 Art. 20' },
+    ],
+  },
+  {
+    title: 'Mission',
+    items: [
+      { name: 'Rapport d’audit NIS2', detail: 'Format A4' },
+      { name: 'Courriel au DSI', detail: 'Texte prêt à envoyer' },
+      { name: 'Guide d’entretien contradictoire', detail: 'Questions AVANT / APRÈS' },
+      { name: 'Registre des arbitrages GRC', detail: 'Décisions et porteurs' },
+    ],
+  },
+  {
+    title: 'Données et preuves',
+    items: [
+      { name: 'Synthèse scellée', detail: 'JSON signé HMAC' },
+      { name: 'Matrice GRC', detail: 'CSV' },
+      { name: 'Dossier de preuve', detail: 'Archive .zip, 12 pièces et manifeste SHA-256' },
+    ],
+  },
+  {
+    title: 'Remédiation',
+    items: [
+      { name: 'Manifeste Terraform', detail: 'À revoir en pull request, jamais appliqué' },
+      { name: 'Playbook gcloud', detail: 'Exécution à blanc (dry-run)' },
+    ],
+  },
+];
+
+export const LockedDeliverablesList: React.FC = () => (
+  <section aria-labelledby="locked-list-title" className="surface-panel rounded-2xl p-5 sm:p-6">
+    <h3 id="locked-list-title" className="text-base font-semibold text-main">
+      Ce que la signature débloque
+    </h3>
+    <p className="mt-1 text-xs text-sub">
+      Chaque export répond 403 tant que la synthèse n&apos;est pas signée, et se reverrouille si un arbitrage change.
+    </p>
+    <div className="mt-4 space-y-4">
+      {DELIVERABLE_GROUPS.map((group) => (
+        <div key={group.title}>
+          <h4 className="text-xs font-semibold text-sub">{group.title}</h4>
+          <ul className="mt-1.5 divide-y divide-[var(--border-subtle)] border-y border-hairline">
+            {group.items.map((item) => (
+              <li key={item.name} className="py-2 flex items-center justify-between gap-3">
+                <span className="min-w-0">
+                  <span className="block text-sm text-main">{item.name}</span>
+                  <span className="block text-xs text-sub">{item.detail}</span>
+                </span>
+                <Padlock className="w-4 h-4 text-[var(--warning-text)] shrink-0" />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+);

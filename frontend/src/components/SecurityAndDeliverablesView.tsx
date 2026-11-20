@@ -73,7 +73,7 @@ import {
   type Nis2CoverageReport,
 } from '../utils/nis2Coverage';
 import { ForensicBundleVerifier } from './ForensicBundleVerifier';
-import { SealBanner, ValidationAttestation } from './ValidationSeal';
+import { LockedDeliverablesList, SealBanner, ValidationAttestation } from './ValidationSeal';
 import type { ToastTone } from './ToastStack';
 
 export type DeliverablesSubTab =
@@ -1755,110 +1755,54 @@ export const SecurityAndDeliverablesView: React.FC<
       transition={{ duration: 0.22 }}
       className="space-y-5"
     >
-      {/* Barre de sous-onglets claire et aérée */}
-      <div className="surface-panel rounded-2xl p-2 flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setSubTab('deliverables')}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-              subTab === 'deliverables'
-                ? 'bg-[var(--deloitte)] text-black'
-                : 'text-sub hover:text-main'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            <span>Exports &amp; Aperçu</span>
-            {validated ? (
-              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/20">
-                Scellé ✓
-              </span>
-            ) : (
-              <Lock className="w-3.5 h-3.5 opacity-75" />
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSubTab('roadmap')}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-              subTab === 'roadmap'
-                ? 'bg-[var(--deloitte)] text-black'
-                : 'text-sub hover:text-main'
-            }`}
-          >
-            <Target className="w-4 h-4" />
-            <span>Plan 30/60/90j</span>
-            {synthesis && (
-              <span
-                className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums ${
-                  subTab === 'roadmap'
-                    ? 'bg-black/20'
-                    : 'surface-subtle text-sub'
+      {/* Sous-onglets : vocabulaire de consultant, sélection neutre, outil de démonstration à part */}
+      <div className="border-b border-hairline flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+        <div role="tablist" aria-label="Sections livrables et gouvernance" className="flex flex-wrap items-end gap-1 -mb-px">
+          {(
+            [
+              ['deliverables', 'Livrables', FileText, validated ? '12' : null],
+              ['roadmap', 'Plan de remédiation', Target, synthesis ? String(synthesis.findings.length) : null],
+              ['douanier', 'Posture et permissions', ShieldCheck, String(docs.length)],
+              ['chain', 'Intégrité des preuves', Link2, String(auditLog.length)],
+            ] as const
+          ).map(([key, label, Icon, count]) => {
+            const active = subTab === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setSubTab(key)}
+                className={`inline-flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold border-b-2 transition cursor-pointer ${
+                  active
+                    ? 'border-[var(--text-primary)] text-main'
+                    : 'border-transparent text-sub hover:text-main hover:border-[var(--border-strong)]'
                 }`}
               >
-                {synthesis.findings.length}
-              </span>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSubTab('douanier')}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-              subTab === 'douanier'
-                ? 'bg-[var(--deloitte)] text-black'
-                : 'text-sub hover:text-main'
-            }`}
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span>Posture &amp; Permissions</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums ${
-                subTab === 'douanier'
-                  ? 'bg-black/20'
-                  : 'surface-subtle text-sub'
-              }`}
-            >
-              {docs.length}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setSubTab('chain')}
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
-              subTab === 'chain'
-                ? 'bg-[var(--deloitte)] text-black'
-                : 'text-sub hover:text-main'
-            }`}
-          >
-            <Link2 className="w-4 h-4" />
-            <span>Chaîne SHA-256 &amp; Vérificateur .zip</span>
-            <span
-              className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums ${
-                subTab === 'chain'
-                  ? 'bg-black/20'
-                  : 'surface-subtle text-sub'
-              }`}
-            >
-              {auditLog.length}
-            </span>
-          </button>
+                <Icon className="w-4 h-4" />
+                <span>{label}</span>
+                {key === 'deliverables' && !validated && <Lock className="w-3.5 h-3.5 text-[var(--warning-text)]" aria-label="verrouillés" />}
+                {count && <span className="text-xs text-sub tabular-nums">{count}</span>}
+              </button>
+            );
+          })}
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            onSimulateViolation();
-            setSubTab('chain');
-            setChainInnerTab('ledger');
-          }}
-          className="badge-critical inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:opacity-90 text-xs font-bold transition cursor-pointer"
-        >
-          <Flame className="w-3.5 h-3.5" />
-          <span>Simuler blocage (delete_bucket)</span>
-        </button>
+        {subTab === 'chain' && (
+          <button
+            type="button"
+            onClick={() => {
+              onSimulateViolation();
+              setChainInnerTab('ledger');
+            }}
+            title="Démonstration : un agent tente une action non autorisée (suppression de bucket), qui doit être bloquée et journalisée"
+            className="mb-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--critical-border)] text-[var(--critical-text)] hover:bg-[var(--critical-bg)] text-xs font-semibold transition cursor-pointer"
+          >
+            <Flame className="w-3.5 h-3.5" />
+            <span>Tester le blocage d&apos;une action interdite</span>
+          </button>
+        )}
       </div>
 
       {/* VOLET 1 : EXPORTS & APERÇU À LA DEMANDE */}
@@ -1876,7 +1820,8 @@ export const SecurityAndDeliverablesView: React.FC<
             </div>
           ) : !validated ? (
             /* Carte verrou épurée pré-validation */
-            <div className="surface-panel rounded-2xl p-6 sm:p-7 max-w-3xl mx-auto space-y-5">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+            <div className="xl:col-span-7 surface-panel rounded-2xl p-5 sm:p-7 space-y-5">
               <ValidationAttestation
                 synthesis={synthesis}
                 mode={mode}
@@ -1893,7 +1838,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 >
                   <span className="inline-flex items-center gap-2">
                     <Lock className="w-3.5 h-3.5 tone-warning" />
-                    <span>Tester les verrous HTTP 403 individuels</span>
+                    <span>Vérifier les verrous un par un (HTTP 403)</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 font-mono text-[10px]">
                     <span>12 routes</span>
@@ -2014,6 +1959,10 @@ export const SecurityAndDeliverablesView: React.FC<
                 )}
               </div>
             </div>
+              <div className="xl:col-span-5">
+                <LockedDeliverablesList />
+              </div>
+            </div>
           ) : (
             /* Post-validation : Barre d'export compacte + Sélecteur d'aperçu à la demande */
             <div className="space-y-4">
@@ -2027,13 +1976,7 @@ export const SecurityAndDeliverablesView: React.FC<
               <div className="surface-panel rounded-2xl p-4 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="badge-success inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>12 livrables débloqués ({mode === 'APRES' ? 'APRÈS' : mode})</span>
-                    </span>
-                    <span className="px-2.5 py-1 rounded-full surface-subtle font-mono text-[11px] text-sub">
-                      #{latestHash.slice(0, 14)}…
-                    </span>
+                    <h3 className="text-base font-semibold text-main">Exporter les livrables</h3>
                   </div>
 
                   {/* Groupe principal mis en avant */}
@@ -2081,8 +2024,11 @@ export const SecurityAndDeliverablesView: React.FC<
                   </div>
                 </div>
 
-                {/* Groupe secondaire structuré (11 exports unitaires) */}
-                <div className="pt-2.5 border-t border-hairline flex flex-wrap items-center gap-1.5">
+                {/* Exports unitaires regroupés (11) — le dossier de preuve complet est l'action principale */}
+                <div className="pt-3 border-t border-hairline grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-3">
+                  <div>
+                    <h4 className="px-3 text-xs font-semibold text-sub">Réglementaire</h4>
+                    <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
                     disabled={isExportingAnssi}
@@ -2090,14 +2036,14 @@ export const SecurityAndDeliverablesView: React.FC<
                       setPreviewSection('regulatory');
                       void exportAnssiDraft();
                     }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     {isExportingAnssi ? (
                       <Loader2 className="w-3 h-3 animate-spin text-accent" />
                     ) : (
                       <ShieldAlert className="w-3 h-3 text-[var(--warning-text)]" />
                     )}
-                    <span>Pré-Notification ANSSI (.md)</span>
+                    <span className="flex-1 min-w-0 truncate">Pré-notification ANSSI</span><span className="text-xs text-sub">.md</span>
                   </button>
                   <button
                     type="button"
@@ -2106,14 +2052,14 @@ export const SecurityAndDeliverablesView: React.FC<
                       setPreviewSection('regulatory');
                       void exportCnilDraft();
                     }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     {isExportingCnilDraft ? (
                       <Loader2 className="w-3 h-3 animate-spin text-accent" />
                     ) : (
                       <FileCheck2 className="w-3 h-3 text-[var(--warning-text)]" />
                     )}
-                    <span>Évaluation CNIL Art. 33 (.md)</span>
+                    <span className="flex-1 min-w-0 truncate">Évaluation CNIL</span><span className="text-xs text-sub">.md</span>
                   </button>
                   <button
                     type="button"
@@ -2122,63 +2068,20 @@ export const SecurityAndDeliverablesView: React.FC<
                       setPreviewSection('regulatory');
                       void exportComexBrief();
                     }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     {isExportingComex ? (
                       <Loader2 className="w-3 h-3 animate-spin text-accent" />
                     ) : (
                       <Scale className="w-3 h-3 text-accent" />
                     )}
-                    <span>Brief COMEX Art. 20 (.md)</span>
+                    <span className="flex-1 min-w-0 truncate">Brief COMEX</span><span className="text-xs text-sub">.md</span>
                   </button>
-                  <button
-                    type="button"
-                    disabled={isExportingTerraform}
-                    onClick={() => {
-                      setPreviewSection('regulatory');
-                      void exportTerraformManifest();
-                    }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[11px] font-bold text-main transition cursor-pointer"
-                  >
-                    {isExportingTerraform ? (
-                      <Loader2 className="w-3 h-3 animate-spin text-accent" />
-                    ) : (
-                      <FileCode2 className="w-3 h-3 text-[var(--info-text)]" />
-                    )}
-                    <span>Manifeste Terraform (.tf)</span>
-                  </button>
-                  <button
-                    type="button"
-                    disabled={isExportingInterviewGuide}
-                    onClick={() => {
-                      setPreviewSection('regulatory');
-                      void exportInterviewGuide();
-                    }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[11px] font-bold text-main transition cursor-pointer"
-                  >
-                    {isExportingInterviewGuide ? (
-                      <Loader2 className="w-3 h-3 animate-spin text-accent" />
-                    ) : (
-                      <MessageSquareQuote className="w-3 h-3 text-accent" />
-                    )}
-                    <span>Guide d&apos;Entretien (.md)</span>
-                  </button>
-                  <button
-                    type="button"
-                    disabled={isExportingRiskRegister}
-                    onClick={() => {
-                      setPreviewSection('regulatory');
-                      void exportRiskRegister();
-                    }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-[11px] font-bold text-main transition cursor-pointer"
-                  >
-                    {isExportingRiskRegister ? (
-                      <Loader2 className="w-3 h-3 animate-spin text-accent" />
-                    ) : (
-                      <ClipboardList className="w-3 h-3 text-accent" />
-                    )}
-                    <span>Registre GRC (.md)</span>
-                  </button>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="px-3 text-xs font-semibold text-sub">Mission</h4>
+                    <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
                     onClick={() =>
@@ -2188,10 +2091,10 @@ export const SecurityAndDeliverablesView: React.FC<
                         'text/markdown;charset=utf-8'
                       )
                     }
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     <Download className="w-3 h-3 text-accent" />
-                    <span>Markdown (.md)</span>
+                    <span className="flex-1 min-w-0 truncate">Rapport d’audit</span><span className="text-xs text-sub">.md</span>
                   </button>
                   <button
                     type="button"
@@ -2202,35 +2105,95 @@ export const SecurityAndDeliverablesView: React.FC<
                         'text/plain;charset=utf-8'
                       )
                     }
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     <Mail className="w-3 h-3 text-accent" />
-                    <span>Mail (.txt)</span>
+                    <span className="flex-1 min-w-0 truncate">Courriel au DSI</span><span className="text-xs text-sub">.txt</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isExportingInterviewGuide}
+                    onClick={() => {
+                      setPreviewSection('regulatory');
+                      void exportInterviewGuide();
+                    }}
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
+                  >
+                    {isExportingInterviewGuide ? (
+                      <Loader2 className="w-3 h-3 animate-spin text-accent" />
+                    ) : (
+                      <MessageSquareQuote className="w-3 h-3 text-accent" />
+                    )}
+                    <span className="flex-1 min-w-0 truncate">Guide d’entretien contradictoire</span><span className="text-xs text-sub">.md</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isExportingRiskRegister}
+                    onClick={() => {
+                      setPreviewSection('regulatory');
+                      void exportRiskRegister();
+                    }}
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
+                  >
+                    {isExportingRiskRegister ? (
+                      <Loader2 className="w-3 h-3 animate-spin text-accent" />
+                    ) : (
+                      <ClipboardList className="w-3 h-3 text-accent" />
+                    )}
+                    <span className="flex-1 min-w-0 truncate">Registre des arbitrages GRC</span><span className="text-xs text-sub">.md</span>
+                  </button>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="px-3 text-xs font-semibold text-sub">Données et preuves</h4>
+                    <div className="mt-1 space-y-0.5">
+                  <button
+                    type="button"
+                    onClick={exportSealedJson}
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
+                  >
+                    <Download className="w-3 h-3 text-accent" />
+                    <span className="flex-1 min-w-0 truncate">Synthèse scellée</span><span className="text-xs text-sub">.json</span>
                   </button>
                   <button
                     type="button"
                     onClick={exportSealedCsv}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     <Download className="w-3 h-3 text-accent" />
-                    <span>CSV (.csv)</span>
+                    <span className="flex-1 min-w-0 truncate">Matrice GRC</span><span className="text-xs text-sub">.csv</span>
                   </button>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="px-3 text-xs font-semibold text-sub">Remédiation</h4>
+                    <div className="mt-1 space-y-0.5">
                   <button
                     type="button"
-                    onClick={exportSealedJson}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
+                    disabled={isExportingTerraform}
+                    onClick={() => {
+                      setPreviewSection('regulatory');
+                      void exportTerraformManifest();
+                    }}
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
-                    <Download className="w-3 h-3 text-accent" />
-                    <span>JSON (.json)</span>
+                    {isExportingTerraform ? (
+                      <Loader2 className="w-3 h-3 animate-spin text-accent" />
+                    ) : (
+                      <FileCode2 className="w-3 h-3 text-[var(--info-text)]" />
+                    )}
+                    <span className="flex-1 min-w-0 truncate">Manifeste Terraform</span><span className="text-xs text-sub">.tf</span>
                   </button>
                   <button
                     type="button"
                     onClick={exportDryRunPlaybook}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
+                    className="w-full inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-[var(--bg-hover)] disabled:opacity-50 text-sm text-main text-left transition cursor-pointer"
                   >
                     <Terminal className="w-3 h-3 text-accent" />
-                    <span>Playbook (.sh)</span>
+                    <span className="flex-1 min-w-0 truncate">Playbook gcloud</span><span className="text-xs text-sub">.sh</span>
                   </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -2247,7 +2210,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   onClick={() => setPreviewSection('regulatory')}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                     previewSection === 'regulatory'
-                      ? 'bg-[var(--deloitte)] text-black'
+                      ? 'seg-active'
                       : 'text-sub hover:text-main'
                   }`}
                 >
@@ -2261,7 +2224,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   onClick={() => setPreviewSection('report')}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                     previewSection === 'report'
-                      ? 'bg-[var(--deloitte)] text-black'
+                      ? 'seg-active'
                       : 'text-sub hover:text-main'
                   }`}
                 >
@@ -2275,7 +2238,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   onClick={() => setPreviewSection('mail')}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                     previewSection === 'mail'
-                      ? 'bg-[var(--deloitte)] text-black'
+                      ? 'seg-active'
                       : 'text-sub hover:text-main'
                   }`}
                 >
@@ -2689,7 +2652,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('anssi')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'anssi'
-                          ? 'bg-[var(--warning-text)] text-black shadow-sm'
+                          ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2759,7 +2722,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('cnil')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'cnil'
-                          ? 'bg-[var(--warning-text)] text-black shadow-sm'
+                          ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2837,7 +2800,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           onClick={() => setAnssiViewMode('formatted')}
                           className={`px-2 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
                             anssiViewMode === 'formatted'
-                              ? 'bg-[var(--deloitte)] text-black'
+                              ? 'seg-active'
                               : 'text-sub hover:text-main'
                           }`}
                         >
@@ -2849,7 +2812,7 @@ export const SecurityAndDeliverablesView: React.FC<
                           onClick={() => setAnssiViewMode('raw')}
                           className={`px-2 py-1 rounded-md text-[10px] font-bold transition cursor-pointer ${
                             anssiViewMode === 'raw'
-                              ? 'bg-[var(--deloitte)] text-black'
+                              ? 'seg-active'
                               : 'text-sub hover:text-main'
                           }`}
                         >
@@ -3439,7 +3402,7 @@ export const SecurityAndDeliverablesView: React.FC<
               onClick={() => setDouanierInnerTab('dlp')}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                 douanierInnerTab === 'dlp'
-                  ? 'bg-[var(--deloitte)] text-black'
+                  ? 'seg-active'
                   : 'text-sub hover:text-main'
               }`}
             >
@@ -3453,7 +3416,7 @@ export const SecurityAndDeliverablesView: React.FC<
               onClick={() => setDouanierInnerTab('matrix')}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                 douanierInnerTab === 'matrix'
-                  ? 'bg-[var(--deloitte)] text-black'
+                  ? 'seg-active'
                   : 'text-sub hover:text-main'
               }`}
             >
@@ -3605,7 +3568,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 onClick={() => setChainInnerTab('ledger')}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                   chainInnerTab === 'ledger'
-                    ? 'bg-[var(--deloitte)] text-black'
+                    ? 'seg-active'
                     : 'text-sub hover:text-main'
                 }`}
               >
@@ -3629,7 +3592,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 onClick={() => setChainInnerTab('verifier')}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
                   chainInnerTab === 'verifier'
-                    ? 'bg-[var(--deloitte)] text-black'
+                    ? 'seg-active'
                     : 'text-sub hover:text-main'
                 }`}
               >
@@ -3678,7 +3641,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   <span
                     className={`px-2.5 py-0.5 rounded-full font-mono text-[11px] font-extrabold tabular-nums ${
                       hasActiveLogFilters
-                        ? 'bg-[var(--deloitte)] text-black'
+                        ? 'seg-active'
                         : 'surface-subtle text-main'
                     }`}
                   >
@@ -3738,7 +3701,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         onClick={() => setChainFilter(k)}
                         className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
                           chainFilter === k
-                            ? 'bg-[var(--deloitte)] text-black'
+                            ? 'seg-active'
                             : 'text-sub hover:text-main'
                         }`}
                       >
