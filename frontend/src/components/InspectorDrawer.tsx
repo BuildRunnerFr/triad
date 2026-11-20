@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { GRAVITE_LABEL } from './ConcordanceRibbon';
 import { DURATION, EASE_OUT, gsap, prefersReducedMotion, useGSAP } from '../motion/gsap';
 import {
   X,
+  ChevronLeft,
+  ChevronRight,
   Copy,
   Check,
   Terminal,
@@ -55,6 +58,9 @@ interface InspectorDrawerProps {
   content: DrawerContent;
   mode?: AuditMode;
   onClose: () => void;
+  /** Navigation entre constats (ordre de lecture partagé). */
+  onNavigate?: (direction: -1 | 1) => void;
+  position?: { index: number; total: number } | null;
   onSaveFindingDecision?: (
     findingId: string,
     payload: FindingDecisionPatchPayload
@@ -68,10 +74,26 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
   content,
   mode = 'APRES',
   onClose,
+  onNavigate,
+  position,
   onSaveFindingDecision,
 }) => {
   const [findingTab, setFindingTab] = useState<FindingSubTab>('preuves');
   const evidenceRef = useRef<HTMLDivElement>(null);
+
+  // Raccourcis J (suivant) / K (précédent) hors champs de saisie.
+  useEffect(() => {
+    if (!onNavigate || content?.type !== 'finding') return undefined;
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'j' || e.key === 'J') onNavigate(1);
+      if (e.key === 'k' || e.key === 'K') onNavigate(-1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onNavigate, content]);
   const evidenceKey =
     content?.type === 'finding' && findingTab === 'preuves' ? content.finding.id : null;
 
@@ -475,33 +497,57 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
             className="relative z-10 w-full max-w-2xl surface-panel h-full shadow-2xl flex flex-col overflow-hidden border-l border-hairline"
           >
-            {/* En-tête compact du tiroir */}
-            <div className="px-5 py-3.5 bg-[var(--bg-rail)] text-white border-b-2 border-[var(--deloitte)] flex items-center justify-between gap-3 shrink-0">
-              <div className="min-w-0">
-                <div className="text-[10px] font-extrabold uppercase tracking-widest text-[var(--accent-text)]">
-                  {content.type === 'finding'
-                    ? 'Constat NIS2'
-                    : content.type === 'doc'
-                    ? 'Pièce DLP Douanier'
-                    : 'Aperçu'}
-                </div>
-                <h3 className="text-sm sm:text-base font-extrabold truncate mt-0.5">
-                  {content.type === 'finding'
-                    ? `${content.finding.id} — ${content.finding.theme}`
-                    : content.type === 'doc'
-                    ? content.doc.nom_fichier
-                    : ''}
-                </h3>
-              </div>
+            {/* En-tête du tiroir : identifiant, intitulé, navigation entre constats */}
+            <div className="px-5 py-3.5 bg-[var(--bg-elevated)] border-b border-hairline flex items-center justify-between gap-3 shrink-0">
+              <h3 className="min-w-0 text-base font-semibold text-main truncate">
+                {content.type === 'finding' ? (
+                  <>
+                    <span className="font-mono text-sm text-sub mr-2">{content.finding.id}</span>
+                    {content.finding.theme}
+                  </>
+                ) : content.type === 'doc' ? (
+                  <>
+                    <span className="text-sm text-sub mr-2">Pièce</span>
+                    {content.doc.nom_fichier}
+                  </>
+                ) : null}
+              </h3>
 
-              <button
-                type="button"
-                aria-label="Fermer le tiroir"
-                onClick={onClose}
-                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition cursor-pointer shrink-0"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1 shrink-0">
+                {content.type === 'finding' && onNavigate && position && position.total > 1 && (
+                  <>
+                    <span className="text-xs text-sub tabular-nums mr-1" aria-live="polite">
+                      {position.index + 1} / {position.total}
+                    </span>
+                    <button
+                      type="button"
+                      aria-label="Constat précédent (K)"
+                      title="Constat précédent (K)"
+                      onClick={() => onNavigate(-1)}
+                      className="p-2 rounded-lg border border-hairline hover:border-strong text-main transition cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Constat suivant (J)"
+                      title="Constat suivant (J)"
+                      onClick={() => onNavigate(1)}
+                      className="p-2 rounded-lg border border-hairline hover:border-strong text-main transition cursor-pointer"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  aria-label="Fermer le tiroir (Échap)"
+                  onClick={onClose}
+                  className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-sub hover:text-main transition cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Barre des 3 Sous-Onglets (uniquement pour un constat) */}
@@ -511,17 +557,17 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                   <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold surface-card text-main">
                     {content.finding.exigence_nis2}
                   </span>
-                  <span className="badge-critical px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase">
-                    {content.finding.gravite}
+                  <span className="badge-critical px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                    Gravité {GRAVITE_LABEL[content.finding.gravite].toLowerCase()}
                   </span>
                   {content.finding.contradiction && (
-                    <span className="badge-warning px-2.5 py-0.5 rounded-full text-[11px] font-extrabold">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold text-[var(--rupture)] bg-[var(--rupture-soft)]">
                       {content.finding.contradiction}
                     </span>
                   )}
                   {typeof content.finding.confiance === 'number' && (
-                    <span className="badge-success px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold tabular-nums">
-                      {Math.round(content.finding.confiance * 100)}%
+                    <span className="surface-card px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-sub tabular-nums">
+                      Confiance {Math.round(content.finding.confiance * 100)} %
                     </span>
                   )}
                   {content.finding.decision_grc && (
@@ -559,7 +605,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         onKeyDown={(e) => handleSubTabKeyDown(e, idx)}
                         className={`min-h-[34px] inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                           active
-                            ? 'bg-[var(--deloitte)] text-black shadow-xs'
+                            ? 'seg-active'
                             : 'text-sub hover:text-main'
                         }`}
                       >
@@ -595,7 +641,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-main leading-relaxed">
+                        <p className="text-[15px] text-main leading-relaxed">
                           {content.finding.dit
                             ? `« ${content.finding.dit.extrait} »`
                             : 'Aucune déclaration associée.'}
@@ -616,7 +662,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-main leading-relaxed">
+                        <p className="text-[15px] text-main leading-relaxed">
                           {content.finding.ecrit
                             ? `« ${content.finding.ecrit.extrait} »`
                             : 'Non documenté.'}
@@ -634,7 +680,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                             </code>
                           )}
                         </div>
-                        <p className="text-xs text-main leading-relaxed">
+                        <p className="text-[15px] text-main leading-relaxed">
                           {content.finding.reel
                             ? content.finding.reel.constat
                             : 'Contrôle procédural.'}
@@ -738,7 +784,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                                       onClick={() => setEcheance(preset)}
                                       className={`px-1.5 py-0.2 rounded font-mono text-[10px] font-bold transition cursor-pointer ${
                                         echeance === preset
-                                          ? 'bg-[var(--deloitte)] text-black'
+                                          ? 'seg-active'
                                           : 'surface-subtle text-dim hover:text-main'
                                       }`}
                                     >
@@ -1020,7 +1066,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         onClick={() => handleSelectPiiFilter('ALL')}
                         className={`px-2.5 py-1 rounded-lg font-mono text-[10px] font-bold transition cursor-pointer tabular-nums ${
                           piiFilter === 'ALL'
-                            ? 'bg-[var(--deloitte)] text-black'
+                            ? 'seg-active'
                             : 'surface-subtle text-sub hover:text-main'
                         }`}
                       >

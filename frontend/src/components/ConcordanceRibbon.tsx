@@ -17,6 +17,20 @@ export const GRAVITE_RADIUS: Record<GraviteFinding, number> = {
   critique: 7.5,
 };
 
+const GRAVITE_ORDER: Record<GraviteFinding, number> = { critique: 4, haute: 3, moyenne: 2, faible: 1 };
+const STATUT_ORDER: Record<StatutFinding, number> = { non_conforme: 4, partiel: 3, a_confirmer: 2, conforme: 1 };
+
+/** Ordre de lecture partagé (cockpit, investigation, tiroir) : gravité puis statut, puis identifiant. */
+export function rankFindings(findings: Finding[]): Finding[] {
+  return [...findings].sort(
+    (a, b) =>
+      Number(a.statut === 'conforme') - Number(b.statut === 'conforme') ||
+      GRAVITE_ORDER[b.gravite] - GRAVITE_ORDER[a.gravite] ||
+      STATUT_ORDER[b.statut] - STATUT_ORDER[a.statut] ||
+      a.id.localeCompare(b.id)
+  );
+}
+
 export const GRAVITE_LABEL: Record<GraviteFinding, string> = {
   critique: 'Critique',
   haute: 'Haute',
@@ -181,14 +195,17 @@ export const RibbonLegend: React.FC<{ className?: string }> = ({ className = '' 
 interface ConcordanceRowProps {
   finding: Finding;
   onOpen: (finding: Finding) => void;
+  /** Mention complémentaire sous la gravité (ex. arbitrage GRC). */
+  note?: React.ReactNode;
+  onHover?: (finding: Finding) => void;
 }
 
 /** Ligne de constat cliquable : identifiant, intitulé, ruban, gravité. */
-export const ConcordanceRow: React.FC<ConcordanceRowProps> = ({ finding, onOpen }) => {
+export const ConcordanceRow: React.FC<ConcordanceRowProps> = ({ finding, onOpen, note, onHover }) => {
   const title = finding.theme;
   const detail = [finding.contradiction, finding.exigence_nis2].filter(Boolean).join(' · ');
   return (
-    <li>
+    <li onMouseEnter={onHover ? () => onHover(finding) : undefined}>
       <button
         type="button"
         onClick={() => onOpen(finding)}
@@ -217,6 +234,7 @@ export const ConcordanceRow: React.FC<ConcordanceRowProps> = ({ finding, onOpen 
             {GRAVITE_LABEL[finding.gravite]}
             <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </span>
+          {note && <span className="text-[11px] font-semibold text-[var(--accent-text)] mt-0.5">{note}</span>}
         </span>
       </button>
     </li>

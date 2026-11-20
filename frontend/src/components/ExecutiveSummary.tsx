@@ -40,7 +40,7 @@ import {
 } from '../utils/grcSimulation';
 import { Nis2RadarChart } from './Nis2RadarChart';
 import CountUp from './reactbits/CountUp';
-import { ConcordanceRow, RibbonLegend } from './ConcordanceRibbon';
+import { ConcordanceRow, RibbonLegend, rankFindings } from './ConcordanceRibbon';
 import { CloudTopologyViz } from './CloudTopologyViz';
 import { Nis2CoverageMatrix } from './Nis2CoverageMatrix';
 import type { ToastTone } from './ToastStack';
@@ -319,13 +319,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
   const contradicted = contradictedList.length;
   const critiquesContredits = contradictedList.filter((f) => f.gravite === 'critique').length;
 
-  const rankedFindings = [...findings]
-    .filter((f) => f.statut !== 'conforme')
-    .sort(
-      (a, b) =>
-        GRAVITE_RANK[b.gravite] - GRAVITE_RANK[a.gravite] ||
-        (a.statut === 'non_conforme' ? -1 : 0) - (b.statut === 'non_conforme' ? -1 : 0)
-    );
+  const rankedFindings = rankFindings(findings).filter((f) => f.statut !== 'conforme');
 
   const fmt1 = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
   const ledeFacts: { label: string; value: string; tone?: string }[] = [

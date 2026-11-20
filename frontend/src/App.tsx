@@ -64,6 +64,7 @@ import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog';
 import { MissionLaunchpad } from './components/MissionLaunchpad';
 import type { DeliverablesSubTab } from './components/SecurityAndDeliverablesView';
 import { LiveExecutionOverlay } from './components/LiveExecutionOverlay';
+import { rankFindings } from './components/ConcordanceRibbon';
 import {
   ToastStack,
   type ToastItem,
@@ -1137,6 +1138,23 @@ export const App: React.FC = () => {
     synthesis?.findings.filter((f) => Boolean(f.decision_grc?.decision))
       .length || 0;
 
+  // Navigation entre constats dans le tiroir, dans l'ordre de lecture partagé (gravité puis statut).
+  const orderedFindings = useMemo(() => rankFindings(synthesis?.findings || []), [synthesis]);
+  const drawerPosition = useMemo(() => {
+    if (drawer?.type !== 'finding') return null;
+    const index = orderedFindings.findIndex((f) => f.id === drawer.finding.id);
+    return index >= 0 ? { index, total: orderedFindings.length } : null;
+  }, [drawer, orderedFindings]);
+  const navigateDrawer = useCallback(
+    (direction: -1 | 1) => {
+      if (!drawerPosition) return;
+      const n = orderedFindings.length;
+      const next = orderedFindings[(drawerPosition.index + direction + n) % n];
+      if (next) setDrawer({ type: 'finding', finding: next });
+    },
+    [drawerPosition, orderedFindings]
+  );
+
   const workflowSteps: ReadonlyArray<{
     key: string;
     label: string;
@@ -1925,6 +1943,8 @@ export const App: React.FC = () => {
               content={drawer}
               mode={mode}
               onClose={() => setDrawer(null)}
+              position={drawerPosition}
+              onNavigate={navigateDrawer}
               onSaveFindingDecision={handleSaveFindingDecision}
             />
           </Suspense>

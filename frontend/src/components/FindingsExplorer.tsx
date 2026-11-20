@@ -47,6 +47,7 @@ import type {
 } from '../types';
 import { GRAVITE_RANK, STATUT_RISK_RANK } from '../utils/auditMetrics';
 import { GRC_DECISION_META } from '../utils/grcSimulation';
+import { ConcordanceRow, RibbonLegend, rankFindings } from './ConcordanceRibbon';
 import { TriadTriangleViz } from './TriadTriangleViz';
 
 const LazyCloud3DTopology = lazy(() => import('./Cloud3DTopology'));
@@ -216,16 +217,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
     ]
   );
 
-  const sortedCards = useMemo(() => {
-    return [...filtered].sort((a, b) => {
-      const rankDiff =
-        (GRAVITE_RANK[b.gravite] || 0) - (GRAVITE_RANK[a.gravite] || 0);
-      if (rankDiff !== 0) return rankDiff;
-      return (
-        (STATUT_RISK_RANK[b.statut] || 0) - (STATUT_RISK_RANK[a.statut] || 0)
-      );
-    });
-  }, [filtered]);
+  const sortedCards = useMemo(() => rankFindings(filtered), [filtered]);
 
   const hasActiveFilters =
     statusFilter !== 'ALL' ||
@@ -633,7 +625,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                     <span
                       className={`font-mono text-[10px] px-1.5 rounded-full tabular-nums ${
                         isActive
-                          ? 'bg-black/15 text-black'
+                          ? 'surface-subtle text-sub'
                           : 'surface-card text-sub'
                       }`}
                     >
@@ -747,7 +739,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                   <span
                     className={`text-[10px] px-1.5 rounded-full tabular-nums ${
                       active
-                        ? 'bg-black/20 text-black'
+                        ? 'surface-subtle text-sub'
                         : 'surface-subtle text-sub'
                     }`}
                   >
@@ -759,33 +751,20 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
 
             <span className="h-4 w-px bg-[var(--border-subtle)] mx-0.5 hidden sm:inline-block" />
 
-            {(
-              [
-                ['critique', 'Critique'],
-                ['haute', 'Haute'],
-                ['moyenne', 'Moyenne'],
-                ['faible', 'Faible'],
-              ] as const
-            ).map(([gKey, gLabel]) => {
-              const active = graviteFilter === gKey;
-              return (
-                <button
-                  key={gKey}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() =>
-                    setGraviteFilter((prev) => (prev === gKey ? 'ALL' : gKey))
-                  }
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
-                    active
-                      ? GRAVITE_META[gKey].cls
-                      : 'surface-subtle text-sub hover:text-main'
-                  }`}
-                >
-                  {gLabel}
-                </button>
-              );
-            })}
+            <label className="inline-flex items-center gap-1.5 text-xs text-sub">
+              <span className="sr-only sm:not-sr-only">Gravité</span>
+              <select
+                value={graviteFilter}
+                onChange={(e) => setGraviteFilter(e.target.value as 'ALL' | GraviteFinding)}
+                className="px-2 py-1 rounded-lg surface-card text-xs font-semibold text-main cursor-pointer"
+              >
+                <option value="ALL">Toutes</option>
+                <option value="critique">Critique</option>
+                <option value="haute">Haute</option>
+                <option value="moyenne">Moyenne</option>
+                <option value="faible">Faible</option>
+              </select>
+            </label>
 
             <button
               type="button"
@@ -926,128 +905,26 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
               )}
             </div>
           ) : listLayout === 'cards' ? (
-            /* Cartes Constat épurées : 1 coup d'œil + accordéon Preuves Dit / Écrit / Réel */
-            <div className="space-y-3">
-              {sortedCards.map((f) => {
-                const meta = STATUS_META[f.statut] || STATUS_META.a_confirmer;
-                const grav = GRAVITE_META[f.gravite] || GRAVITE_META.moyenne;
-                const isCardOpen = Boolean(expandedCards[f.id]);
-                const summaryLine = f.reel?.constat || f.recommandation;
-
-                return (
-                  <article
+            /* Liste en rubans de concordance (clic = tiroir de preuves) */
+            <section aria-label="Constats" className="surface-panel rounded-2xl overflow-hidden">
+              <div className="px-4 sm:px-5 py-3 border-b border-hairline flex flex-wrap items-center justify-between gap-2">
+                <RibbonLegend />
+                <span className="text-xs text-sub tabular-nums">
+                  {sortedCards.length} constat{sortedCards.length > 1 ? 's' : ''}, du plus grave au moins grave
+                </span>
+              </div>
+              <ul className="divide-y divide-[var(--border-subtle)]">
+                {sortedCards.map((f) => (
+                  <ConcordanceRow
                     key={f.id}
-                    onMouseEnter={() => setFocusedFinding(f)}
-                    className={`rounded-2xl surface-panel p-4 space-y-3 transition`}
-                  >
-                    {/* Ligne 1 : ID, titre court, article NIS2 + badges statut / gravité / arbitrage GRC */}
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-2 min-w-0">
-                        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md surface-subtle border border-hairline text-main shrink-0">
-                          {f.id}
-                        </span>
-                        <h3 className="text-sm font-extrabold text-main">
-                          {f.theme}
-                        </h3>
-                        <span
-                          title={f.exigence_nis2}
-                          className="font-mono text-[10px] font-bold px-2 py-0.5 rounded surface-subtle text-sub"
-                        >
-                          {extractShortArticle(f.exigence_nis2)}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        {f.decision_grc && (
-                          <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
-                              GRC_DECISION_META[f.decision_grc.decision]
-                                ?.badgeCls || 'badge-info'
-                            }`}
-                            title={
-                              [
-                                f.decision_grc.decision_label,
-                                f.decision_grc.porteur,
-                                f.decision_grc.echeance,
-                              ]
-                                .filter(Boolean)
-                                .join(' • ')
-                            }
-                          >
-                            <Scale className="w-3 h-3" />
-                            <span>
-                              {GRC_DECISION_META[f.decision_grc.decision]
-                                ?.shortLabel || f.decision_grc.decision_label}
-                            </span>
-                          </span>
-                        )}
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide ${grav.cls}`}
-                        >
-                          {grav.label}
-                        </span>
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${meta.badge}`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${meta.dot}`}
-                          />
-                          <span>{meta.label}</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Ligne 2 : 1 ligne de synthèse/contradiction + Accordéon Preuves + Inspecter */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        {f.contradiction ? (
-                          <span className="badge-critical inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0">
-                            <Zap className="w-3 h-3" />
-                            <span>{f.contradiction}</span>
-                          </span>
-                        ) : (
-                          <span className="badge-success inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0">
-                            <CheckCircle2 className="w-3 h-3" />
-                            <span>Aligné</span>
-                          </span>
-                        )}
-                        <p className="text-xs text-sub line-clamp-1 min-w-0">
-                          {summaryLine}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-2 shrink-0">
-                        <button
-                          type="button"
-                          aria-expanded={isCardOpen}
-                          onClick={() => toggleCardProof(f.id)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl surface-card hover:border-strong text-xs font-bold text-sub hover:text-main transition cursor-pointer"
-                        >
-                          <span>Preuves Dit / Écrit / Réel</span>
-                          <ChevronDown
-                            className={`w-3.5 h-3.5 transition-transform ${
-                              isCardOpen ? 'rotate-180 text-accent' : ''
-                            }`}
-                          />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => onSelectFinding(f)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl surface-card border border-strong hover:border-[var(--accent-border)] hover:text-accent text-main text-xs font-bold transition cursor-pointer"
-                        >
-                          <span>Inspecter</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Accordéon dépliable : 3 colonnes Dit / Écrit / Réel + commande gcloud */}
-                    {isCardOpen && renderEvidenceBlock(f)}
-                  </article>
-                );
-              })}
-            </div>
+                    finding={f}
+                    onOpen={onSelectFinding}
+                    onHover={setFocusedFinding}
+                    note={f.decision_grc?.decision ? `Arbitré : ${f.decision_grc.decision_label}` : undefined}
+                  />
+                ))}
+              </ul>
+            </section>
           ) : (
             /* Vue Tableau compacte (@tanstack/react-table) */
             <div className="surface-panel rounded-2xl overflow-hidden">
