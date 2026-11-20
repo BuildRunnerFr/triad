@@ -93,7 +93,7 @@ const STATUS_META: Record<
 };
 
 const GRAVITE_META: Record<GraviteFinding, { label: string; cls: string }> = {
-  critique: { label: 'Critique', cls: 'bg-[var(--rupture)] text-white' },
+  critique: { label: 'Critique', cls: 'badge-critical' },
   haute: { label: 'Haute', cls: 'badge-high' },
   moyenne: { label: 'Moyenne', cls: 'badge-warning' },
   faible: {
@@ -323,7 +323,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
           const g = GRAVITE_META[info.getValue()] || GRAVITE_META.moyenne;
           return (
             <span
-              className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide whitespace-nowrap ${g.cls}`}
+              className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-sub whitespace-nowrap ${g.cls}`}
             >
               {g.label}
             </span>
@@ -472,7 +472,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
         {/* 1. LE DIT */}
         <div className="surface-subtle rounded-xl p-3 flex flex-col justify-between gap-2">
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider tone-info">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-sub tone-info">
               <MessageSquareQuote className="w-3.5 h-3.5" />
               <span>Le Dit (Entretien)</span>
             </div>
@@ -501,7 +501,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
         {/* 2. L'ÉCRIT */}
         <div className="surface-subtle rounded-xl p-3 flex flex-col justify-between gap-2">
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider tone-violet">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-sub tone-violet">
               <FileText className="w-3.5 h-3.5" />
               <span>L&apos;Écrit (Corpus)</span>
             </div>
@@ -535,7 +535,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
         {/* 3. LE RÉEL */}
         <div className="surface-subtle rounded-xl p-3 flex flex-col justify-between gap-2">
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-accent">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-sub text-accent">
               <Server className="w-3.5 h-3.5" />
               <span>Le Réel (Cloud GCP)</span>
             </div>

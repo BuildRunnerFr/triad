@@ -61,7 +61,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
                 onClick={() => onSelectFinding(f)}
                 className={`px-2.5 py-1 rounded-lg font-mono text-xs font-bold transition cursor-pointer ${
                   isSelected
-                    ? 'bg-[var(--deloitte)] text-black border border-[var(--deloitte)]'
+                    ? 'seg-active'
                     : isKo
                     ? 'badge-critical hover:opacity-90'
                     : 'surface-card text-sub hover:text-main'

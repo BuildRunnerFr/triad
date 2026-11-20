@@ -364,7 +364,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
           key={idx}
           className="pt-2.5 border-t border-hairline first:border-t-0 first:pt-0"
         >
-          <h4 className="text-xs font-extrabold uppercase tracking-wider text-accent">
+          <h4 className="text-sm font-semibold text-accent">
             {renderInlineMarkdown(trimmed.slice(3))}
           </h4>
         </div>
@@ -573,7 +573,7 @@ function renderTerraformHclPreview(hcl: string): React.ReactNode {
           >
             <div className="px-3 py-2 surface-subtle border-b border-hairline flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-                <span className="px-2 py-0.5 rounded bg-[var(--deloitte)] text-black font-mono text-[10px] font-extrabold uppercase">
+                <span className="px-2 py-0.5 rounded surface-subtle border border-hairline text-main font-mono text-[10px] font-bold">
                   {sec.blockType}
                 </span>
                 {sec.resourceType && (
@@ -2258,7 +2258,7 @@ export const SecurityAndDeliverablesView: React.FC<
               >
                   <div className="bg-[var(--bg-rail)] text-white px-8 py-6 border-b-4 border-[var(--deloitte)] flex flex-wrap items-start justify-between gap-4">
                     <div>
-                      <div className="text-[11px] font-extrabold uppercase tracking-widest text-[var(--accent-text)]">
+                      <div className="text-xs font-semibold text-sub text-[var(--accent-text)]">
                         Rapport d&apos;Audit de Conformité Cybersécurité • NIS2
                       </div>
                       <h2 className="text-2xl font-extrabold mt-1">
@@ -2281,7 +2281,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   <div className="p-8 space-y-6">
                     {/* 1. Top 3 risques */}
                     <div className="print-avoid-break">
-                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5">
+                      <h3 className="text-sm font-semibold text-slate-500 mb-2.5">
                         1. Synthèse Direction Générale — Top 3 Risques Majeurs
                       </h3>
                       <div className="space-y-2">
@@ -2302,7 +2302,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {/* Récapitulatif Comparatif AVANT vs APRÈS (affiché dès que les deux phases existent) */}
                     {comparisonSummary && (
                       <div className="print-avoid-break space-y-3">
-                        <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                        <h3 className="text-sm font-semibold text-slate-500">
                           2. Trajectoire Contradictoire AVANT vs APRÈS Entretien DSI
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -2380,7 +2380,7 @@ export const SecurityAndDeliverablesView: React.FC<
 
                     {/* Matrice des constats détaillés */}
                     <div>
-                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5">
+                      <h3 className="text-sm font-semibold text-slate-500 mb-2.5">
                         {comparisonSummary ? '3.' : '2.'} Matrice Détaillée des Constats (Dit × Écrit × Réel)
                       </h3>
                       <div className="space-y-3">
@@ -2396,7 +2396,7 @@ export const SecurityAndDeliverablesView: React.FC<
                                   ({f.exigence_nis2})
                                 </span>
                               </div>
-                              <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-900 text-white">
+                              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-900 text-white">
                                 {f.statut} • {f.gravite}
                               </span>
                             </div>
@@ -2445,7 +2445,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {/* Synthèse Tabulaire du Plan d'Action 30 / 60 / 90 Jours */}
                     {printableRoadmapItems.length > 0 && (
                       <div className="print-avoid-break space-y-2.5">
-                        <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                        <h3 className="text-sm font-semibold text-slate-500">
                           {comparisonSummary ? '4.' : '3.'} Feuille de Route Opérationnelle 30 / 60 / 90 Jours
                         </h3>
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
@@ -2495,7 +2495,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     {nis2CoverageReport && (
                       <div className="print-avoid-break space-y-2.5">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                          <h3 className="text-sm font-semibold text-slate-500">
                             {comparisonSummary
                               ? printableRoadmapItems.length > 0
                                 ? '5.'
@@ -2666,7 +2666,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('comex')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'comex'
-                          ? 'bg-[var(--deloitte)] text-black shadow-sm'
+                          ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2694,7 +2694,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('interview')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'interview'
-                          ? 'bg-[var(--deloitte)] text-black shadow-sm'
+                          ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -2708,7 +2708,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       onClick={() => setRegulatoryDocTab('grc')}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                         regulatoryDocTab === 'grc'
-                          ? 'bg-[var(--deloitte)] text-black shadow-sm'
+                          ? 'seg-active'
                           : 'surface-card text-sub hover:text-main'
                       }`}
                     >
@@ -3348,7 +3348,7 @@ export const SecurityAndDeliverablesView: React.FC<
                       } space-y-1.5`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-dim">
+                        <span className="text-xs font-semibold text-sub">
                           {barrier.category}
                         </span>
                         <div className="flex items-center gap-1.5 shrink-0">
@@ -3895,7 +3895,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               #{String(blockNum).padStart(2, '0')}
                             </span>
                             {isTamperedTarget && (
-                              <span className="px-2 py-0.5 rounded-full bg-[var(--rupture)] text-white text-[10px] font-sans font-extrabold">
+                              <span className="px-2 py-0.5 rounded-full badge-critical text-[10px] font-sans font-extrabold">
                                 ALTÉRÉ
                               </span>
                             )}

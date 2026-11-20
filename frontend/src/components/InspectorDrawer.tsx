@@ -632,7 +632,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                     >
                       <div data-evidence="dit" className="surface-card rounded-xl p-4 edge-sky space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold uppercase tone-info">
+                          <span className="text-[10px] font-bold tone-info">
                             DIT • Entretien DSI
                           </span>
                           {content.finding.dit?.source && (
@@ -650,7 +650,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
 
                       <div data-evidence="ecrit" className="surface-card rounded-xl p-4 edge-violet space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold uppercase tone-violet">
+                          <span className="text-[10px] font-bold tone-violet">
                             ÉCRIT • Référentiel
                           </span>
                           {content.finding.ecrit?.source && (
@@ -671,7 +671,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
 
                       <div data-evidence="reel" className="surface-card rounded-xl p-4 edge-accent space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold uppercase text-accent">
+                          <span className="text-[10px] font-bold text-accent">
                             RÉEL • Sonde Cloud GCP
                           </span>
                           {content.finding.reel?.ressource && (
@@ -870,7 +870,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                       className="space-y-3.5"
                     >
                       <div className="surface-card rounded-2xl p-4 space-y-1.5">
-                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-accent flex items-center gap-1.5">
+                        <div className="text-xs font-semibold text-sub text-accent flex items-center gap-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           Action Corrective
                         </div>
@@ -975,7 +975,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                     <div className="rounded-2xl badge-critical p-3.5 flex gap-3 items-start">
                       <AlertOctagon className="w-5 h-5 shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-extrabold uppercase">
+                        <div className="text-xs font-bold">
                           Quarantaine Douanier
                         </div>
                         <p className="text-xs text-main mt-0.5 leading-relaxed">

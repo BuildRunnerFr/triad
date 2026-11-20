@@ -1266,7 +1266,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
 
                   <div className="flex items-center gap-1.5 shrink-0">
                     {spec.finding && (
-                      <span className="px-1.5 py-0.5 rounded bg-[var(--deloitte)] text-black font-mono text-[10px] font-extrabold">
+                      <span className="px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main font-mono text-[10px] font-extrabold">
                         {spec.finding.id}
                       </span>
                     )}
@@ -1309,7 +1309,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           const active = simStep === null && hudFilter === key;
           const activeCls =
             key === 'CRITICAL'
-              ? 'bg-[var(--rupture)] text-white border border-[var(--rupture)]'
+              ? 'badge-critical'
               : 'seg-active border border-transparent';
           return (
             <button
@@ -1338,7 +1338,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
             onClick={toggleAttackSimulation}
             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-extrabold transition cursor-pointer ${
               simStep !== null
-                ? 'bg-[var(--rupture)] text-white border border-[var(--rupture)]'
+                ? 'badge-critical'
                 : 'badge-critical hover:opacity-90'
             }`}
             title="Animer le chemin d'attaque"
@@ -1495,7 +1495,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                   <button
                     type="button"
                     onClick={() => onSelectFinding(activeCardSpec.finding!)}
-                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg surface-subtle border border-hairline text-main font-mono text-[10px] font-extrabold transition cursor-pointer"
                   >
                     <span>{activeCardSpec.finding.id}</span>
                     <ArrowUpRight className="w-3 h-3" />

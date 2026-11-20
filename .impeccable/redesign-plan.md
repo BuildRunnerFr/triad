@@ -13,8 +13,8 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - [ ] 8. Mobile (barre d'outils repliée, cibles 44px), thème sombre, accessibilité, détecteur, revue de finition + DESIGN.md.
 
 - [x] 9. Mode Présentation COMEX (plein écran) + tiroir « Piliers et trame DSI ».
-- [ ] 10. Sous-vues de couverture (Prestataires Art. 21 §2 d, Continuité RTO/RPO, Référentiels HDS/ISO/RGPD) + matrice NIS2.
-- [ ] 11. Livrables : Plan de remédiation, Posture et permissions, Intégrité des preuves (registre, vérificateur .zip).
+- [x] 10. Sous-vues de couverture (Prestataires Art. 21 §2 d, Continuité RTO/RPO, Référentiels HDS/ISO/RGPD) + matrice NIS2.
+- [x] 11. Livrables : Plan de remédiation, Posture et permissions, Intégrité des preuves (registre, vérificateur .zip).
 - [ ] 12. Palette de commandes, dialogue raccourcis, notifications, états vides (nouvelle session).
 
 ## Journal
@@ -26,4 +26,5 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - 01:30 — It.6 : Livrables : onglets soulignés en vocabulaire consultant (Livrables, Plan de remédiation, Posture et permissions, Intégrité des preuves), bouton de démo « delete_bucket » renommé et déplacé dans l'onglet Intégrité ; écran de signature en deux colonnes (attestation + « Ce que la signature débloque », 12 livrables en 4 groupes) ; après signature, mur de boutons remplacé par 4 colonnes d'export libellées, pastilles redondantes retirées, onglets d'aperçu neutres.
 - 01:33 — It.7 : Comparateur recomposé (phrase-titre « les entretiens ont fait apparaître N déclarations démenties », faits à filets, télémétrie réduite à une ligne, matrice en un panneau à filets, identifiants neutres, jargon /api/audit/diff reformulé) ; overlay du pipeline et rail : jetons sombres scopés via data-theme="dark" (contraste correct en thème clair).
 - 01:40 — It.8a : en-tête sur une ligne (titre, progression, phase, Auditer, menu Options : thème, densité, cache, palette, raccourcis, réinitialiser) ; pastille client masquée sous 2xl ; revue du thème sombre sur les 5 vues : cohérente.
-- 01:45 — It.9 : mode Présentation COMEX refait en brief d'une page à l'échelle projection (phrase-titre 50px, faits à filets, trois risques, contradictions en rubans, trajectoire 90 j par pilier avec barre actuel/visé, décisions attendues Art. 20) ; tiroir des piliers en liste à filets (score vérifié + repère bleu du déclaré, écart en vermillon) ; vue Triangle : bordures teintées et libellés Dit/Écrit/Réel en couleurs de piliers ; easing sans rebond (détecteur : 4 → 0 hors fonte).
+- 01:38 — It.9 : mode Présentation COMEX refait en brief d'une page à l'échelle projection (phrase-titre 50px, faits à filets, trois risques, contradictions en rubans, trajectoire 90 j par pilier avec barre actuel/visé, décisions attendues Art. 20) ; tiroir des piliers en liste à filets (score vérifié + repère bleu du déclaré, écart en vermillon) ; vue Triangle : bordures teintées et libellés Dit/Écrit/Réel en couleurs de piliers ; easing sans rebond (détecteur : 4 → 0 hors fonte).
+- 04:54 — It.10-11 : balayage par regex sur 15 composants (sélections vertes → seg-active, puces F-00x neutres, micro-libellés en capitales → libellés, pastilles en casse normale, pastilles rouges pleines → badge-critical) ; sous-vues couverture/prestataires/continuité/référentiels et onglets plan de remédiation/posture/intégrité alignés sur le monde.

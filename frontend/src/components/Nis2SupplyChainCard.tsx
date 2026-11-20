@@ -191,7 +191,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
       {/* 4 tuiles KPI chiffrées aérées */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="surface-card rounded-xl p-3.5 space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+          <div className="text-xs font-semibold text-sub">
             Tiers évalués
           </div>
           <div className="text-xl font-extrabold font-mono text-main tabular-nums">
@@ -201,7 +201,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
         </div>
 
         <div className="surface-card rounded-xl p-3.5 space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+          <div className="text-xs font-semibold text-sub">
             Critiques &amp; Élevés
           </div>
           <div
@@ -218,7 +218,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
         </div>
 
         <div className="surface-card rounded-xl p-3.5 space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+          <div className="text-xs font-semibold text-sub">
             Quarantaine DLP
           </div>
           <div
@@ -232,7 +232,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
         </div>
 
         <div className="surface-card rounded-xl p-3.5 space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+          <div className="text-xs font-semibold text-sub">
             Maîtrisés
           </div>
           <div className="text-xl font-extrabold font-mono text-accent tabular-nums">
@@ -266,7 +266,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
               onClick={() => setFilter(key)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                 active
-                  ? 'bg-[var(--deloitte)] text-black'
+                  ? 'seg-active'
                   : 'surface-card text-sub hover:text-main'
               }`}
             >
@@ -340,7 +340,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
                             onClick={() =>
                               target && onInspectFindingInExplorer(target)
                             }
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded surface-subtle border border-hairline text-main font-mono text-[10px] font-extrabold transition cursor-pointer"
                           >
                             <span>{fid}</span>
                             <ArrowUpRight className="w-2.5 h-2.5" />
@@ -400,7 +400,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
                     {vendor.recommended_clauses.length > 0 && (
                       <div className="surface-subtle rounded-lg p-3 space-y-2 border border-hairline">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-accent flex items-center gap-1">
+                          <span className="text-xs font-semibold text-sub text-accent flex items-center gap-1">
                             <FileText className="w-3 h-3" />
                             <span>Clauses Art. 21 §2 (d)</span>
                           </span>

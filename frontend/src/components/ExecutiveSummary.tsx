@@ -77,7 +77,7 @@ const GRAVITE_PILL: Record<
   GraviteFinding | 'conforme',
   { label: string; cls: string }
 > = {
-  critique: { label: 'Critique', cls: 'bg-[var(--rupture)] text-white' },
+  critique: { label: 'Critique', cls: 'badge-critical' },
   haute: { label: 'Haute', cls: 'badge-high' },
   moyenne: { label: 'Moyenne', cls: 'badge-warning' },
   faible: {

@@ -630,7 +630,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                       {/* Colonne Gauche : Phase 1 AVANT */}
                       <div className="lg:col-span-5 p-4 space-y-2 text-xs">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-dim">
+                          <span className="text-xs font-semibold text-sub">
                             AVANT (Écrit × Réel)
                           </span>
                           {item.avant?.contradiction && (
@@ -666,7 +666,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                       {/* Colonne Droite : Phase 2 APRÈS */}
                       <div className="lg:col-span-7 p-4 space-y-2.5 text-xs">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-accent">
+                          <span className="text-xs font-semibold text-sub text-accent">
                             APRÈS (Dit × Écrit × Réel)
                           </span>
                           {item.apres?.contradiction && (
@@ -682,7 +682,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                             {item.apres.dit && (
                               <div className="p-2.5 rounded-xl badge-info flex items-start justify-between gap-3">
                                 <div>
-                                  <div className="text-[10px] font-extrabold uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                                  <div className="text-xs font-semibold text-sub mb-0.5 flex items-center gap-1">
                                     <MessageSquareQuote className="w-3 h-3" />
                                     Déclaration DSI (Dit)
                                   </div>

@@ -72,7 +72,7 @@ const SIGNATURE_STATUS_META: Record<
     badgeLabel: 'HMAC-SHA256 : INVALID ✕',
     cardLabel: 'INVALID • Sceau falsifié ✕',
     detail: 'Signature émetteur HMAC-SHA256 invalide ou altérée',
-    pillCls: 'bg-[var(--rupture)] text-white border border-[var(--critical-border)]',
+    pillCls: 'badge-critical border border-[var(--critical-border)]',
     textCls: 'tone-critical',
   },
 };
@@ -331,7 +331,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 <ShieldAlert className="w-5 h-5 shrink-0" />
               )}
               <div className="min-w-0">
-                <div className="text-[10px] font-extrabold uppercase tracking-widest opacity-90">
+                <div className="text-xs font-semibold text-sub opacity-90">
                   Certificat Forensique TRIAD
                 </div>
                 <div className="text-sm font-extrabold truncate">
@@ -355,8 +355,8 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               <span
                 className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold ${
                   certificate.authentic
-                    ? 'bg-[var(--deloitte)] text-black'
-                    : 'bg-[var(--rupture)] text-white'
+                    ? 'seg-active'
+                    : 'badge-critical'
                 }`}
               >
                 {certificate.authentic ? 'AUTHENTIQUE ✓' : 'ALTÉRÉ ✕'}

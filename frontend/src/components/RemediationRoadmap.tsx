@@ -510,7 +510,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* KPI 1 : Score AVANT -> APRÈS simulation */}
           <div className="surface-card rounded-2xl p-4 space-y-2 border border-hairline">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-sub">
+              <span className="text-xs font-semibold text-sub">
                 Score Projeté
               </span>
               <span className="badge-success font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full tabular-nums">
@@ -546,7 +546,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* KPI 2 : Charge j.h */}
           <div className="surface-card rounded-2xl p-4 space-y-1.5 border border-hairline">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-sub inline-flex items-center gap-1">
+              <span className="text-xs font-semibold text-sub inline-flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-accent" />
                 Charge j.h
               </span>
@@ -571,7 +571,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* KPI 3 : Exposition Art. 34 */}
           <div className="surface-card rounded-2xl p-4 space-y-1.5 border border-hairline">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-sub inline-flex items-center gap-1">
+              <span className="text-xs font-semibold text-sub inline-flex items-center gap-1">
                 <Scale className="w-3.5 h-3.5 text-accent" />
                 Exposition Art. 34
               </span>
@@ -607,7 +607,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           {/* KPI 4 : Quick-Wins */}
           <div className="surface-card rounded-2xl p-4 space-y-1.5 border border-hairline">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-sub inline-flex items-center gap-1">
+              <span className="text-xs font-semibold text-sub inline-flex items-center gap-1">
                 <Zap className="w-3.5 h-3.5 text-accent" />
                 Quick-Wins
               </span>
@@ -693,7 +693,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-mono text-[10px] font-extrabold uppercase tracking-wider text-accent">
+                    <span className="font-mono text-xs font-semibold text-sub text-accent">
                       {meta.badge}
                     </span>
                     <h4 className="text-xs font-extrabold text-main">
@@ -759,7 +759,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                                   className="accent-[var(--deloitte)] rounded cursor-pointer shrink-0"
                                 />
                               )}
-                              <span className="font-mono text-[11px] font-extrabold px-1.5 py-0.5 rounded bg-[var(--deloitte)] text-black shrink-0">
+                              <span className="font-mono text-[11px] font-bold px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main shrink-0">
                                 {it.finding.id}
                               </span>
                               <span
@@ -908,7 +908,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     onClick={() => onSelectFinding(it.finding)}
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
                   >
-                    <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-[var(--deloitte)] text-black">
+                    <span className="font-mono text-[10px] px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main">
                       {it.finding.id}
                     </span>
                     <span>{it.finding.theme}</span>

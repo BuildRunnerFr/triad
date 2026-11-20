@@ -180,7 +180,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                   : 'surface-card border-hairline hover:border-strong'
               }`}
             >
-              <div className="text-[10px] font-extrabold uppercase tracking-wider text-accent">
+              <div className="text-xs font-semibold text-sub text-accent">
                 {FRAMEWORK_LABELS[fw].short}
               </div>
               <div className="text-xl font-extrabold font-mono text-main tabular-nums">
@@ -194,7 +194,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
         })}
 
         <div className="surface-card rounded-xl p-3.5 space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-dim">
+          <div className="text-xs font-semibold text-sub">
             Écarts actifs
           </div>
           <div
@@ -240,7 +240,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                 onClick={() => setFrameworkFilter(key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                   active
-                    ? 'bg-[var(--deloitte)] text-black'
+                    ? 'seg-active'
                     : 'surface-card text-sub hover:text-main'
                 }`}
               >
@@ -271,7 +271,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                 onClick={() => setStatusFilter(key)}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                   active
-                    ? 'bg-[var(--deloitte)] text-black'
+                    ? 'seg-active'
                     : 'surface-subtle text-sub hover:text-main'
                 }`}
               >
@@ -396,7 +396,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                                     onInspectFindingInExplorer(target);
                                   }
                                 }}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded surface-subtle border border-hairline text-main font-mono text-[10px] font-extrabold transition cursor-pointer"
                               >
                                 <span>{fid}</span>
                                 <ArrowUpRight className="w-2.5 h-2.5" />
