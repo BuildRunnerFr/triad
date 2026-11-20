@@ -232,7 +232,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
       <div
         role="tablist"
         aria-label="Sous-onglets de conformité réglementaire"
-        className="flex flex-wrap items-end gap-1 border-b border-hairline"
+        className="flex items-end gap-1 border-b border-hairline overflow-x-auto no-scrollbar"
       >
         {SUB_TABS.map((tab, idx) => {
           const isActive = activeSubTab === tab.key;
@@ -253,7 +253,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
               onFocus={() => preloadSubTabChunk(tab.key)}
               onClick={() => setActiveSubTab(tab.key)}
               onKeyDown={(e) => handleTabKeyDown(e, idx)}
-              className={`-mb-px inline-flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold border-b-2 transition cursor-pointer ${
+              className={`-mb-px shrink-0 whitespace-nowrap inline-flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold border-b-2 transition cursor-pointer ${
                 isActive
                   ? 'border-[var(--text-primary)] text-main'
                   : 'border-transparent text-sub hover:text-main hover:border-[var(--border-strong)]'

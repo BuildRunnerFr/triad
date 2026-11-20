@@ -1757,7 +1757,7 @@ export const SecurityAndDeliverablesView: React.FC<
     >
       {/* Sous-onglets : vocabulaire de consultant, sélection neutre, outil de démonstration à part */}
       <div className="border-b border-hairline flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-        <div role="tablist" aria-label="Sections livrables et gouvernance" className="flex flex-wrap items-end gap-1 -mb-px">
+        <div role="tablist" aria-label="Sections livrables et gouvernance" className="flex items-end gap-1 -mb-px overflow-x-auto no-scrollbar max-w-full">
           {(
             [
               ['deliverables', 'Livrables', FileText, validated ? '12' : null],
@@ -1774,7 +1774,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 role="tab"
                 aria-selected={active}
                 onClick={() => setSubTab(key)}
-                className={`inline-flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold border-b-2 transition cursor-pointer ${
+                className={`shrink-0 whitespace-nowrap inline-flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold border-b-2 transition cursor-pointer ${
                   active
                     ? 'border-[var(--text-primary)] text-main'
                     : 'border-transparent text-sub hover:text-main hover:border-[var(--border-strong)]'
