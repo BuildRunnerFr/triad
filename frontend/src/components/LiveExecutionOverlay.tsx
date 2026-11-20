@@ -111,16 +111,16 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--deloitte)]" />
                 </span>
                 <div>
-                  <div className="text-sm font-extrabold tracking-tight flex items-center gap-2">
-                    <span>Chaîne d&apos;Audit Multi-Agents TRIAD en cours</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--deloitte)]/20 text-[var(--accent-text)]">
-                      {sequenceLabel || `Phase ${mode}`}
+                  <div className="text-base font-semibold tracking-tight flex items-center gap-2">
+                    <span>Audit en cours</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--accent-soft)] text-[var(--accent-text)]">
+                      {sequenceLabel || `phase ${mode === 'APRES' ? 'APRÈS' : 'AVANT'}`}
                     </span>
                   </div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs text-[var(--text-secondary)]">
                     {useCache
-                      ? 'Séquence accélérée (Cache validé + Sas Douanier actif)'
-                      : 'Inspection contradictoire temps réel des pièces et sondes Cloud'}
+                      ? 'Rejeu d’un audit enregistré, pièces filtrées par le Douanier'
+                      : 'Les quatre agents croisent les pièces du dossier et la configuration Google Cloud'}
                   </div>
                 </div>
               </div>
@@ -178,15 +178,15 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                           )}
                         </div>
                         <span
-                          className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
+                          className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                             isRunning
-                              ? 'bg-[var(--deloitte)] text-black'
+                              ? 'bg-[var(--deloitte)] text-[#0B100D]'
                               : isDone
                               ? 'bg-[var(--accent-soft)] text-[var(--accent-text)]'
                               : 'bg-white/8 text-slate-400'
                           }`}
                         >
-                          {isRunning ? 'Actif' : isDone ? 'Scellé ✓' : 'Attente'}
+                          {isRunning ? 'En cours' : isDone ? 'Terminé' : 'En attente'}
                         </span>
                       </div>
                       <div className="text-xs font-extrabold text-white">
