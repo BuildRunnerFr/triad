@@ -1242,7 +1242,7 @@ export const App: React.FC = () => {
       id: 'deliverables',
       label: 'Livrables',
       icon: ShieldCheck,
-      badge: validated ? 'Validé' : 'À signer',
+      badge: validated ? 'Validé' : synthesis ? 'À signer' : undefined,
       badgeTone: validated
         ? 'bg-[var(--deloitte)] text-black'
         : 'bg-[#F2C14E]/20 text-[#F2C14E]',
@@ -1530,7 +1530,11 @@ export const App: React.FC = () => {
                   onMouseEnter={() => preloadNavChunk('cockpit')}
                   onClick={handleRunAudit}
                   disabled={isRunning}
-                  className="min-h-[38px] inline-flex items-center gap-1.5 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-[#0B100D] font-bold px-4 py-1.5 rounded-lg text-sm transition cursor-pointer"
+                  className={`min-h-[38px] inline-flex items-center gap-1.5 disabled:opacity-50 font-bold px-4 py-1.5 rounded-lg text-sm transition cursor-pointer ${
+                    displayedDocs.length > 0
+                      ? 'bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-[#0B100D]'
+                      : 'border border-strong text-main hover:bg-[var(--bg-hover)]'
+                  }`}
                 >
                   {isRunning ? (
                     <>

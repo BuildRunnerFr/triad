@@ -529,3 +529,8 @@ input, textarea {
     page-break-inside: avoid;
   }
 }
+
+/* La palette porte son propre indicateur de focus (cadre de la boîte de dialogue) */
+[cmdk-input]:focus-visible {
+  outline: none;
+}

@@ -51,7 +51,7 @@ export const KeyboardShortcutsDialog: React.FC<KeyboardShortcutsDialogProps> = (
                 Raccourcis Clavier Rapides
               </Dialog.Title>
               <Dialog.Description id="shortcuts-desc" className="text-[11px] text-sub">
-                Navigation au clavier inspirée des postes de commande cyber
+                Tout TRIAD au clavier, sans quitter la tâche en cours
               </Dialog.Description>
             </div>
           </div>

@@ -185,7 +185,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     return (
       <>
         {before}
-        <mark className="bg-[var(--deloitte)]/30 text-main border-b border-[var(--deloitte)] px-0.5 rounded font-semibold">
+        <mark className="bg-[var(--accent-soft)] text-main underline decoration-[var(--deloitte)] decoration-2 underline-offset-2 px-0.5 rounded-sm font-semibold">
           {highlighted}
         </mark>
         {after}
@@ -509,7 +509,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="font-mono text-[11px] font-extrabold px-2 py-0.5 rounded bg-[var(--deloitte)] text-black shrink-0">
+                          <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded surface-subtle border border-hairline text-main shrink-0">
                             {f.id}
                           </span>
                           <span className="font-semibold truncate">{f.theme}</span>
@@ -524,7 +524,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                             </span>
                           )}
                           <span
-                            className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                               f.statut === 'conforme'
                                 ? 'badge-success'
                                 : f.statut === 'non_conforme'

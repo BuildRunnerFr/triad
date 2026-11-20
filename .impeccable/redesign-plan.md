@@ -15,7 +15,7 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - [x] 9. Mode Présentation COMEX (plein écran) + tiroir « Piliers et trame DSI ».
 - [x] 10. Sous-vues de couverture (Prestataires Art. 21 §2 d, Continuité RTO/RPO, Référentiels HDS/ISO/RGPD) + matrice NIS2.
 - [x] 11. Livrables : Plan de remédiation, Posture et permissions, Intégrité des preuves (registre, vérificateur .zip).
-- [ ] 12. Palette de commandes, dialogue raccourcis, notifications, états vides (nouvelle session).
+- [x] 12. Palette de commandes, dialogue raccourcis, notifications, états vides (nouvelle session).
 
 ## Journal
 - 01:10 — It.1 : PRODUCT.md, tirage (candidate 6 « étude de cabinet », seed:c9ef73d2d28d009f), contrat de surface ; Schibsted Grotesk + JetBrains Mono auto-hébergées (Google Fonts retiré) ; jetons clair par défaut / sombre encre ; @theme (slate→neutres vert-gris, rayons, graisses) ; 234 couleurs codées en dur → jetons ; favicon ; thème persisté.
@@ -28,3 +28,4 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - 01:40 — It.8a : en-tête sur une ligne (titre, progression, phase, Auditer, menu Options : thème, densité, cache, palette, raccourcis, réinitialiser) ; pastille client masquée sous 2xl ; revue du thème sombre sur les 5 vues : cohérente.
 - 01:38 — It.9 : mode Présentation COMEX refait en brief d'une page à l'échelle projection (phrase-titre 50px, faits à filets, trois risques, contradictions en rubans, trajectoire 90 j par pilier avec barre actuel/visé, décisions attendues Art. 20) ; tiroir des piliers en liste à filets (score vérifié + repère bleu du déclaré, écart en vermillon) ; vue Triangle : bordures teintées et libellés Dit/Écrit/Réel en couleurs de piliers ; easing sans rebond (détecteur : 4 → 0 hors fonte).
 - 04:54 — It.10-11 : balayage par regex sur 15 composants (sélections vertes → seg-active, puces F-00x neutres, micro-libellés en capitales → libellés, pastilles en casse normale, pastilles rouges pleines → badge-critical) ; sous-vues couverture/prestataires/continuité/référentiels et onglets plan de remédiation/posture/intégrité alignés sur le monde.
+- 04:55 — It.12 : palette (puces neutres, surlignage souligné, focus d'input propre), dialogue raccourcis (texte sans « poste de commande cyber »), état vide : « Auditer » de l'en-tête secondaire tant que le dossier est vide, badge « À signer » masqué sans synthèse.
