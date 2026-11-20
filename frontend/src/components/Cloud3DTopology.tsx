@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {
   RotateCcw,
-  Pause,
-  Play,
   ArrowUpRight,
   Maximize2,
   Minimize2,
@@ -14,12 +11,21 @@ import {
   X,
   Camera,
   Check,
-  Box,
-  Layers,
   Lock,
 } from 'lucide-react';
 import type { AuditorProof, Finding, ThemeMode } from '../types';
 import type { ToastTone } from './ToastStack';
+import {
+  buildLinks,
+  createTopologyScene,
+  DEFAULT_CAMERA_POS,
+  DEFAULT_CAMERA_TARGET,
+  type NodeStatus,
+  type NodeVisualState,
+  type SceneNodeSpec,
+  type TopologySceneApi,
+  type TopologyVisualState,
+} from './topology/scene';
 
 interface Cloud3DTopologyProps {
   findings: Finding[];
@@ -31,48 +37,11 @@ interface Cloud3DTopologyProps {
   tall?: boolean;
 }
 
-type NodeStatus = 'critical' | 'warning' | 'compliant' | 'attacker' | 'auditor';
 type HudFilter = 'ALL' | 'CRITICAL' | 'COMPLIANT';
 type RenderMode = '3d' | '2d';
 
-interface TopologyNodeSpec {
-  id: string;
-  label: string;
-  sublabel: string;
-  position: [number, number, number];
-  status: NodeStatus;
-  shape: 'icosahedron' | 'cylinder' | 'octahedron' | 'dodecahedron' | 'box';
+interface TopologyNodeSpec extends SceneNodeSpec {
   finding: Finding | null;
-  attackFromInternet?: boolean;
-}
-
-interface PulseParticle {
-  mesh: THREE.Mesh;
-  curve: THREE.QuadraticBezierCurve3;
-  progress: number;
-  speed: number;
-}
-
-interface NodeVisualHandle {
-  spec: TopologyNodeSpec;
-  mesh: THREE.Mesh;
-  meshMat: THREE.MeshStandardMaterial;
-  spriteMat: THREE.SpriteMaterial;
-  rings: Array<{ mat: THREE.MeshBasicMaterial; baseOpacity: number }>;
-  haloMat: THREE.MeshBasicMaterial | null;
-  attackTubeMat: THREE.MeshBasicMaterial | null;
-  attackTubeBaseOpacity: number;
-  pulseMats: THREE.MeshBasicMaterial[];
-}
-
-interface SceneFilterRegistry {
-  nodes: NodeVisualHandle[];
-  lateralLineMat: THREE.LineDashedMaterial | null;
-  auditorLines: Array<{
-    targetSpec: TopologyNodeSpec;
-    mat: THREE.LineBasicMaterial;
-    baseOpacity: number;
-  }>;
 }
 
 interface AttackSimulationStep {
@@ -104,71 +73,6 @@ const ATTACK_SIMULATION_STEPS: AttackSimulationStep[] = [
   },
 ];
 
-function createLabelSprite(
-  title: string,
-  subtitle: string,
-  accentHex: string,
-  isDark: boolean
-): THREE.Sprite {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 144;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const bg = isDark ? 'rgba(18, 25, 21, 0.94)' : 'rgba(251, 251, 248, 0.96)';
-    const textMain = isDark ? '#EEF2EE' : '#141A16';
-    const textSub = isDark ? '#A9B5AD' : '#46504A';
-
-    const x = 24;
-    const y = 18;
-    const w = canvas.width - 48;
-    const h = canvas.height - 36;
-    const r = 12;
-
-    ctx.beginPath();
-    ctx.roundRect(x, y, w, h, r);
-    ctx.fillStyle = bg;
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = accentHex;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(x + 28, y + 38, 8, 0, Math.PI * 2);
-    ctx.fillStyle = accentHex;
-    ctx.fill();
-
-    ctx.font = '600 24px "JetBrains Mono", monospace';
-    ctx.fillStyle = textMain;
-    ctx.fillText(title.slice(0, 26), x + 48, y + 46);
-
-    ctx.font = '500 21px "Schibsted Grotesk", sans-serif';
-    ctx.fillStyle = textSub;
-    ctx.fillText(subtitle.slice(0, 34), x + 24, y + 84);
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  const material = new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-    depthTest: false,
-  });
-  const sprite = new THREE.Sprite(material);
-  sprite.scale.set(2.85, 0.8, 1);
-  return sprite;
-}
-
-const STATUS_HEX: Record<NodeStatus, string> = {
-  attacker: '#D2452A',
-  critical: '#D2452A',
-  warning: '#D99A1E',
-  compliant: '#86BC25',
-  auditor: '#2350B8',
-};
-
 const STATUS_BADGE: Record<NodeStatus, { label: string; cls: string; dot: string }> = {
   attacker: { label: 'Externe', cls: 'badge-critical', dot: 'bg-[var(--rupture)]' },
   critical: { label: 'Critique', cls: 'badge-critical', dot: 'bg-[var(--rupture)]' },
@@ -186,29 +90,17 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
   tall = false,
 }) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  const controlsRef = useRef<OrbitControls | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const apiRef = useRef<TopologySceneApi | null>(null);
 
   const prefersReducedInitial =
     typeof window !== 'undefined' &&
     Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
 
-  // Rotation désactivée par défaut : l'écran d'analyse reste stable (activable à la demande).
-  const autoRotateRef = useRef<boolean>(false);
   const reducedMotionRef = useRef<boolean>(prefersReducedInitial);
   const hudFilterRef = useRef<HudFilter>('ALL');
   const simStepRef = useRef<number | null>(null);
-  const filterRegistryRef = useRef<SceneFilterRegistry | null>(null);
-  const cameraTweenRef = useRef<{
-    active: boolean;
-    targetPos: THREE.Vector3;
-    targetLookAt: THREE.Vector3;
-  } | null>(null);
 
   const [renderMode, setRenderMode] = useState<RenderMode>('3d');
-  const [autoRotate, setAutoRotate] = useState<boolean>(false);
   const [hudFilter, setHudFilter] = useState<HudFilter>('ALL');
   const [simStep, setSimStep] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -229,184 +121,6 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
     },
     []
   );
-
-  const applyFilterToRegistry = useCallback(
-    (filter: HudFilter, activeSimStep: number | null = simStepRef.current) => {
-      const reg = filterRegistryRef.current;
-      if (!reg) return;
-
-      if (activeSimStep !== null) {
-        const step = ATTACK_SIMULATION_STEPS[activeSimStep];
-        const chainSet = new Set(step.activeChainIds);
-
-        for (const n of reg.nodes) {
-          const isPrimary = n.spec.id === step.nodeId;
-          const isInChain = chainSet.has(n.spec.id);
-          const isWormContrast =
-            activeSimStep === 3 && n.spec.id === 'archives-pacs';
-
-          const baseScale = isPrimary
-            ? 1.3
-            : isInChain
-            ? 1.08
-            : isWormContrast
-            ? 0.96
-            : 0.84;
-          n.mesh.userData.baseScale = baseScale;
-          n.mesh.scale.setScalar(baseScale);
-
-          const targetOpacity = isPrimary
-            ? 1
-            : isInChain
-            ? 0.94
-            : isWormContrast
-            ? 0.55
-            : 0.13;
-          n.meshMat.transparent = targetOpacity < 1;
-          n.meshMat.opacity = targetOpacity;
-          n.meshMat.needsUpdate = true;
-
-          n.spriteMat.opacity = isPrimary
-            ? 1
-            : isInChain
-            ? 0.92
-            : isWormContrast
-            ? 0.65
-            : 0.18;
-
-          for (const r of n.rings) {
-            r.mat.opacity = isWormContrast ? r.baseOpacity : 0.08;
-          }
-
-          if (n.haloMat) {
-            n.haloMat.opacity = isPrimary ? 0.92 : isInChain ? 0.65 : 0.05;
-          }
-
-          if (n.attackTubeMat) {
-            const beamActive =
-              (activeSimStep === 1 && n.spec.id === 'export-radiologie') ||
-              ((activeSimStep === 2 || activeSimStep === 3) &&
-                n.spec.id === 'allow-ssh-anywhere');
-            n.attackTubeMat.opacity = beamActive ? 0.96 : 0.06;
-          }
-
-          for (const pm of n.pulseMats) {
-            const beamActive =
-              (activeSimStep === 1 && n.spec.id === 'export-radiologie') ||
-              ((activeSimStep === 2 || activeSimStep === 3) &&
-                n.spec.id === 'allow-ssh-anywhere');
-            pm.transparent = !beamActive;
-            pm.opacity = beamActive ? 1 : 0.05;
-          }
-        }
-
-        if (reg.lateralLineMat) {
-          reg.lateralLineMat.transparent = true;
-          reg.lateralLineMat.opacity = activeSimStep === 3 ? 1 : 0.1;
-        }
-
-        for (const al of reg.auditorLines) {
-          al.mat.opacity = 0.06;
-        }
-        return;
-      }
-
-      for (const n of reg.nodes) {
-        const active = matchesHudFilter(n.spec.status, filter);
-        const baseScale = filter === 'ALL' ? 1 : active ? 1.12 : 0.85;
-        n.mesh.userData.baseScale = baseScale;
-        n.mesh.scale.setScalar(baseScale);
-
-        n.meshMat.transparent = !active;
-        n.meshMat.opacity = active ? 1 : 0.14;
-        n.meshMat.needsUpdate = true;
-
-        n.spriteMat.opacity = active ? 1 : 0.2;
-
-        for (const r of n.rings) {
-          r.mat.opacity = active
-            ? filter === 'COMPLIANT'
-              ? Math.min(1, r.baseOpacity * 1.2)
-              : r.baseOpacity
-            : 0.08;
-        }
-
-        if (n.haloMat) {
-          n.haloMat.opacity = active ? 0.68 : 0.06;
-        }
-
-        if (n.attackTubeMat) {
-          const showAttack = filter === 'ALL' || filter === 'CRITICAL';
-          n.attackTubeMat.opacity = showAttack
-            ? filter === 'CRITICAL'
-              ? Math.min(0.95, n.attackTubeBaseOpacity * 1.25)
-              : n.attackTubeBaseOpacity
-            : 0.06;
-        }
-
-        for (const pm of n.pulseMats) {
-          const showAttack = filter === 'ALL' || filter === 'CRITICAL';
-          pm.transparent = !showAttack;
-          pm.opacity = showAttack ? 1 : 0.06;
-        }
-      }
-
-      if (reg.lateralLineMat) {
-        const showLateral = filter === 'ALL' || filter === 'CRITICAL';
-        reg.lateralLineMat.transparent = true;
-        reg.lateralLineMat.opacity = showLateral ? 0.9 : 0.08;
-      }
-
-      for (const al of reg.auditorLines) {
-        if (filter === 'ALL') {
-          al.mat.opacity = al.baseOpacity;
-        } else if (filter === 'COMPLIANT') {
-          al.mat.opacity =
-            al.targetSpec.status === 'compliant' ? 0.68 : 0.14;
-        } else {
-          al.mat.opacity = 0.08;
-        }
-      }
-    },
-    [matchesHudFilter]
-  );
-
-  useEffect(() => {
-    hudFilterRef.current = hudFilter;
-    simStepRef.current = simStep;
-    applyFilterToRegistry(hudFilter, simStep);
-  }, [hudFilter, simStep, applyFilterToRegistry]);
-
-  useEffect(() => {
-    if (!isExpanded) return;
-    const onKeyDown = (ev: KeyboardEvent) => {
-      if (ev.key === 'Escape' && !document.querySelector('[role="dialog"]')) {
-        setIsExpanded(false);
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isExpanded]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const handleChange = (ev: MediaQueryListEvent) => {
-      reducedMotionRef.current = ev.matches;
-      if (ev.matches) {
-        setAutoRotate(false);
-      }
-    };
-    mq.addEventListener('change', handleChange);
-    return () => mq.removeEventListener('change', handleChange);
-  }, []);
-
-  useEffect(() => {
-    autoRotateRef.current = autoRotate;
-    if (controlsRef.current) {
-      controlsRef.current.autoRotate = autoRotate;
-    }
-  }, [autoRotate]);
 
   const nodeSpecs = useMemo<TopologyNodeSpec[]>(() => {
     const findMatch = (keywords: string[]) =>
@@ -540,8 +254,110 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
     ];
   }, [findings, proof]);
 
+  const linkSpecs = useMemo(() => buildLinks(nodeSpecs), [nodeSpecs]);
+
+  /** Calcule l'état visuel (filtre ou étape de propagation) et l'applique à la scène. */
+  const applyFilterToRegistry = useCallback(
+    (filter: HudFilter, activeSimStep: number | null = simStepRef.current) => {
+      const api = apiRef.current;
+      if (!api) return;
+      const state: TopologyVisualState = { nodes: {}, links: {} };
+
+      if (activeSimStep !== null) {
+        const step = ATTACK_SIMULATION_STEPS[activeSimStep];
+        const chainSet = new Set(step.activeChainIds);
+        for (const n of nodeSpecs) {
+          const isPrimary = n.id === step.nodeId;
+          const isInChain = chainSet.has(n.id);
+          const isWormContrast = activeSimStep === 3 && n.id === 'archives-pacs';
+          const s: NodeVisualState = {
+            scale: isPrimary ? 1.3 : isInChain ? 1.08 : isWormContrast ? 0.96 : 0.84,
+            opacity: isPrimary ? 1 : isInChain ? 0.94 : isWormContrast ? 0.55 : 0.13,
+            label: isPrimary ? 1 : isInChain ? 0.92 : isWormContrast ? 0.65 : 0.18,
+            accent: isPrimary || isInChain || isWormContrast ? 1 : 0.1,
+          };
+          state.nodes[n.id] = s;
+        }
+        for (const l of linkSpecs) {
+          if (l.kind === 'attack') {
+            const beamActive =
+              (activeSimStep === 1 && l.to === 'export-radiologie') ||
+              ((activeSimStep === 2 || activeSimStep === 3) &&
+                l.to === 'allow-ssh-anywhere');
+            state.links[l.id] = beamActive ? 1.25 : 0.08;
+          } else if (l.kind === 'lateral') {
+            state.links[l.id] = activeSimStep === 3 ? 1.5 : 0.15;
+          } else {
+            state.links[l.id] = 0.25;
+          }
+        }
+        api.applyState(state);
+        return;
+      }
+
+      for (const n of nodeSpecs) {
+        const active = matchesHudFilter(n.status, filter);
+        state.nodes[n.id] = {
+          scale: filter === 'ALL' ? 1 : active ? 1.12 : 0.85,
+          opacity: active ? 1 : 0.14,
+          label: active ? 1 : 0.2,
+          accent: active ? 1 : 0.08,
+        };
+      }
+      for (const l of linkSpecs) {
+        const showAttack = filter === 'ALL' || filter === 'CRITICAL';
+        if (l.kind === 'attack') {
+          state.links[l.id] = showAttack ? (filter === 'CRITICAL' ? 1.2 : 1) : 0.08;
+        } else if (l.kind === 'lateral') {
+          state.links[l.id] = showAttack ? 1 : 0.1;
+        } else {
+          const target = nodeSpecs.find((s) => s.id === l.from);
+          state.links[l.id] =
+            filter === 'ALL'
+              ? 1
+              : filter === 'COMPLIANT'
+              ? target?.status === 'compliant'
+                ? 2.6
+                : 0.5
+              : 0.3;
+        }
+      }
+      api.applyState(state);
+    },
+    [matchesHudFilter, nodeSpecs, linkSpecs]
+  );
+
+  useEffect(() => {
+    hudFilterRef.current = hudFilter;
+    simStepRef.current = simStep;
+    applyFilterToRegistry(hudFilter, simStep);
+  }, [hudFilter, simStep, applyFilterToRegistry]);
+
+  useEffect(() => {
+    if (!isExpanded) return;
+    const onKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape' && !document.querySelector('[role="dialog"]')) {
+        setIsExpanded(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = (ev: MediaQueryListEvent) => {
+      reducedMotionRef.current = ev.matches;
+      apiRef.current?.setReducedMotion(ev.matches);
+    };
+    mq.addEventListener('change', handleChange);
+    return () => mq.removeEventListener('change', handleChange);
+  }, []);
+
   const focusCameraOnNode = useCallback((spec: TopologyNodeSpec) => {
-    if (!cameraRef.current || !controlsRef.current) return;
+    const api = apiRef.current;
+    if (!api) return;
     const [nx, ny, nz] = spec.position;
     const nextLookAt = new THREE.Vector3(nx * 0.72, ny * 0.45, nz * 0.72);
     const nextPos = new THREE.Vector3(
@@ -549,514 +365,90 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       Math.max(2.9, ny + 2.8),
       nz * 0.65 + 7.1
     );
-    if (reducedMotionRef.current) {
-      cameraRef.current.position.copy(nextPos);
-      controlsRef.current.target.copy(nextLookAt);
-      controlsRef.current.update();
-    } else {
-      cameraTweenRef.current = {
-        active: true,
-        targetPos: nextPos,
-        targetLookAt: nextLookAt,
-      };
-    }
+    api.flyTo(nextPos, nextLookAt);
   }, []);
 
   const effectiveMode: RenderMode = webglError ? '2d' : renderMode;
+
+  // Les callbacks vivent dans des refs : la scène n'est reconstruite que si
+  // les ressources changent (pas au changement de thème ni de sélection).
+  const onSelectFindingRef = useRef(onSelectFinding);
+  const focusRef = useRef(focusCameraOnNode);
+  const applyRef = useRef(applyFilterToRegistry);
+  useEffect(() => {
+    onSelectFindingRef.current = onSelectFinding;
+    focusRef.current = focusCameraOnNode;
+    applyRef.current = applyFilterToRegistry;
+  });
 
   useEffect(() => {
     if (effectiveMode !== '3d') return;
     const container = mountRef.current;
     if (!container) return;
 
-    const isDark = theme === 'dark';
-    let renderer: THREE.WebGLRenderer;
-
+    const specById = new Map(nodeSpecs.map((s) => [s.id, s]));
+    let api: TopologySceneApi;
     try {
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: false,
-        powerPreference: 'high-performance',
-      });
+      api = createTopologyScene(
+        container,
+        nodeSpecs,
+        {
+          onHover: (id) => setHoveredSpec(id ? specById.get(id) || null : null),
+          onClick: (id) => {
+            const spec = id ? specById.get(id) : undefined;
+            if (spec) {
+              setSelectedNodeId(spec.id);
+              focusRef.current(spec);
+              if (spec.finding) onSelectFindingRef.current(spec.finding);
+            } else {
+              setSelectedNodeId(null);
+            }
+          },
+          onDoubleClick: (id) => {
+            const spec = id ? specById.get(id) : undefined;
+            if (spec) {
+              focusRef.current(spec);
+            } else {
+              setSelectedNodeId(null);
+              apiRef.current?.flyTo(DEFAULT_CAMERA_POS, DEFAULT_CAMERA_TARGET);
+            }
+          },
+        },
+        { reducedMotion: reducedMotionRef.current }
+      );
     } catch {
       setWebglError(true);
       setRenderMode('2d');
       return;
     }
-
-    const width = container.clientWidth || 640;
-    const height = container.clientHeight || 340;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(width, height);
-    renderer.setClearColor(isDark ? 0x0c110f : 0xf2f3ef, 1);
-
-    container.innerHTML = '';
-    container.appendChild(renderer.domElement);
-    rendererRef.current = renderer;
-
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(isDark ? 0x0c110f : 0xf2f3ef, 0.03);
-    sceneRef.current = scene;
-
-    const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 100);
-    camera.position.set(-1.1, 4.4, 9.6);
-    cameraRef.current = camera;
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.06;
-    controls.minDistance = 5;
-    controls.maxDistance = 16;
-    controls.maxPolarAngle = Math.PI / 1.9;
-    controls.target.set(0.5, 0.15, 0);
-    controls.autoRotate = autoRotateRef.current;
-    controls.autoRotateSpeed = 0.55;
-    controlsRef.current = controls;
-
-    const ambient = new THREE.AmbientLight(0xffffff, isDark ? 0.78 : 1.05);
-    scene.add(ambient);
-
-    const dirLight = new THREE.DirectionalLight(0xffffff, isDark ? 1.25 : 0.95);
-    dirLight.position.set(5, 10, 7);
-    scene.add(dirLight);
-
-    const greenPoint = new THREE.PointLight(0x86bc25, isDark ? 0.6 : 0.22, 14);
-    greenPoint.position.set(3.2, 2.2, 0.2);
-    scene.add(greenPoint);
-
-    const redPoint = new THREE.PointLight(0xd2452a, isDark ? 0.7 : 0.25, 14);
-    redPoint.position.set(-3.5, 2.0, 0);
-    scene.add(redPoint);
-
-    const grid = new THREE.GridHelper(
-      18,
-      24,
-      isDark ? 0x252d29 : 0xb3bfb7,
-      isDark ? 0x161c19 : 0xdce2dc
-    );
-    grid.position.y = -1.55;
-    scene.add(grid);
-
-    const platformGeo = new THREE.CylinderGeometry(3.85, 4.05, 0.12, 6);
-    const platformMat = new THREE.MeshStandardMaterial({
-      color: isDark ? 0x18211c : 0xdde3dc,
-      transparent: true,
-      opacity: isDark ? 0.5 : 0.55,
-      roughness: 0.95,
-      metalness: 0,
-    });
-    const platform = new THREE.Mesh(platformGeo, platformMat);
-    platform.position.set(2.05, -1.48, 0);
-    scene.add(platform);
-
-    const perimeterRingGeo = new THREE.RingGeometry(3.9, 3.98, 6);
-    const perimeterRingMat = new THREE.MeshBasicMaterial({
-      color: 0x86bc25,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.5,
-    });
-    const perimeterRing = new THREE.Mesh(perimeterRingGeo, perimeterRingMat);
-    perimeterRing.rotation.x = -Math.PI / 2;
-    perimeterRing.position.set(2.05, -1.41, 0);
-    scene.add(perimeterRing);
-
-    const pickableMeshes: THREE.Mesh[] = [];
-    const meshToSpec = new Map<THREE.Object3D, TopologyNodeSpec>();
-    const animatedRings: Array<{
-      mesh: THREE.Mesh;
-      speedX: number;
-      speedY: number;
-    }> = [];
-    const threatHalos: THREE.Mesh[] = [];
-    const pulseParticles: PulseParticle[] = [];
-    const nodeVisuals: NodeVisualHandle[] = [];
-    let lateralLineMatRef: THREE.LineDashedMaterial | null = null;
-    const auditorLineRefs: SceneFilterRegistry['auditorLines'] = [];
-
-    const internetSpec = nodeSpecs[0];
-    const internetPos = new THREE.Vector3(...internetSpec.position);
-
-    for (const spec of nodeSpecs) {
-      const hexStr = STATUS_HEX[spec.status];
-      const color = new THREE.Color(hexStr);
-      const pos = new THREE.Vector3(...spec.position);
-
-      let geo: THREE.BufferGeometry;
-      if (spec.shape === 'icosahedron') {
-        geo = new THREE.IcosahedronGeometry(0.56, 1);
-      } else if (spec.shape === 'cylinder') {
-        geo = new THREE.CylinderGeometry(0.42, 0.42, 0.68, 24);
-      } else if (spec.shape === 'octahedron') {
-        geo = new THREE.OctahedronGeometry(0.48, 0);
-      } else if (spec.shape === 'dodecahedron') {
-        geo = new THREE.DodecahedronGeometry(0.45, 0);
-      } else {
-        geo = new THREE.BoxGeometry(0.62, 0.62, 0.62);
-      }
-
-      const mat = new THREE.MeshStandardMaterial({
-        color,
-        emissive: color,
-        emissiveIntensity: isDark ? 0.18 : 0.04,
-        roughness: 0.28,
-        metalness: 0.45,
-        wireframe: spec.status === 'attacker',
-      });
-
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.copy(pos);
-      mesh.userData.baseScale = 1;
-      scene.add(mesh);
-      pickableMeshes.push(mesh);
-      meshToSpec.set(mesh, spec);
-
-      const sprite = createLabelSprite(spec.label, spec.sublabel, hexStr, isDark);
-      sprite.position.set(pos.x, pos.y + 0.98, pos.z);
-      scene.add(sprite);
-
-      const ringHandles: Array<{
-        mat: THREE.MeshBasicMaterial;
-        baseOpacity: number;
-      }> = [];
-      let haloMatHandle: THREE.MeshBasicMaterial | null = null;
-      let attackTubeMatHandle: THREE.MeshBasicMaterial | null = null;
-      const attackTubeBaseOpacity = isDark ? 0.62 : 0.78;
-      const pulseMatHandles: THREE.MeshBasicMaterial[] = [];
-
-      if (spec.status === 'compliant' || spec.status === 'auditor') {
-        const ring1Geo = new THREE.TorusGeometry(0.72, 0.028, 12, 48);
-        const ring1Mat = new THREE.MeshBasicMaterial({
-          color: 0x86bc25,
-          transparent: true,
-          opacity: 0.9,
-        });
-        const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
-        ring1.position.copy(pos);
-        ring1.rotation.x = Math.PI / 2.4;
-        scene.add(ring1);
-        animatedRings.push({ mesh: ring1, speedX: 0.01, speedY: 0.018 });
-        ringHandles.push({ mat: ring1Mat, baseOpacity: 0.9 });
-
-        const ring2Geo = new THREE.TorusGeometry(0.86, 0.018, 12, 48);
-        const ring2Mat = new THREE.MeshBasicMaterial({
-          color: 0x86bc25,
-          transparent: true,
-          opacity: 0.48,
-        });
-        const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
-        ring2.position.copy(pos);
-        ring2.rotation.y = Math.PI / 3;
-        scene.add(ring2);
-        animatedRings.push({ mesh: ring2, speedX: -0.014, speedY: 0.01 });
-        ringHandles.push({ mat: ring2Mat, baseOpacity: 0.48 });
-      }
-
-      if (spec.status === 'critical' || spec.status === 'attacker') {
-        const haloGeo = new THREE.RingGeometry(0.62, 0.78, 32);
-        const haloMat = new THREE.MeshBasicMaterial({
-          color: 0xd2452a,
-          side: THREE.DoubleSide,
-          transparent: true,
-          opacity: 0.65,
-        });
-        const halo = new THREE.Mesh(haloGeo, haloMat);
-        halo.position.set(pos.x, pos.y - 0.34, pos.z);
-        halo.rotation.x = -Math.PI / 2;
-        scene.add(halo);
-        threatHalos.push(halo);
-        haloMatHandle = haloMat;
-      }
-
-      if (spec.attackFromInternet && spec.id !== 'internet') {
-        const mid = internetPos.clone().lerp(pos, 0.5);
-        mid.y += 1.45;
-        const curve = new THREE.QuadraticBezierCurve3(internetPos, mid, pos);
-
-        const tubeGeo = new THREE.TubeGeometry(curve, 44, 0.036, 8, false);
-        const tubeMat = new THREE.MeshBasicMaterial({
-          color: 0xd2452a,
-          transparent: true,
-          opacity: attackTubeBaseOpacity,
-        });
-        const tube = new THREE.Mesh(tubeGeo, tubeMat);
-        scene.add(tube);
-        attackTubeMatHandle = tubeMat;
-
-        for (let p = 0; p < 2; p += 1) {
-          const pulseGeo = new THREE.SphereGeometry(0.095, 12, 12);
-          const pulseMat = new THREE.MeshBasicMaterial({ color: 0xe8735a });
-          const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
-          pulseMesh.position.copy(curve.getPointAt(p * 0.5 + 0.25));
-          scene.add(pulseMesh);
-          pulseMatHandles.push(pulseMat);
-          pulseParticles.push({
-            mesh: pulseMesh,
-            curve,
-            progress: p * 0.5,
-            speed: 0.0065,
-          });
-        }
-      }
-
-      nodeVisuals.push({
-        spec,
-        mesh,
-        meshMat: mat,
-        spriteMat: sprite.material as THREE.SpriteMaterial,
-        rings: ringHandles,
-        haloMat: haloMatHandle,
-        attackTubeMat: attackTubeMatHandle,
-        attackTubeBaseOpacity,
-        pulseMats: pulseMatHandles,
-      });
-    }
-
-    const sshSpec = nodeSpecs.find((n) => n.id === 'allow-ssh-anywhere');
-    const dpiSpec = nodeSpecs.find((n) => n.id === 'backups-dpi');
-    if (sshSpec && dpiSpec && dpiSpec.status !== 'compliant') {
-      const p1 = new THREE.Vector3(...sshSpec.position);
-      const p2 = new THREE.Vector3(...dpiSpec.position);
-      const mid = p1.clone().lerp(p2, 0.5);
-      mid.y += 0.8;
-      const lateralCurve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
-      const pts = lateralCurve.getPoints(32);
-      const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
-      const lineMat = new THREE.LineDashedMaterial({
-        color: 0xd99a1e,
-        dashSize: 0.22,
-        gapSize: 0.14,
-      });
-      const dashedLine = new THREE.Line(lineGeo, lineMat);
-      dashedLine.computeLineDistances();
-      scene.add(dashedLine);
-      lateralLineMatRef = lineMat;
-    }
-
-    const auditorSpec = nodeSpecs.find((n) => n.id === 'auditor-sa');
-    if (auditorSpec) {
-      const auditorPos = new THREE.Vector3(...auditorSpec.position);
-      const baseAudOpacity = isDark ? 0.22 : 0.34;
-      for (const target of nodeSpecs) {
-        if (target.id === 'internet' || target.id === 'auditor-sa') continue;
-        const tPos = new THREE.Vector3(...target.position);
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([
-          auditorPos,
-          tPos,
-        ]);
-        const lineMat = new THREE.LineBasicMaterial({
-          color: 0x86bc25,
-          transparent: true,
-          opacity: baseAudOpacity,
-        });
-        scene.add(new THREE.Line(lineGeo, lineMat));
-        auditorLineRefs.push({
-          targetSpec: target,
-          mat: lineMat,
-          baseOpacity: baseAudOpacity,
-        });
-      }
-    }
-
-    filterRegistryRef.current = {
-      nodes: nodeVisuals,
-      lateralLineMat: lateralLineMatRef,
-      auditorLines: auditorLineRefs,
-    };
-    applyFilterToRegistry(hudFilterRef.current, simStepRef.current);
-
-    const raycaster = new THREE.Raycaster();
-    const pointer = new THREE.Vector2();
-    let hoveredMesh: THREE.Mesh | null = null;
-    let downX = 0;
-    let downY = 0;
-
-    const updatePointer = (ev: PointerEvent) => {
-      const rect = renderer.domElement.getBoundingClientRect();
-      pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
-      pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
-    };
-
-    const onPointerMove = (ev: PointerEvent) => {
-      updatePointer(ev);
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(pickableMeshes, false);
-      const hitMesh = (hits[0]?.object as THREE.Mesh | undefined) || null;
-
-      if (hitMesh !== hoveredMesh) {
-        if (hoveredMesh) {
-          const prevBase = (hoveredMesh.userData.baseScale as number) || 1;
-          hoveredMesh.scale.setScalar(prevBase);
-        }
-        hoveredMesh = hitMesh;
-        if (hoveredMesh) {
-          const base = (hoveredMesh.userData.baseScale as number) || 1;
-          hoveredMesh.scale.setScalar(base * 1.18);
-          const spec = meshToSpec.get(hoveredMesh) || null;
-          setHoveredSpec(spec);
-          renderer.domElement.style.cursor = 'pointer';
-        } else {
-          setHoveredSpec(null);
-          renderer.domElement.style.cursor = 'grab';
-        }
-      }
-    };
-
-    const onPointerDown = (ev: PointerEvent) => {
-      downX = ev.clientX;
-      downY = ev.clientY;
-      if (cameraTweenRef.current) {
-        cameraTweenRef.current.active = false;
-      }
-    };
-
-    const onWheel = () => {
-      if (cameraTweenRef.current) {
-        cameraTweenRef.current.active = false;
-      }
-    };
-
-    const onPointerUp = (ev: PointerEvent) => {
-      const dist = Math.hypot(ev.clientX - downX, ev.clientY - downY);
-      if (dist > 6) return;
-      updatePointer(ev);
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(pickableMeshes, false);
-      if (hits.length > 0) {
-        const spec = meshToSpec.get(hits[0].object);
-        if (spec) {
-          setSelectedNodeId(spec.id);
-          focusCameraOnNode(spec);
-          if (spec.finding) {
-            onSelectFinding(spec.finding);
-          }
-        }
-      } else {
-        setSelectedNodeId(null);
-      }
-    };
-
-    renderer.domElement.addEventListener('pointermove', onPointerMove);
-    renderer.domElement.addEventListener('pointerdown', onPointerDown);
-    renderer.domElement.addEventListener('pointerup', onPointerUp);
-    renderer.domElement.addEventListener('wheel', onWheel, { passive: true });
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (!entry) return;
-      const w = Math.max(280, entry.contentRect.width);
-      const h = Math.max(260, entry.contentRect.height);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    });
-    resizeObserver.observe(container);
-
-    let frameId = 0;
-    let tick = 0;
-    const animate = () => {
-      frameId = window.requestAnimationFrame(animate);
-
-      const tween = cameraTweenRef.current;
-      if (tween?.active) {
-        camera.position.lerp(tween.targetPos, 0.088);
-        controls.target.lerp(tween.targetLookAt, 0.095);
-        if (
-          camera.position.distanceTo(tween.targetPos) < 0.025 &&
-          controls.target.distanceTo(tween.targetLookAt) < 0.025
-        ) {
-          camera.position.copy(tween.targetPos);
-          controls.target.copy(tween.targetLookAt);
-          tween.active = false;
-        }
-      }
-
-      if (!reducedMotionRef.current) {
-        tick += 0.035;
-
-        for (const item of animatedRings) {
-          item.mesh.rotation.x += item.speedX;
-          item.mesh.rotation.y += item.speedY;
-        }
-
-        const pulseScale = 1 + Math.sin(tick * 2.2) * 0.14;
-        for (const halo of threatHalos) {
-          halo.scale.setScalar(pulseScale);
-        }
-
-        for (const p of pulseParticles) {
-          p.progress = (p.progress + p.speed) % 1;
-          const pt = p.curve.getPointAt(p.progress);
-          p.mesh.position.copy(pt);
-        }
-      }
-
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
+    apiRef.current = api;
+    applyRef.current(hudFilterRef.current, simStepRef.current);
 
     return () => {
-      window.cancelAnimationFrame(frameId);
-      resizeObserver.disconnect();
-      filterRegistryRef.current = null;
-      rendererRef.current = null;
-      sceneRef.current = null;
-      controlsRef.current = null;
-      cameraRef.current = null;
-      renderer.domElement.removeEventListener('pointermove', onPointerMove);
-      renderer.domElement.removeEventListener('pointerdown', onPointerDown);
-      renderer.domElement.removeEventListener('pointerup', onPointerUp);
-      renderer.domElement.removeEventListener('wheel', onWheel);
-      controls.dispose();
-
-      scene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line) {
-          obj.geometry.dispose();
-          if (Array.isArray(obj.material)) {
-            obj.material.forEach((m) => m.dispose());
-          } else {
-            obj.material.dispose();
-          }
-        } else if (obj instanceof THREE.Sprite) {
-          obj.material.map?.dispose();
-          obj.material.dispose();
-        }
-      });
-      renderer.dispose();
+      apiRef.current = null;
+      api.dispose();
     };
-  }, [
-    effectiveMode,
-    nodeSpecs,
-    theme,
-    onSelectFinding,
-    applyFilterToRegistry,
-    focusCameraOnNode,
-  ]);
+  }, [effectiveMode, nodeSpecs]);
+
+  // Changement de thème : relecture des variables CSS une fois le DOM à jour.
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => apiRef.current?.refreshPalette());
+    return () => window.cancelAnimationFrame(id);
+  }, [theme]);
+
+  useEffect(() => {
+    apiRef.current?.setSelected(selectedNodeId);
+  }, [selectedNodeId]);
 
   const resetCamera = useCallback(() => {
     setSelectedNodeId(null);
-    if (!cameraRef.current || !controlsRef.current) return;
-    const defaultPos = new THREE.Vector3(-1.1, 4.4, 9.6);
-    const defaultTarget = new THREE.Vector3(0.5, 0.15, 0);
-    if (reducedMotionRef.current) {
-      cameraRef.current.position.copy(defaultPos);
-      controlsRef.current.target.copy(defaultTarget);
-      controlsRef.current.update();
-    } else {
-      cameraTweenRef.current = {
-        active: true,
-        targetPos: defaultPos,
-        targetLookAt: defaultTarget,
-      };
-    }
+    apiRef.current?.flyTo(DEFAULT_CAMERA_POS, DEFAULT_CAMERA_TARGET);
   }, []);
 
   const capturePngHd = useCallback(() => {
-    const renderer = rendererRef.current;
-    const scene = sceneRef.current;
-    const camera = cameraRef.current;
-    if (!renderer || !scene || !camera) return;
+    const api = apiRef.current;
+    if (!api) return;
+    const { renderer, scene, camera } = api;
 
     const canvas = renderer.domElement;
     const w = canvas.clientWidth || 960;
@@ -1069,8 +461,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
         renderer.setPixelRatio(hdRatio);
         renderer.setSize(w, h, false);
       }
-      controlsRef.current?.update();
-      renderer.render(scene, camera);
+      api.renderNow();
       const dataUrl = renderer.domElement.toDataURL('image/png');
 
       if (hdRatio !== prevRatio) {
@@ -1102,16 +493,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
   }, [onNotify]);
 
   useEffect(() => {
-    if (simStep === null) {
-      if (controlsRef.current) {
-        controlsRef.current.autoRotate = autoRotateRef.current;
-      }
-      return;
-    }
-
-    if (controlsRef.current) {
-      controlsRef.current.autoRotate = false;
-    }
+    if (simStep === null) return;
 
     const stepMeta = ATTACK_SIMULATION_STEPS[simStep];
     const targetSpec = nodeSpecs.find((n) => n.id === stepMeta.nodeId);
@@ -1358,21 +740,6 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           <>
             <button
               type="button"
-              aria-pressed={autoRotate}
-              aria-label="Rotation orbitale automatique"
-              onClick={() => setAutoRotate((v) => !v)}
-              className="p-1.5 rounded-lg surface-panel/90 backdrop-blur-xs text-sub hover:text-main transition cursor-pointer"
-              title={autoRotate ? 'Pause rotation' : 'Activer rotation'}
-            >
-              {autoRotate ? (
-                <Pause className="w-3.5 h-3.5 text-accent" />
-              ) : (
-                <Play className="w-3.5 h-3.5 text-accent" />
-              )}
-            </button>
-
-            <button
-              type="button"
               aria-label="Capturer PNG haute résolution de la scène 3D"
               onClick={capturePngHd}
               className="p-1.5 rounded-lg surface-panel/90 backdrop-blur-xs text-sub hover:text-main transition cursor-pointer"
@@ -1523,8 +890,12 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                 <span>Exposé</span>
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[var(--deloitte)]" />
+                <span className="w-2 h-2 rounded-full bg-[var(--reel)]" />
                 <span>Conforme</span>
+              </span>
+              <span className="inline-flex items-center gap-1" title="La sonde balaie la configuration en lecture seule, sans jamais lire les données">
+                <span className="w-3 h-px bg-[var(--reel)]" />
+                <span>Balayage en lecture seule</span>
               </span>
             </div>
           )}
