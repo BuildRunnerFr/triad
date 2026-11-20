@@ -521,7 +521,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                           <tr className="surface-subtle">
                             <td
                               colSpan={4}
-                              className="px-4 py-3 border-l-4 border-l-[#86BC25]"
+                              className="px-4 py-3 border-l-4 border-l-[var(--deloitte)]"
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                                 <div className="space-y-1">

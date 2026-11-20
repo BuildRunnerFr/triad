@@ -171,8 +171,8 @@ const STATUS_BADGE: Record<NodeStatus, { label: string; cls: string; dot: string
   attacker: { label: 'Externe', cls: 'badge-critical', dot: 'bg-rose-500' },
   critical: { label: 'Critique', cls: 'badge-critical', dot: 'bg-rose-500' },
   warning: { label: 'Partiel', cls: 'badge-warning', dot: 'bg-amber-400' },
-  compliant: { label: 'Conforme ✓', cls: 'badge-success', dot: 'bg-[#86BC25]' },
-  auditor: { label: 'Sonde 403 ✓', cls: 'badge-success', dot: 'bg-[#86BC25]' },
+  compliant: { label: 'Conforme ✓', cls: 'badge-success', dot: 'bg-[var(--deloitte)]' },
+  auditor: { label: 'Sonde 403 ✓', cls: 'badge-success', dot: 'bg-[var(--deloitte)]' },
 };
 
 export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
@@ -1222,7 +1222,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           role="region"
           aria-label="Scène 3D Cloud GCP — flèches pour parcourir les actifs, Entrée pour inspecter"
           onKeyDown={handleCanvasKeyDown}
-          className={`w-full transition-[height] duration-200 cursor-grab active:cursor-grabbing focus:outline-none focus:ring-2 focus:ring-[#86BC25]/60 ${
+          className={`w-full transition-[height] duration-200 cursor-grab active:cursor-grabbing focus:outline-none focus:ring-2 focus:ring-[var(--deloitte)]/60 ${
             isExpanded ? 'h-[560px]' : 'h-[350px]'
           }`}
         />
@@ -1246,7 +1246,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                     if (spec.finding) onSelectFinding(spec.finding);
                   }}
                   className={`text-left surface-card hover:border-strong rounded-xl px-3 py-2.5 transition flex items-center justify-between gap-2 cursor-pointer ${
-                    isSel ? 'ring-1 ring-[#86BC25]' : ''
+                    isSel ? 'ring-1 ring-[var(--deloitte)]' : ''
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -1265,7 +1265,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
 
                   <div className="flex items-center gap-1.5 shrink-0">
                     {spec.finding && (
-                      <span className="px-1.5 py-0.5 rounded bg-[#86BC25] text-black font-mono text-[10px] font-extrabold">
+                      <span className="px-1.5 py-0.5 rounded bg-[var(--deloitte)] text-black font-mono text-[10px] font-extrabold">
                         {spec.finding.id}
                       </span>
                     )}
@@ -1309,7 +1309,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           const activeCls =
             key === 'CRITICAL'
               ? 'bg-rose-500 text-white border border-rose-400'
-              : 'bg-[#86BC25] text-black border border-[#86BC25]';
+              : 'bg-[var(--deloitte)] text-black border border-[var(--deloitte)]';
           return (
             <button
               key={key}
@@ -1362,7 +1362,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
               onClick={() => setRenderMode('3d')}
               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-extrabold transition cursor-pointer ${
                 effectiveMode === '3d'
-                  ? 'bg-[#86BC25] text-black'
+                  ? 'bg-[var(--deloitte)] text-black'
                   : 'text-sub hover:text-main'
               }`}
               title="Vue 3D WebGL"
@@ -1379,7 +1379,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
               }}
               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-extrabold transition cursor-pointer ${
                 effectiveMode === '2d'
-                  ? 'bg-[#86BC25] text-black'
+                  ? 'bg-[var(--deloitte)] text-black'
                   : 'text-sub hover:text-main'
               }`}
               title="Repli 2D accessible"
@@ -1438,7 +1438,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
               onClick={() => setIsExpanded((v) => !v)}
               className={`p-1.5 rounded-lg transition cursor-pointer ${
                 isExpanded
-                  ? 'bg-[#86BC25] text-black'
+                  ? 'bg-[var(--deloitte)] text-black'
                   : 'surface-panel/90 backdrop-blur-xs text-sub hover:text-main'
               }`}
               title={isExpanded ? 'Réduire (Échap)' : 'Plein cadre'}
@@ -1495,7 +1495,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                   <button
                     type="button"
                     onClick={() => onSelectFinding(activeSimSpec.finding!)}
-                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#86BC25] text-black text-[10px] font-extrabold font-mono cursor-pointer"
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--deloitte)] text-black text-[10px] font-extrabold font-mono cursor-pointer"
                   >
                     <span>{activeSimSpec.finding.id}</span>
                     <ArrowUpRight className="w-3 h-3" />
@@ -1534,7 +1534,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                   <button
                     type="button"
                     onClick={() => onSelectFinding(activeCardSpec.finding!)}
-                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#86BC25] hover:bg-[#96cf2e] text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
                   >
                     <span>{activeCardSpec.finding.id}</span>
                     <ArrowUpRight className="w-3 h-3" />
@@ -1559,7 +1559,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                 <span>Exposé</span>
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#86BC25]" />
+                <span className="w-2 h-2 rounded-full bg-[var(--deloitte)]" />
                 <span>Conforme</span>
               </span>
             </div>

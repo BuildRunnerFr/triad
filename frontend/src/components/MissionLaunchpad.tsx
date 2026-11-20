@@ -282,7 +282,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                       onClick={() => onSelectSession(sess.session_id)}
                       className={`min-h-[28px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
                         active
-                          ? 'bg-[#86BC25] text-black'
+                          ? 'bg-[var(--deloitte)] text-black'
                           : 'text-sub hover:text-main'
                       }`}
                     >
@@ -294,7 +294,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                       {anyReady && (
                         <span
                           className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            active ? 'bg-black' : 'bg-[#86BC25]'
+                            active ? 'bg-black' : 'bg-[var(--deloitte)]'
                           }`}
                         />
                       )}
@@ -312,7 +312,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
               aria-label="Sélectionner une session d'audit enregistrée"
               value={activeSessionId}
               onChange={(e) => onSelectSession(e.target.value)}
-              className="min-h-[34px] max-w-[230px] rounded-xl surface-card px-2.5 py-1 text-xs font-semibold text-main hover:border-strong focus:outline-none focus:border-[#86BC25] transition cursor-pointer"
+              className="min-h-[34px] max-w-[230px] rounded-xl surface-card px-2.5 py-1 text-xs font-semibold text-main hover:border-strong focus:outline-none focus:border-[var(--deloitte)] transition cursor-pointer"
             >
               {availableSessions.map((sess) => (
                 <option key={sess.session_id} value={sess.session_id}>
@@ -330,7 +330,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                 disabled={isExportingSession}
                 onClick={handleTriggerExportSession}
                 title={`Exporter le snapshot JSON signé de la session ${activeSessionId}`}
-                className="min-h-[34px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl surface-card hover:border-[#86BC25] disabled:opacity-50 text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
+                className="min-h-[34px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
               >
                 {isExportingSession ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
@@ -356,7 +356,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                   disabled={isImportingSession}
                   onClick={() => sessionImportInputRef.current?.click()}
                   title="Importer un snapshot de session (.json)"
-                  className="min-h-[34px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl surface-card hover:border-[#86BC25] disabled:opacity-50 text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
+                  className="min-h-[34px] inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl surface-card hover:border-[var(--deloitte)] disabled:opacity-50 text-xs font-semibold text-sub hover:text-main transition cursor-pointer"
                 >
                   {isImportingSession ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
@@ -383,7 +383,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
             <button
               type="button"
               onClick={onCreateNewSession}
-              className="min-h-[34px] inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[#86BC25]/45 bg-[var(--accent-soft)] hover:bg-[#86BC25] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
+              className="min-h-[34px] inline-flex items-center gap-1.5 px-3 py-1 rounded-xl border border-[var(--deloitte)]/45 bg-[var(--accent-soft)] hover:bg-[var(--deloitte)] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Nouvelle session</span>
@@ -427,7 +427,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* BLOC 1 : SCÉNARIO, PHASE & LANCEMENT */}
         <div className="xl:col-span-7 surface-panel rounded-2xl p-6 space-y-6 relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-56 h-56 rounded-full bg-[#86BC25]/8 blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-56 h-56 rounded-full bg-[var(--deloitte)]/8 blur-3xl pointer-events-none" />
 
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -452,7 +452,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
               onClick={() => onModeChange('AVANT')}
               className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
                 mode === 'AVANT'
-                  ? 'border-[#86BC25] bg-[var(--accent-soft)] shadow-xs'
+                  ? 'border-[var(--deloitte)] bg-[var(--accent-soft)] shadow-xs'
                   : 'surface-card hover:border-strong'
               }`}
             >
@@ -461,7 +461,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                   Phase AVANT
                 </span>
                 {modesReady?.AVANT && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#86BC25] text-black">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--deloitte)] text-black">
                     <CheckCircle2 className="w-3 h-3" />
                     Prêt
                   </span>
@@ -480,7 +480,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
               onClick={() => onModeChange('APRES')}
               className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
                 mode === 'APRES'
-                  ? 'border-[#86BC25] bg-[var(--accent-soft)] shadow-xs'
+                  ? 'border-[var(--deloitte)] bg-[var(--accent-soft)] shadow-xs'
                   : 'surface-card hover:border-strong'
               }`}
             >
@@ -489,7 +489,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                   Phase APRÈS
                 </span>
                 {modesReady?.APRES && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#86BC25] text-black">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--deloitte)] text-black">
                     <CheckCircle2 className="w-3 h-3" />
                     Prêt
                   </span>
@@ -510,7 +510,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
               <button
                 type="button"
                 onClick={onRunAudit}
-                className="inline-flex items-center gap-2 bg-[#86BC25] hover:bg-[#96cf2e] text-black font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
+                className="inline-flex items-center gap-2 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5 fill-current" />
                 <span>Auditer ({mode === 'AVANT' ? 'AVANT' : 'APRÈS'})</span>
@@ -542,7 +542,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                 <button
                   type="button"
                   onClick={onOpenCockpit}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[#86BC25] text-xs font-extrabold text-main transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer"
                 >
                   <span>Cockpit</span>
                   <ArrowRight className="w-3.5 h-3.5 text-accent" />
@@ -647,7 +647,7 @@ export const MissionLaunchpad: React.FC<MissionLaunchpadProps> = ({
                 onUploadFiles(e.dataTransfer.files);
               }
             }}
-            className="surface-card border-dashed hover:border-[#86BC25] rounded-xl px-4 py-3.5 flex items-center justify-center gap-2.5 cursor-pointer transition"
+            className="surface-card border-dashed hover:border-[var(--deloitte)] rounded-xl px-4 py-3.5 flex items-center justify-center gap-2.5 cursor-pointer transition"
           >
             <Upload className="w-4 h-4 text-accent shrink-0" />
             <span className="text-xs font-semibold text-main">

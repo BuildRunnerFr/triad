@@ -350,7 +350,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
             <button
               type="button"
               onClick={onOpenComparator}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full surface-card hover:border-[#86BC25] text-[11px] font-bold text-main transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full surface-card hover:border-[var(--deloitte)] text-[11px] font-bold text-main transition cursor-pointer"
             >
               <GitCompareArrows className="w-3.5 h-3.5 text-accent" />
               <span className="font-mono tabular-nums">
@@ -369,7 +369,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           <button
             type="button"
             onClick={() => setDetailsDrawerOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[#86BC25] text-xs font-bold text-main transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
           >
             <SlidersHorizontal className="w-3.5 h-3.5 text-accent" />
             <span>
@@ -380,7 +380,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
           <button
             type="button"
             onClick={() => setComexModeOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#86BC25] hover:bg-[#96cf2e] text-black text-xs font-extrabold shadow-sm transition cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold shadow-sm transition cursor-pointer"
           >
             <Presentation className="w-4 h-4" />
             <span>Présentation COMEX</span>
@@ -560,7 +560,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                   className="w-full text-left surface-card hover:border-strong rounded-xl px-3.5 py-2.5 flex items-start justify-between gap-3 transition cursor-pointer"
                 >
                   <div className="flex items-start gap-3 min-w-0">
-                    <span className="px-2 py-0.5 rounded-md bg-[#86BC25] text-black font-mono font-extrabold text-[11px] shrink-0">
+                    <span className="px-2 py-0.5 rounded-md bg-[var(--deloitte)] text-black font-mono font-extrabold text-[11px] shrink-0">
                       0{idx + 1}
                     </span>
                     <span
@@ -618,7 +618,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                 type="button"
                 aria-label="Fermer le tiroir Détails"
                 onClick={() => setDetailsDrawerOpen(false)}
-                className="p-2 rounded-xl surface-card hover:border-[#86BC25] text-sub hover:text-main transition cursor-pointer"
+                className="p-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-sub hover:text-main transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -775,7 +775,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
             <header className="surface-panel rounded-2xl p-5 edge-accent flex flex-wrap items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-md bg-[#86BC25] text-black text-[11px] font-extrabold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-md bg-[var(--deloitte)] text-black text-[11px] font-extrabold uppercase tracking-wider">
                     Soutenance COMEX
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full surface-subtle text-[11px] font-mono font-bold text-main">
@@ -793,7 +793,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
               <button
                 type="button"
                 onClick={() => setComexModeOpen(false)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl surface-card hover:border-[#86BC25] text-xs font-extrabold text-main transition cursor-pointer shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer shrink-0"
               >
                 <X className="w-4 h-4 text-accent" />
                 <span>Quitter (Échap)</span>
@@ -930,7 +930,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                         key={idx}
                         className="surface-card rounded-xl p-3.5 flex items-start gap-3 edge-accent"
                       >
-                        <span className="px-2 py-0.5 rounded-lg bg-[#86BC25] text-black font-mono font-extrabold text-xs shrink-0">
+                        <span className="px-2 py-0.5 rounded-lg bg-[var(--deloitte)] text-black font-mono font-extrabold text-xs shrink-0">
                           0{idx + 1}
                         </span>
                         <p className="text-xs text-main font-medium leading-relaxed">
@@ -958,7 +958,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                               setComexModeOpen(false);
                               onSelectFinding(f);
                             }}
-                            className="surface-card hover:border-[#86BC25] rounded-xl p-3 transition cursor-pointer space-y-1"
+                            className="surface-card hover:border-[var(--deloitte)] rounded-xl p-3 transition cursor-pointer space-y-1"
                           >
                             <div className="flex flex-wrap items-center justify-between gap-2">
                               <div className="flex items-center gap-2">
@@ -1019,11 +1019,11 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                         </div>
                         <div className="h-2 rounded-full surface-subtle overflow-hidden relative">
                           <div
-                            className="h-full bg-[#86BC25]/35 rounded-full"
+                            className="h-full bg-[var(--deloitte)]/35 rounded-full"
                             style={{ width: `${p.projected_score}%` }}
                           />
                           <div
-                            className="h-full bg-[#86BC25] rounded-full absolute inset-y-0 left-0"
+                            className="h-full bg-[var(--deloitte)] rounded-full absolute inset-y-0 left-0"
                             style={{ width: `${p.current_score}%` }}
                           />
                         </div>
@@ -1032,7 +1032,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                   </div>
                 </div>
 
-                <div className="surface-panel rounded-2xl p-5 border border-[#86BC25]/35 space-y-2.5">
+                <div className="surface-panel rounded-2xl p-5 border border-[var(--deloitte)]/35 space-y-2.5">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
                     <h3 className="text-xs font-extrabold uppercase tracking-wider text-main">
@@ -1041,7 +1041,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                   </div>
                   <ul className="space-y-2 text-xs text-sub">
                     <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25] mt-1.5 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
                       <span>
                         <strong className="text-main">Quick-Wins (0–30j) :</strong>{' '}
                         {comexSimulation.workload_jh.by_horizon['0_30'].count} action(s) (
@@ -1049,7 +1049,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25] mt-1.5 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
                       <span>
                         <strong className="text-main">Plan 90j :</strong>{' '}
                         {comexSimulation.workload_jh.label} ({maturityScore}% →{' '}
@@ -1057,7 +1057,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25] mt-1.5 shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
                       <span>
                         <strong className="text-main">Double guichet :</strong>{' '}
                         circuit ANSSI 24h/72h &amp; CNIL 72h.

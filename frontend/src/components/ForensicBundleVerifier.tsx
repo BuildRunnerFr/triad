@@ -209,7 +209,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
       {/* En-tête compact zéro surcharge */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[var(--accent-soft)] border border-[#86BC25]/35 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-[var(--accent-soft)] border border-[var(--deloitte)]/35 flex items-center justify-center shrink-0">
             <FolderArchive className="w-4 h-4 text-accent" />
           </div>
           <div>
@@ -266,8 +266,8 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
           isVerifying
             ? 'opacity-70 cursor-wait border-hairline surface-subtle'
             : isDragging
-            ? 'border-[#86BC25] bg-[#86BC25]/10 cursor-copy'
-            : 'border-hairline hover:border-[#86BC25]/60 surface-card cursor-pointer'
+            ? 'border-[var(--deloitte)] bg-[var(--deloitte)]/10 cursor-copy'
+            : 'border-hairline hover:border-[var(--deloitte)]/60 surface-card cursor-pointer'
         }`}
       >
         <input
@@ -298,7 +298,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
           </div>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#86BC25] hover:bg-[#96cf2e] text-black text-xs font-extrabold transition shrink-0">
+        <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition shrink-0">
           <ShieldCheck className="w-4 h-4" />
           <span>Choisir une archive (.zip)</span>
         </span>
@@ -355,7 +355,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               <span
                 className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold ${
                   certificate.authentic
-                    ? 'bg-[#86BC25] text-black'
+                    ? 'bg-[var(--deloitte)] text-black'
                     : 'bg-rose-600 text-white'
                 }`}
               >

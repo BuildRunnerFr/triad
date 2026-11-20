@@ -100,19 +100,19 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.97, y: 8, opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="w-full max-w-4xl rounded-2xl bg-[#07090F] border border-white/12 text-white shadow-2xl overflow-hidden"
+            className="w-full max-w-4xl rounded-2xl bg-[var(--bg-rail)] border border-white/12 text-white shadow-2xl overflow-hidden"
           >
             {/* Barre supérieure Live */}
             <div className="px-6 py-4 bg-white/[0.03] border-b border-white/10 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#86BC25] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#86BC25]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--deloitte)] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--deloitte)]" />
                 </span>
                 <div>
                   <div className="text-sm font-extrabold tracking-tight flex items-center gap-2">
                     <span>Chaîne d&apos;Audit Multi-Agents TRIAD en cours</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#86BC25]/20 text-[#86BC25]">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[var(--deloitte)]/20 text-[var(--accent-text)]">
                       {sequenceLabel || `Phase ${mode}`}
                     </span>
                   </div>
@@ -124,7 +124,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                 </div>
               </div>
 
-              <div className="font-mono text-sm font-bold text-[#86BC25] tabular-nums bg-white/[0.05] px-3 py-1.5 rounded-xl border border-white/10">
+              <div className="font-mono text-sm font-bold text-[var(--accent-text)] tabular-nums bg-white/[0.05] px-3 py-1.5 rounded-xl border border-white/10">
                 {elapsed.toFixed(1)}s
               </div>
             </div>
@@ -132,7 +132,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
             {/* Barre de progression fluide */}
             <div className="h-1 w-full bg-white/5 overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[#86BC25] via-emerald-400 to-[#86BC25]"
+                className="h-full bg-gradient-to-r from-[var(--deloitte)] via-emerald-400 to-[var(--deloitte)]"
                 animate={{ width: `${progressPct}%` }}
                 transition={{ duration: 0.35 }}
               />
@@ -152,7 +152,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                       key={ag.key}
                       className={`rounded-xl p-4 border transition-all duration-300 ${
                         isRunning
-                          ? 'bg-[#86BC25]/12 border-[#86BC25] shadow-[0_0_24px_rgba(134,188,37,0.2)]'
+                          ? 'bg-[var(--deloitte)]/12 border-[var(--deloitte)] shadow-[0_0_24px_rgba(134,188,37,0.2)]'
                           : isDone
                           ? 'bg-emerald-500/[0.07] border-emerald-500/35'
                           : 'bg-white/[0.02] border-white/8 opacity-60'
@@ -162,7 +162,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                         <div
                           className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                             isRunning
-                              ? 'bg-[#86BC25] text-black'
+                              ? 'bg-[var(--deloitte)] text-black'
                               : isDone
                               ? 'bg-emerald-500/20 text-emerald-400'
                               : 'bg-white/8 text-slate-400'
@@ -179,7 +179,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                         <span
                           className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
                             isRunning
-                              ? 'bg-[#86BC25] text-black'
+                              ? 'bg-[var(--deloitte)] text-black'
                               : isDone
                               ? 'bg-emerald-500/20 text-emerald-300'
                               : 'bg-white/8 text-slate-400'
@@ -191,7 +191,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                       <div className="text-xs font-extrabold text-white">
                         {ag.title}
                       </div>
-                      <div className="text-[11px] font-semibold text-[#86BC25] mt-0.5">
+                      <div className="text-[11px] font-semibold text-[var(--accent-text)] mt-0.5">
                         {ag.subtitle}
                       </div>
                       <p className="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
@@ -206,7 +206,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
               <div className="rounded-xl bg-[#05070C] border border-white/10 overflow-hidden">
                 <div className="px-4 py-2.5 bg-white/[0.03] border-b border-white/8 flex items-center justify-between text-[11px]">
                   <div className="flex items-center gap-2 font-mono text-slate-300 font-semibold">
-                    <Terminal className="w-3.5 h-3.5 text-[#86BC25]" />
+                    <Terminal className="w-3.5 h-3.5 text-[var(--accent-text)]" />
                     <span>Flux temps réel — Registre cryptographique SHA-256</span>
                   </div>
                   <span className="font-mono text-[10px] text-slate-400">
@@ -217,7 +217,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                 <div className="p-4 h-44 overflow-y-auto font-mono text-[11px] space-y-1.5">
                   {liveEntries.length === 0 ? (
                     <div className="text-slate-500 flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-[#86BC25] animate-pulse" />
+                      <Sparkles className="w-3.5 h-3.5 text-[var(--accent-text)] animate-pulse" />
                       <span>Initialisation du sas Douanier et ouverture de la chaîne d&apos;audit…</span>
                     </div>
                   ) : (
@@ -238,7 +238,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
                             {isQuar && (
                               <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                             )}
-                            <span className="text-[#86BC25] font-bold">
+                            <span className="text-[var(--accent-text)] font-bold">
                               [{entry.agent}]
                             </span>
                             <span className="font-semibold text-white">

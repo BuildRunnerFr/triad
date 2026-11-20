@@ -80,8 +80,8 @@ const STATUS_META: Record<
   conforme: {
     label: 'Conforme',
     badge: 'badge-success',
-    border: 'border-l-[#86BC25]',
-    dot: 'bg-[#86BC25]',
+    border: 'border-l-[var(--deloitte)]',
+    dot: 'bg-[var(--deloitte)]',
   },
   a_confirmer: {
     label: 'À confirmer',
@@ -262,7 +262,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
             aria-label="Tout sélectionner"
             checked={table.getIsAllRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
-            className="accent-[#86BC25] rounded cursor-pointer"
+            className="accent-[var(--deloitte)] rounded cursor-pointer"
           />
         ),
         cell: ({ row }) => (
@@ -275,7 +275,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
               aria-label={`Sélectionner ${row.original.id}`}
               checked={row.getIsSelected()}
               onChange={row.getToggleSelectedHandler()}
-              className="accent-[#86BC25] rounded cursor-pointer"
+              className="accent-[var(--deloitte)] rounded cursor-pointer"
             />
             <button
               type="button"
@@ -383,7 +383,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
               e.stopPropagation();
               onSelectFinding(row.original);
             }}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-subtle hover:border-[#86BC25]/60 text-[11px] font-bold text-accent transition cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)]/60 text-[11px] font-bold text-accent transition cursor-pointer whitespace-nowrap"
           >
             <span>Inspecter</span>
             <ArrowUpRight className="w-3 h-3" />
@@ -655,7 +655,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="F-001, SSH, bucket, Art. 23…"
-                className="w-full pl-8 pr-7 py-1.5 text-xs surface-card rounded-xl text-main placeholder:text-dim focus:outline-none focus:border-[#86BC25] transition"
+                className="w-full pl-8 pr-7 py-1.5 text-xs surface-card rounded-xl text-main placeholder:text-dim focus:outline-none focus:border-[var(--deloitte)] transition"
               />
               {query && (
                 <button
@@ -1130,7 +1130,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                             <tr className="surface-card">
                               <td
                                 colSpan={row.getVisibleCells().length}
-                                className="px-4 pb-4 border-l-4 border-l-[#86BC25]"
+                                className="px-4 pb-4 border-l-4 border-l-[var(--deloitte)]"
                               >
                                 {renderEvidenceBlock(f)}
                               </td>

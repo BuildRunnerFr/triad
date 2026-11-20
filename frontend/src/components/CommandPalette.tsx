@@ -185,7 +185,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     return (
       <>
         {before}
-        <mark className="bg-[#86BC25]/30 text-main border-b border-[#86BC25] px-0.5 rounded font-semibold">
+        <mark className="bg-[var(--deloitte)]/30 text-main border-b border-[var(--deloitte)] px-0.5 rounded font-semibold">
           {highlighted}
         </mark>
         {after}
@@ -509,7 +509,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-xs"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="font-mono text-[11px] font-extrabold px-2 py-0.5 rounded bg-[#86BC25] text-black shrink-0">
+                          <span className="font-mono text-[11px] font-extrabold px-2 py-0.5 rounded bg-[var(--deloitte)] text-black shrink-0">
                             {f.id}
                           </span>
                           <span className="font-semibold truncate">{f.theme}</span>

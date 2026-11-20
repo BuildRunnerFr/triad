@@ -61,7 +61,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
                 onClick={() => onSelectFinding(f)}
                 className={`px-2.5 py-1 rounded-lg font-mono text-xs font-bold transition cursor-pointer ${
                   isSelected
-                    ? 'bg-[#86BC25] text-black border border-[#86BC25]'
+                    ? 'bg-[var(--deloitte)] text-black border border-[var(--deloitte)]'
                     : isKo
                     ? 'badge-critical hover:opacity-90'
                     : 'surface-card text-sub hover:text-main'
@@ -245,7 +245,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
         {/* Synthèse instantanée du contrôle sélectionné (7 cols) */}
         <div className="lg:col-span-7 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-[#86BC25] text-black">
+            <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-[var(--deloitte)] text-black">
               {active.id}
             </span>
             <h4 className="text-base font-extrabold text-main">{active.theme}</h4>
@@ -275,7 +275,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               </p>
             </div>
 
-            <div className="surface-card rounded-xl p-3 border-t-2 border-t-[#86BC25]">
+            <div className="surface-card rounded-xl p-3 border-t-2 border-t-[var(--deloitte)]">
               <div className="text-[10px] font-extrabold uppercase text-accent mb-1">
                 RÉEL
               </div>
@@ -309,7 +309,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
             <button
               type="button"
               onClick={() => onInspectFinding(active)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#86BC25] hover:bg-[#96cf2e] text-black text-xs font-extrabold transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition cursor-pointer"
             >
               <span>Inspecter</span>
               <ArrowUpRight className="w-3.5 h-3.5" />

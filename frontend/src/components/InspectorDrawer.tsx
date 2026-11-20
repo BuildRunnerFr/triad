@@ -318,7 +318,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
               occIdx !== -1 ? 'cursor-pointer' : ''
             } ${
               isFocused
-                ? 'ring-2 ring-[#86BC25] ring-offset-1 scale-105 shadow-sm'
+                ? 'ring-2 ring-[var(--deloitte)] ring-offset-1 scale-105 shadow-sm'
                 : ''
             }`}
           >
@@ -397,7 +397,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                 )}
                 <mark
                   ref={highlightRef}
-                  className="bg-[#86BC25]/20 text-main underline decoration-2 decoration-[#86BC25] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
+                  className="bg-[var(--deloitte)]/20 text-main underline decoration-2 decoration-[var(--deloitte)] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
                 >
                   {renderTokensOnly(lineMatch, suspectQuote, claimMatchIdx)}
                 </mark>
@@ -416,7 +416,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             {renderTokensOnly(prefixText, suspectQuote, claimMatchIdx)}
             <mark
               ref={highlightRef}
-              className="bg-[#86BC25]/20 text-main underline decoration-2 decoration-[#86BC25] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
+              className="bg-[var(--deloitte)]/20 text-main underline decoration-2 decoration-[var(--deloitte)] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
             >
               {renderTokensOnly(focusLine, suspectQuote, claimMatchIdx)}
             </mark>
@@ -437,7 +437,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             {renderTokensOnly(before, suspectQuote, claimMatchIdx)}
             <mark
               ref={highlightRef}
-              className="bg-[#86BC25]/20 text-main underline decoration-2 decoration-[#86BC25] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
+              className="bg-[var(--deloitte)]/20 text-main underline decoration-2 decoration-[var(--deloitte)] underline-offset-[3px] px-0.5 rounded-sm font-semibold [box-decoration-break:clone]"
             >
               {renderTokensOnly(match, suspectQuote, claimMatchIdx)}
             </mark>
@@ -476,9 +476,9 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             className="relative z-10 w-full max-w-2xl surface-panel h-full shadow-2xl flex flex-col overflow-hidden border-l border-hairline"
           >
             {/* En-tête compact du tiroir */}
-            <div className="px-5 py-3.5 bg-[#07090F] text-white border-b-2 border-[#86BC25] flex items-center justify-between gap-3 shrink-0">
+            <div className="px-5 py-3.5 bg-[var(--bg-rail)] text-white border-b-2 border-[var(--deloitte)] flex items-center justify-between gap-3 shrink-0">
               <div className="min-w-0">
-                <div className="text-[10px] font-extrabold uppercase tracking-widest text-[#86BC25]">
+                <div className="text-[10px] font-extrabold uppercase tracking-widest text-[var(--accent-text)]">
                   {content.type === 'finding'
                     ? 'Constat NIS2'
                     : content.type === 'doc'
@@ -559,7 +559,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         onKeyDown={(e) => handleSubTabKeyDown(e, idx)}
                         className={`min-h-[34px] inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
                           active
-                            ? 'bg-[#86BC25] text-black shadow-xs'
+                            ? 'bg-[var(--deloitte)] text-black shadow-xs'
                             : 'text-sub hover:text-main'
                         }`}
                       >
@@ -691,7 +691,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                                   onClick={() => setDecisionType(optKey)}
                                   className={`text-left p-2.5 rounded-xl border transition cursor-pointer ${
                                     selected
-                                      ? 'border-[#86BC25] bg-[var(--accent-soft)]'
+                                      ? 'border-[var(--deloitte)] bg-[var(--accent-soft)]'
                                       : 'surface-subtle border-hairline hover:border-strong'
                                   }`}
                                 >
@@ -719,7 +719,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                                 onChange={(e) => setPorteur(e.target.value)}
                                 placeholder="ex. RSSI & Ops GCP"
                                 maxLength={160}
-                                className="w-full px-3 py-1.5 rounded-xl surface-subtle border border-hairline focus:border-[#86BC25] focus:outline-none text-xs text-main placeholder:text-dim"
+                                className="w-full px-3 py-1.5 rounded-xl surface-subtle border border-hairline focus:border-[var(--deloitte)] focus:outline-none text-xs text-main placeholder:text-dim"
                               />
                             </label>
 
@@ -738,7 +738,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                                       onClick={() => setEcheance(preset)}
                                       className={`px-1.5 py-0.2 rounded font-mono text-[10px] font-bold transition cursor-pointer ${
                                         echeance === preset
-                                          ? 'bg-[#86BC25] text-black'
+                                          ? 'bg-[var(--deloitte)] text-black'
                                           : 'surface-subtle text-dim hover:text-main'
                                       }`}
                                     >
@@ -753,7 +753,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                                 onChange={(e) => setEcheance(e.target.value)}
                                 placeholder="J+30 ou 2026-12-31"
                                 maxLength={64}
-                                className="w-full px-3 py-1.5 rounded-xl surface-subtle border border-hairline focus:border-[#86BC25] focus:outline-none text-xs font-mono text-main placeholder:text-dim"
+                                className="w-full px-3 py-1.5 rounded-xl surface-subtle border border-hairline focus:border-[var(--deloitte)] focus:outline-none text-xs font-mono text-main placeholder:text-dim"
                               />
                             </div>
                           </div>
@@ -768,7 +768,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                               onChange={(e) => setCommentaire(e.target.value)}
                               placeholder="Mesure compensatoire ou motif d'arbitrage…"
                               maxLength={2000}
-                              className="w-full px-3 py-2 rounded-xl surface-subtle border border-hairline focus:border-[#86BC25] focus:outline-none text-xs text-main placeholder:text-dim resize-y"
+                              className="w-full px-3 py-2 rounded-xl surface-subtle border border-hairline focus:border-[var(--deloitte)] focus:outline-none text-xs text-main placeholder:text-dim resize-y"
                             />
                           </label>
 
@@ -776,7 +776,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                             <button
                               type="submit"
                               disabled={isSavingDecision}
-                              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-50 text-black text-xs font-extrabold transition cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black text-xs font-extrabold transition cursor-pointer"
                             >
                               {isSavingDecision ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -834,9 +834,9 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                       </div>
 
                       {content.finding.commande_correction ? (
-                        <div className="rounded-2xl overflow-hidden border border-white/12 bg-[#07090F] text-white">
+                        <div className="rounded-2xl overflow-hidden border border-white/12 bg-[var(--bg-rail)] text-white">
                           <div className="px-4 py-2.5 bg-white/[0.04] border-b border-white/10 flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 text-[11px] font-bold text-[#86BC25]">
+                            <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--accent-text)]">
                               <Terminal className="w-3.5 h-3.5" />
                               <span>gcloud (Dry-Run • Non exécutée)</span>
                             </div>
@@ -852,7 +852,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                             >
                               {copiedKey === 'gcloud' ? (
                                 <>
-                                  <Check className="w-3 h-3 text-[#86BC25]" />{' '}
+                                  <Check className="w-3 h-3 text-[var(--accent-text)]" />{' '}
                                   Copié
                                 </>
                               ) : (
@@ -1020,7 +1020,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         onClick={() => handleSelectPiiFilter('ALL')}
                         className={`px-2.5 py-1 rounded-lg font-mono text-[10px] font-bold transition cursor-pointer tabular-nums ${
                           piiFilter === 'ALL'
-                            ? 'bg-[#86BC25] text-black'
+                            ? 'bg-[var(--deloitte)] text-black'
                             : 'surface-subtle text-sub hover:text-main'
                         }`}
                       >
@@ -1041,7 +1041,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                               count === 0
                                 ? 'surface-subtle text-dim opacity-45 cursor-not-allowed'
                                 : active
-                                ? 'bg-[#86BC25] text-black cursor-pointer'
+                                ? 'bg-[var(--deloitte)] text-black cursor-pointer'
                                 : `${PII_BADGE_CLASS[kind]} cursor-pointer hover:opacity-90`
                             }`}
                           >

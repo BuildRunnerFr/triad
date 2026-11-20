@@ -221,7 +221,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
         className="surface-panel rounded-2xl p-6 sm:p-7 max-w-2xl mx-auto space-y-5"
       >
         <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-[#86BC25]/15 border border-[#86BC25]/35 text-accent flex items-center justify-center shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-[var(--deloitte)]/15 border border-[var(--deloitte)]/35 text-accent flex items-center justify-center shrink-0">
             <GitCompareArrows className="w-5 h-5" />
           </div>
           <div>
@@ -313,7 +313,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
               type="button"
               disabled={isRunning}
               onClick={() => onRunSingleMode(missingMode)}
-              className="inline-flex items-center gap-2 bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-50 text-black font-extrabold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer"
+              className="inline-flex items-center gap-2 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black font-extrabold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>
@@ -325,7 +325,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
               type="button"
               disabled={isRunning}
               onClick={onRunBothModes}
-              className="inline-flex items-center gap-2 bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-50 text-black font-extrabold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer"
+              className="inline-flex items-center gap-2 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black font-extrabold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>Exécuter la séquence AVANT → APRÈS</span>
@@ -571,7 +571,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                   </div>
                   <div className="h-1.5 w-full rounded-full surface-subtle overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[#86BC25] transition-all duration-300"
+                      className="h-full rounded-full bg-[var(--deloitte)] transition-all duration-300"
                       style={{ width: `${barPct}%` }}
                     />
                   </div>
@@ -638,7 +638,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                   onClick={() => setFilter(key)}
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                     active
-                      ? 'bg-[#86BC25] text-black'
+                      ? 'bg-[var(--deloitte)] text-black'
                       : 'surface-card text-sub hover:text-main'
                   }`}
                 >
@@ -698,7 +698,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                   >
                     {/* Gauche : ID + Thème + Exigence */}
                     <div className="flex flex-wrap items-center gap-2 min-w-0">
-                      <span className="font-mono text-xs font-extrabold px-2 py-0.5 rounded bg-[#86BC25] text-black shrink-0">
+                      <span className="font-mono text-xs font-extrabold px-2 py-0.5 rounded bg-[var(--deloitte)] text-black shrink-0">
                         {item.id}
                       </span>
                       <span className="text-sm font-extrabold text-main">
@@ -773,7 +773,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                             e.stopPropagation();
                             onSelectFinding(targetFinding);
                           }}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-subtle hover:border-[#86BC25] text-xs font-bold text-accent transition cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-xs font-bold text-accent transition cursor-pointer"
                         >
                           <span>Preuve</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />

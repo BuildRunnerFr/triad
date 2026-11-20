@@ -72,7 +72,7 @@ export const CloudTopologyViz: React.FC<CloudTopologyVizProps> = ({
             onClick={() => setTopoMode('3d')}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
               topoMode === '3d'
-                ? 'bg-[#86BC25] text-black shadow-xs'
+                ? 'bg-[var(--deloitte)] text-black shadow-xs'
                 : 'text-sub hover:text-main'
             }`}
           >
@@ -84,7 +84,7 @@ export const CloudTopologyViz: React.FC<CloudTopologyVizProps> = ({
             onClick={() => setTopoMode('2d')}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition cursor-pointer ${
               topoMode === '2d'
-                ? 'bg-[#86BC25] text-black shadow-xs'
+                ? 'bg-[var(--deloitte)] text-black shadow-xs'
                 : 'text-sub hover:text-main'
             }`}
           >

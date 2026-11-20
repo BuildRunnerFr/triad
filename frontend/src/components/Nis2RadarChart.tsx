@@ -147,7 +147,7 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
             Déclaré
           </span>
           <span className="inline-flex items-center gap-1.5 text-main font-semibold">
-            <span className="w-3 h-2 rounded-xs bg-[#86BC25]/60 border border-[#86BC25] inline-block" />
+            <span className="w-3 h-2 rounded-xs bg-[var(--deloitte)]/60 border border-[var(--deloitte)] inline-block" />
             Réel vérifié
           </span>
         </div>

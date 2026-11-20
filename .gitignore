@@ -29,4 +29,9 @@ Thumbs.db
 frontend/node_modules/
 
 .playwright-mcp/
-.impeccable/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/questions/
+.impeccable/critique/
+.impeccable/build/
+.impeccable/config.local.json

@@ -266,7 +266,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
               onClick={() => setFilter(key)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                 active
-                  ? 'bg-[#86BC25] text-black'
+                  ? 'bg-[var(--deloitte)] text-black'
                   : 'surface-card text-sub hover:text-main'
               }`}
             >
@@ -340,7 +340,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
                             onClick={() =>
                               target && onInspectFindingInExplorer(target)
                             }
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
                           >
                             <span>{fid}</span>
                             <ArrowUpRight className="w-2.5 h-2.5" />
@@ -431,7 +431,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
                         <ul className="space-y-1 text-[11px] text-main leading-snug">
                           {vendor.recommended_clauses.map((clause, idx) => (
                             <li key={idx} className="flex items-start gap-1.5">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25] mt-1.5 shrink-0" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
                               <span>{clause}</span>
                             </li>
                           ))}

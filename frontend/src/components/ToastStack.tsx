@@ -32,7 +32,7 @@ const TONE_META: Record<
 > = {
   success: {
     borderCls: 'edge-accent',
-    iconCls: 'text-[#86BC25]',
+    iconCls: 'text-[var(--accent-text)]',
     Icon: CheckCircle2,
   },
   info: {

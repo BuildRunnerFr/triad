@@ -429,7 +429,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 }
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                   validated
-                    ? 'surface-card hover:border-[#86BC25] text-main'
+                    ? 'surface-card hover:border-[var(--deloitte)] text-main'
                     : 'badge-warning hover:opacity-90'
                 }`}
               >
@@ -452,7 +452,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <button
               type="button"
               onClick={exportRoadmapMarkdown}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#86BC25] hover:bg-[#96cf2e] text-black text-xs font-extrabold transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-black text-xs font-extrabold transition cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Markdown (.md)</span>
@@ -470,21 +470,21 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <button
               type="button"
               onClick={() => selectScenarioPreset('0_30')}
-              className="px-2.5 py-1 rounded-lg surface-card hover:border-[#86BC25] text-xs font-bold text-main transition cursor-pointer"
+              className="px-2.5 py-1 rounded-lg surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
             >
               J+30 Quick-Wins
             </button>
             <button
               type="button"
               onClick={() => selectScenarioPreset('0_60')}
-              className="px-2.5 py-1 rounded-lg surface-card hover:border-[#86BC25] text-xs font-bold text-main transition cursor-pointer"
+              className="px-2.5 py-1 rounded-lg surface-card hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
             >
               J+60 Consolidation
             </button>
             <button
               type="button"
               onClick={() => selectScenarioPreset('ALL')}
-              className="px-2.5 py-1 rounded-lg bg-[var(--accent-soft)] border border-[#86BC25]/45 hover:bg-[#86BC25] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-[var(--accent-soft)] border border-[var(--deloitte)]/45 hover:bg-[var(--deloitte)] hover:text-black text-xs font-extrabold text-accent transition cursor-pointer"
             >
               Plan 90j (100%)
             </button>
@@ -532,7 +532,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 style={{ width: `${Math.min(100, currentScore)}%` }}
               />
               <div
-                className="h-full bg-[#86BC25] transition-all duration-300"
+                className="h-full bg-[var(--deloitte)] transition-all duration-300"
                 style={{
                   width: `${Math.max(
                     0,
@@ -660,7 +660,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                   />
                   {p.gain > 0 && (
                     <div
-                      className="h-full bg-[#86BC25] transition-all duration-300"
+                      className="h-full bg-[var(--deloitte)] transition-all duration-300"
                       style={{
                         width: `${Math.min(100 - p.current_score, p.gain)}%`,
                       }}
@@ -724,7 +724,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                         key={it.finding.id}
                         className={`surface-card hover:border-strong rounded-xl overflow-hidden transition ${
                           isDone || isAlreadyCompliant
-                            ? 'opacity-80 border-[#86BC25]/50'
+                            ? 'opacity-80 border-[var(--deloitte)]/50'
                             : ''
                         }`}
                       >
@@ -756,10 +756,10 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                                   onClick={(e) => toggleCompleted(it.finding.id, e)}
                                   onChange={() => {}}
                                   aria-label={`Simuler remédiation ${it.finding.id}`}
-                                  className="accent-[#86BC25] rounded cursor-pointer shrink-0"
+                                  className="accent-[var(--deloitte)] rounded cursor-pointer shrink-0"
                                 />
                               )}
-                              <span className="font-mono text-[11px] font-extrabold px-1.5 py-0.5 rounded bg-[#86BC25] text-black shrink-0">
+                              <span className="font-mono text-[11px] font-extrabold px-1.5 py-0.5 rounded bg-[var(--deloitte)] text-black shrink-0">
                                 {it.finding.id}
                               </span>
                               <span
@@ -778,7 +778,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                                 onSelectFinding(it.finding);
                               }}
                               title="Ouvrir l'inspecteur de preuve"
-                              className="p-1 rounded-lg surface-subtle hover:border-[#86BC25] text-accent shrink-0 cursor-pointer"
+                              className="p-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-accent shrink-0 cursor-pointer"
                             >
                               <ArrowUpRight className="w-3.5 h-3.5" />
                             </button>
@@ -906,9 +906,9 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[#86BC25] text-xs font-bold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-xs font-bold text-main transition cursor-pointer"
                   >
-                    <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-[#86BC25] text-black">
+                    <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-[var(--deloitte)] text-black">
                       {it.finding.id}
                     </span>
                     <span>{it.finding.theme}</span>

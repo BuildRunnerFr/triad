@@ -176,7 +176,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
               }
               className={`text-left p-3.5 rounded-xl border transition cursor-pointer space-y-1 ${
                 isSelected
-                  ? 'border-[#86BC25] bg-[#86BC25]/15'
+                  ? 'border-[var(--deloitte)] bg-[var(--deloitte)]/15'
                   : 'surface-card border-hairline hover:border-strong'
               }`}
             >
@@ -240,7 +240,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                 onClick={() => setFrameworkFilter(key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                   active
-                    ? 'bg-[#86BC25] text-black'
+                    ? 'bg-[var(--deloitte)] text-black'
                     : 'surface-card text-sub hover:text-main'
                 }`}
               >
@@ -271,7 +271,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                 onClick={() => setStatusFilter(key)}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer tabular-nums ${
                   active
-                    ? 'bg-[#86BC25] text-black'
+                    ? 'bg-[var(--deloitte)] text-black'
                     : 'surface-subtle text-sub hover:text-main'
                 }`}
               >
@@ -396,7 +396,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                                     onInspectFindingInExplorer(target);
                                   }
                                 }}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-60 text-black font-mono text-[10px] font-extrabold transition cursor-pointer"
                               >
                                 <span>{fid}</span>
                                 <ArrowUpRight className="w-2.5 h-2.5" />
@@ -428,7 +428,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                       <tr className="surface-subtle">
                         <td
                           colSpan={visibleColsCount}
-                          className="px-4 py-3 border-l-4 border-l-[#86BC25] space-y-2.5"
+                          className="px-4 py-3 border-l-4 border-l-[var(--deloitte)] space-y-2.5"
                         >
                           <div className="space-y-1">
                             <div className="text-[10px] font-mono font-bold text-dim">

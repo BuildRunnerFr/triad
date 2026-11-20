@@ -133,8 +133,19 @@ function readStoredDensity(): DensityMode {
   }
 }
 
+const THEME_STORAGE_KEY = 'triad.theme';
+
+/** Thème clair par défaut (usage en salle de réunion et projection COMEX) ; préférence persistée. */
+function readStoredTheme(): ThemeMode {
+  try {
+    return window.localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+  } catch {
+    return 'light';
+  }
+}
+
 export const App: React.FC = () => {
-  const [theme, setTheme] = useState<ThemeMode>('dark');
+  const [theme, setTheme] = useState<ThemeMode>(readStoredTheme);
   const [density, setDensity] = useState<DensityMode>(readStoredDensity);
   const [activeNav, setActiveNav] = useState<NavSection>('mission');
   const [deliverablesSubTab, setDeliverablesSubTab] =
@@ -197,6 +208,11 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* stockage indisponible : préférence non persistée */
+    }
   }, [theme]);
 
   useEffect(() => {
@@ -1209,7 +1225,7 @@ export const App: React.FC = () => {
       icon: ShieldCheck,
       badge: validated ? 'Validé' : 'À signer',
       badgeTone: validated
-        ? 'bg-[#86BC25] text-black'
+        ? 'bg-[var(--deloitte)] text-black'
         : 'bg-amber-500/20 text-amber-300',
     },
   ];
@@ -1235,11 +1251,11 @@ export const App: React.FC = () => {
           </Suspense>
 
           {/* RAIL DE NAVIGATION LATÉRAL GAUCHE (OBSIDIENNE #07090F) */}
-        <aside className="lg:w-56 bg-[#07090F] text-white border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen z-30">
+        <aside className="lg:w-56 bg-[var(--bg-rail)] text-white border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen z-30">
           <div>
             {/* Marque TRIAD */}
             <div className="px-4 py-4 border-b border-white/8 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#86BC25] text-black flex items-center justify-center shadow-[0_0_16px_rgba(134,188,37,0.28)] shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[var(--deloitte)] text-black flex items-center justify-center shadow-[0_0_16px_rgba(134,188,37,0.28)] shrink-0">
                 <svg
                   viewBox="0 0 24 24"
                   className="w-4 h-4 fill-none stroke-current"
@@ -1255,7 +1271,7 @@ export const App: React.FC = () => {
                 <span className="font-display text-base font-extrabold tracking-tight leading-none">
                   TRIAD
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)]" />
               </div>
             </div>
 
@@ -1273,7 +1289,7 @@ export const App: React.FC = () => {
                 className="flex-1 min-w-0 flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs text-slate-300 transition cursor-pointer"
               >
                 <span className="inline-flex items-center gap-2 truncate">
-                  <Search className="w-3.5 h-3.5 text-[#86BC25] shrink-0" />
+                  <Search className="w-3.5 h-3.5 text-[var(--accent-text)] shrink-0" />
                   <span className="truncate">Rechercher…</span>
                 </span>
                 <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 shrink-0">
@@ -1321,14 +1337,14 @@ export const App: React.FC = () => {
                         : 'cursor-pointer'
                     } ${
                       isActive
-                        ? 'bg-[#86BC25]/15 text-white border border-[#86BC25]/40'
+                        ? 'bg-[var(--deloitte)]/15 text-white border border-[var(--deloitte)]/40'
                         : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Icon
                         className={`w-4 h-4 shrink-0 ${
-                          isActive ? 'text-[#86BC25]' : 'text-slate-400'
+                          isActive ? 'text-[var(--accent-text)]' : 'text-slate-400'
                         }`}
                       />
                       <span className="text-xs font-bold leading-tight truncate">
@@ -1357,7 +1373,7 @@ export const App: React.FC = () => {
               <span
                 className={`font-bold ${
                   statusData?.chain?.valide !== false
-                    ? 'text-[#86BC25]'
+                    ? 'text-[var(--accent-text)]'
                     : 'text-rose-400'
                 }`}
               >
@@ -1480,7 +1496,7 @@ export const App: React.FC = () => {
                         {ready && (
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${
-                              'bg-[#86BC25]'
+                              'bg-[var(--deloitte)]'
                             }`}
                           />
                         )}
@@ -1495,7 +1511,7 @@ export const App: React.FC = () => {
                   onMouseEnter={() => preloadNavChunk('cockpit')}
                   onClick={handleRunAudit}
                   disabled={isRunning}
-                  className="min-h-[36px] inline-flex items-center gap-1.5 bg-[#86BC25] hover:bg-[#96cf2e] disabled:opacity-50 text-black font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition shadow-xs cursor-pointer"
+                  className="min-h-[36px] inline-flex items-center gap-1.5 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition shadow-xs cursor-pointer"
                 >
                   {isRunning ? (
                     <>
@@ -1517,7 +1533,7 @@ export const App: React.FC = () => {
                       type="checkbox"
                       checked={useCache}
                       onChange={(e) => setUseCache(e.target.checked)}
-                      className="accent-[#86BC25] rounded"
+                      className="accent-[var(--deloitte)] rounded"
                     />
                     <Zap className="w-3.5 h-3.5 text-accent" />
                     <span className="hidden xl:inline">Cache</span>
