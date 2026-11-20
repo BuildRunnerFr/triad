@@ -96,9 +96,9 @@ void main() {
   float dist = abs(fract(v - 0.5) - 0.5) / fw;   // distance à l'isoligne, en px écran
   float idx = floor(v + 0.5);
   float master = 1.0 - step(0.5, abs(mod(idx, 5.0)));
-  float halfWidth = mix(0.5, 0.95, master) * u_dpr;
+  float halfWidth = mix(0.5, 0.8, master) * u_dpr;
   float line = 1.0 - smoothstep(halfWidth - 0.5, halfWidth + 0.75, dist);
-  float alpha = line * u_inkAlpha * mix(0.75, 1.45, master);
+  float alpha = line * u_inkAlpha * mix(0.75, 1.25, master);
 
   // Fond des puits critiques : un point vermillon minuscule.
   float dotA = 0.0;
