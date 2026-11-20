@@ -1269,7 +1269,7 @@ export const App: React.FC = () => {
           </Suspense>
 
           {/* RAIL DE NAVIGATION LATÉRAL GAUCHE (OBSIDIENNE #07090F) */}
-        <aside className="lg:w-56 bg-[var(--bg-rail)] text-white border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen z-30">
+        <aside data-theme="dark" className="lg:w-56 bg-[var(--bg-rail)] text-white border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen z-30">
           <div>
             {/* Marque TRIAD */}
             <div className="px-4 py-4 border-b border-white/8 flex items-center gap-2.5">

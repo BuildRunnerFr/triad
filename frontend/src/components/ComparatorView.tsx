@@ -355,253 +355,95 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
       transition={{ duration: 0.22 }}
       className="space-y-5"
     >
-      {/* LIGNE 1 : 4 CARTES KPI CHIFFRÉES AÉRÉES */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* KPI 1 : Score AVANT -> APRÈS */}
-        <div className="surface-panel rounded-2xl p-4 flex flex-col justify-between gap-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-sub">
-              Score AVANT → APRÈS
-            </span>
-            <span
-              className={`inline-flex items-center gap-1 text-xs font-extrabold px-2 py-0.5 rounded-full tabular-nums ${
-                summary.scoreDelta > 0
-                  ? 'badge-success'
-                  : summary.scoreDelta < 0
-                  ? 'badge-critical'
-                  : 'surface-subtle text-sub'
-              }`}
+      {/* CHIFFRE-TITRE : ce que les entretiens ont changé, en une phrase */}
+      <section aria-labelledby="compare-lede" className="pt-1 pb-6 border-b border-hairline">
+        <p className="text-sm text-sub">
+          Comparaison des deux phases · {serverDiff?.counts?.findings_avant ?? avantSynthesis.findings.length} constats
+          AVANT, {serverDiff?.counts?.findings_apres ?? apresSynthesis.findings.length} APRÈS
+        </p>
+        <h2
+          id="compare-lede"
+          className="mt-2 max-w-4xl text-[1.75rem] sm:text-[2.35rem] leading-[1.12] font-semibold tracking-[-0.025em] text-main"
+        >
+          Les entretiens ont fait apparaître{' '}
+          <span className="text-[var(--rupture)] font-bold tabular-nums">{summary.ditContradictionsCount}</span>{' '}
+          déclaration{summary.ditContradictionsCount > 1 ? 's' : ''} de la DSI démentie
+          {summary.ditContradictionsCount > 1 ? 's' : ''} par les faits ; la maturité passe de{' '}
+          <span className="tabular-nums">{summary.scoreAvant} %</span> à{' '}
+          <span className={`tabular-nums font-bold ${summary.scoreDelta < 0 ? 'text-[var(--rupture)]' : 'text-[var(--accent-text)]'}`}>
+            {summary.scoreApres} %
+          </span>
+          .
+        </h2>
+
+        <dl className="mt-6 grid grid-cols-2 lg:grid-cols-4 border-t border-hairline">
+          {[
+            {
+              label: 'Évolution de la maturité',
+              value: `${summary.scoreDelta > 0 ? '+' : ''}${summary.scoreDelta} pts`,
+              tone: summary.scoreDelta < 0 ? 'text-[var(--rupture)]' : 'text-[var(--accent-text)]',
+            },
+            {
+              label: 'Écarts confirmés',
+              value: `${summary.confirmedGapsCount}${summary.newGapsCount > 0 ? ` (+${summary.newGapsCount} nouveau${summary.newGapsCount > 1 ? 'x' : ''})` : ''}`,
+              tone: undefined,
+            },
+            {
+              label: 'Effort de remédiation',
+              value: fullPlanWorkload
+                ? `${fullPlanWorkload.workload_jh.estimated_jh.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} j·h`
+                : '—',
+              tone: undefined,
+              note: fullPlanWorkload
+                ? `entre ${fullPlanWorkload.workload_jh.min_jh.toLocaleString('fr-FR')} et ${fullPlanWorkload.workload_jh.max_jh.toLocaleString('fr-FR')} j·h${fullPlanWorkload.workload_jh.quick_wins_count > 0 ? `, ${fullPlanWorkload.workload_jh.quick_wins_count} gains rapides` : ''}`
+                : undefined,
+            },
+            {
+              label: 'Exposition aux sanctions (Art. 34)',
+              value: fullPlanWorkload ? `Risque ${fullPlanWorkload.art34_exposure.risk_level_before.toLowerCase()}` : '—',
+              tone:
+                fullPlanWorkload?.art34_exposure.risk_level_before === 'CRITIQUE'
+                  ? 'text-[var(--rupture)]'
+                  : undefined,
+              note: 'jusqu’à 10 M€ ou 2 % du CA mondial',
+            },
+          ].map((fact, i) => (
+            <div
+              key={fact.label}
+              className={`pt-3 pb-1 pr-4 ${i > 0 ? 'pl-4 border-l border-hairline' : ''} ${i === 2 ? 'max-lg:border-l-0 max-lg:pl-0' : ''}`}
             >
-              <DeltaIcon className="w-3.5 h-3.5" />
-              {summary.scoreDelta > 0
-                ? `+${summary.scoreDelta}`
-                : summary.scoreDelta}{' '}
-              pts
-            </span>
-          </div>
-          <div className="flex items-baseline gap-2.5 mt-1">
-            <span className="text-lg font-bold tabular-nums text-sub">
-              {summary.scoreAvant}%
-            </span>
-            <ArrowRight className="w-4 h-4 text-dim" />
-            <span className="text-3xl font-extrabold tabular-nums text-main">
-              {summary.scoreApres}%
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-sub tabular-nums">
-            <span>
-              {serverDiff?.counts?.findings_avant ?? avantSynthesis.findings.length}{' '}
-              →{' '}
-              {serverDiff?.counts?.findings_apres ?? apresSynthesis.findings.length}{' '}
-              constats
-            </span>
-            <span>•</span>
-            <span className="tone-success font-bold">
-              {summary.resolvedOrCompliantCount} sain(s)
-            </span>
-          </div>
-        </div>
-
-        {/* KPI 2 : Ruptures du Dit */}
-        <div className="surface-panel rounded-2xl p-4 flex flex-col justify-between gap-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-sub">
-              Ruptures du Dit
-            </span>
-            <div className="w-7 h-7 rounded-lg badge-critical flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5" />
+              <dt className="text-xs text-sub">{fact.label}</dt>
+              <dd className={`mt-1 text-xl font-semibold tabular-nums ${fact.tone || 'text-main'}`}>{fact.value}</dd>
+              {fact.note && <dd className="text-xs text-sub mt-0.5">{fact.note}</dd>}
             </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tabular-nums tone-critical">
-              +{summary.ditContradictionsCount}
-            </span>
-            <span className="badge-critical text-[10px] font-bold px-2 py-0.5 rounded-full">
-              Dit ≠ Réel / Écrit
-            </span>
-          </div>
-          <div className="text-[11px] font-mono text-sub">
-            Déclarations DSI démenties
-          </div>
-        </div>
+          ))}
+        </dl>
 
-        {/* KPI 3 : Charge j.h & Quick-Wins */}
-        <div className="surface-panel rounded-2xl p-4 flex flex-col justify-between gap-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-sub">
-              Charge j.h
-            </span>
-            <div className="w-7 h-7 rounded-lg badge-success flex items-center justify-center">
-              <Clock className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold font-mono tabular-nums text-main">
-              {fullPlanWorkload
-                ? `${String(fullPlanWorkload.workload_jh.estimated_jh).replace(
-                    '.',
-                    ','
-                  )}`
-                : '0'}{' '}
-              <span className="text-sm font-bold text-sub">j.h</span>
-            </span>
-            {fullPlanWorkload &&
-              fullPlanWorkload.workload_jh.quick_wins_count > 0 && (
-                <span className="badge-success text-[10px] font-extrabold px-2 py-0.5 rounded-full tabular-nums">
-                  {fullPlanWorkload.workload_jh.quick_wins_count} Quick-Wins
-                </span>
-              )}
-          </div>
-          <div className="text-[11px] font-mono text-sub tabular-nums">
-            {fullPlanWorkload
-              ? `Fourchette ${String(fullPlanWorkload.workload_jh.min_jh).replace(
-                  '.',
-                  ','
-                )}–${String(fullPlanWorkload.workload_jh.max_jh).replace(
-                  '.',
-                  ','
-                )} j.h`
-              : 'Plan 30/60/90j'}
-          </div>
-        </div>
-
-        {/* KPI 4 : Exposition Art. 34 & Écarts */}
-        <div className="surface-panel rounded-2xl p-4 flex flex-col justify-between gap-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-sub">
-              Exposition Art. 34
-            </span>
-            <div className="w-7 h-7 rounded-lg badge-warning flex items-center justify-center">
-              <Scale className="w-3.5 h-3.5" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tabular-nums tone-warning">
-              {summary.confirmedGapsCount}
-            </span>
-            <span className="text-xs font-semibold text-sub">écart(s)</span>
-            {summary.newGapsCount > 0 && (
-              <span className="badge-high text-[10px] font-bold px-2 py-0.5 rounded-full tabular-nums">
-                +{summary.newGapsCount} nouveaux
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-sub">
-            {fullPlanWorkload ? (
-              <span
-                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                  fullPlanWorkload.art34_exposure.risk_level_before === 'CRITIQUE'
-                    ? 'badge-critical'
-                    : fullPlanWorkload.art34_exposure.risk_level_before === 'ÉLEVÉ'
-                    ? 'badge-warning'
-                    : 'badge-success'
-                }`}
-              >
-                Risque {fullPlanWorkload.art34_exposure.risk_level_before}
-              </span>
-            ) : (
-              <span>10 M€ / 2 % CA</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* TÉLÉMÉTRIE MULTI-AGENTS CONDENSÉE */}
-      {showAgentTimings && (
-        <div className="surface-panel rounded-2xl p-4 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-accent" />
-              <h3 className="text-xs sm:text-sm font-extrabold text-main">
-                Télémétrie d&apos;Exécution par Agent
-              </h3>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono tabular-nums">
-              {totalAvantMs !== null && (
-                <span className="surface-subtle text-sub px-2.5 py-0.5 rounded-lg">
-                  AVANT :{' '}
-                  <strong className="text-main">
-                    {formatAgentTimingMs(totalAvantMs)}
-                  </strong>
-                </span>
-              )}
-              {totalApresMs !== null && (
-                <span className="badge-success px-2.5 py-0.5 rounded-lg font-bold">
-                  APRÈS : {formatAgentTimingMs(totalApresMs)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-2.5">
-            {CANONICAL_AGENTS.map((ag, idx) => {
-              const avMs = resolvedAvantTimings?.[ag.key];
-              const apMs =
-                resolvedApresTimings?.[ag.key] ??
-                (!resolvedAvantTimings
-                  ? resolvedFallbackTimings?.[ag.key]
-                  : undefined);
-              const primaryMs =
-                typeof apMs === 'number'
-                  ? apMs
-                  : typeof avMs === 'number'
-                  ? avMs
-                  : null;
-              const barPct =
-                primaryMs !== null
-                  ? Math.max(
-                      6,
-                      Math.min(100, Math.round((primaryMs / maxObservedAgentMs) * 100))
-                    )
-                  : 0;
-
-              return (
-                <div
-                  key={ag.key}
-                  className="surface-card rounded-xl p-3 space-y-1.5"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-extrabold text-main truncate">
-                      0{idx + 1}. {ag.label}
-                    </span>
-                    <span className="font-mono text-xs font-extrabold text-accent tabular-nums shrink-0">
-                      {formatAgentTimingMs(primaryMs)}
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full surface-subtle overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-[var(--deloitte)] transition-all duration-300"
-                      style={{ width: `${barPct}%` }}
-                    />
-                  </div>
-                  {typeof avMs === 'number' && typeof apMs === 'number' && (
-                    <div className="flex items-center justify-between text-[10px] font-mono text-sub tabular-nums">
-                      <span>AV: {formatAgentTimingMs(avMs)}</span>
-                      <span>AP: {formatAgentTimingMs(apMs)}</span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+        {showAgentTimings && (
+          <p className="mt-4 text-xs text-sub tabular-nums">
+            Exécution de la chaîne d&apos;agents :{' '}
+            {totalAvantMs !== null && <>AVANT {formatAgentTimingMs(totalAvantMs)}</>}
+            {totalAvantMs !== null && totalApresMs !== null && ' · '}
+            {totalApresMs !== null && <>APRÈS {formatAgentTimingMs(totalApresMs)}</>}
+          </p>
+        )}
+      </section>
 
       {/* LIGNE 2 : LISTE CONDENSÉE PAR CONSTAT + ACCORDÉON « DÉTAILS » */}
       <div className="surface-panel rounded-2xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-hairline">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-sm sm:text-base font-extrabold text-main">
-              Matrice Différentielle ({filteredItems.length}/{summary.items.length})
-            </h2>
+            <h3 className="text-base font-semibold text-main">
+              Évolution constat par constat{' '}
+              <span className="text-sub font-normal tabular-nums">
+                ({filteredItems.length} / {summary.items.length})
+              </span>
+            </h3>
             {diffSource === 'server' && (
-              <span className="badge-success inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold">
+              <span className="inline-flex items-center gap-1 text-xs text-sub">
                 <ShieldCheck className="w-3 h-3" />
-                /api/audit/diff
-                {serverDiff?.chain?.valide
-                  ? ` • ${serverDiff.chain.nb_entrees} blocs`
-                  : ''}
+                Calculé sur le registre scellé
+                {serverDiff?.chain?.valide ? ` (${serverDiff.chain.nb_entrees} entrées)` : ''}
               </span>
             )}
             {diffSource === 'loading' && (
@@ -638,7 +480,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                   onClick={() => setFilter(key)}
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
                     active
-                      ? 'bg-[var(--deloitte)] text-black'
+                      ? 'seg-active'
                       : 'surface-card text-sub hover:text-main'
                   }`}
                 >
@@ -663,7 +505,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
             </button>
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="-mx-4 sm:-mx-5 divide-y divide-[var(--border-subtle)] border-t border-hairline">
             {filteredItems.map((item) => {
               const targetFinding = item.apres || item.avant;
               const avStatus = item.avant
@@ -680,7 +522,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
               return (
                 <div
                   key={item.key}
-                  className="surface-card hover:border-strong rounded-2xl overflow-hidden transition"
+                  className="overflow-hidden"
                 >
                   {/* Ligne condensée par défaut */}
                   <div
@@ -694,17 +536,17 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                         toggleItemDetails(item.key);
                       }
                     }}
-                    className="px-4 py-3 flex flex-wrap items-center justify-between gap-3 cursor-pointer"
+                    className="px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-3 cursor-pointer hover:bg-[var(--bg-hover)] transition-colors"
                   >
                     {/* Gauche : ID + Thème + Exigence */}
                     <div className="flex flex-wrap items-center gap-2 min-w-0">
-                      <span className="font-mono text-xs font-extrabold px-2 py-0.5 rounded bg-[var(--deloitte)] text-black shrink-0">
+                      <span className="font-mono text-xs text-sub shrink-0 w-12">
                         {item.id}
                       </span>
-                      <span className="text-sm font-extrabold text-main">
+                      <span className="text-sm font-semibold text-main">
                         {item.theme}
                       </span>
-                      <span className="text-xs font-mono text-dim hidden sm:inline">
+                      <span className="text-xs text-sub hidden sm:inline">
                         {item.exigence_nis2}
                       </span>
                     </div>
@@ -729,7 +571,7 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
                           </span>
                         ) : (
                           <span className="px-2 py-0.5 rounded-full badge-success">
-                            Levé ✓
+                            Levé
                           </span>
                         )}
                       </div>

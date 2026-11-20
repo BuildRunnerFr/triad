@@ -100,6 +100,7 @@ export const LiveExecutionOverlay: React.FC<LiveExecutionOverlayProps> = ({
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.97, y: 8, opacity: 0 }}
             transition={{ duration: 0.22 }}
+            data-theme="dark"
             className="w-full max-w-4xl rounded-2xl bg-[var(--bg-rail)] border border-white/12 text-white shadow-2xl overflow-hidden"
           >
             {/* Barre supérieure Live */}
