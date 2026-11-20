@@ -516,112 +516,78 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-2xl h-full overflow-y-auto surface-panel border-l border-hairline p-6 space-y-6 shadow-2xl"
           >
-            <div className="flex items-center justify-between gap-3 pb-4 border-b border-hairline">
-              <div className="flex items-center gap-2.5">
-                <SlidersHorizontal className="w-4 h-4 text-accent" />
-                <h2 className="text-base font-extrabold text-main">
-                  Ventilation des 5 Piliers NIS2
-                </h2>
+            <div className="flex items-start justify-between gap-3 pb-4 border-b border-hairline">
+              <div>
+                <h2 className="text-lg font-semibold text-main">Les cinq piliers NIS2</h2>
+                <p className="mt-0.5 text-xs text-sub">
+                  Score vérifié (barre) face au niveau déclaré par l&apos;établissement (repère bleu).
+                </p>
               </div>
               <button
                 type="button"
-                aria-label="Fermer le tiroir Détails"
+                aria-label="Fermer le tiroir des piliers"
                 onClick={() => setDetailsDrawerOpen(false)}
-                className="p-2 rounded-xl surface-card hover:border-[var(--deloitte)] text-sub hover:text-main transition cursor-pointer"
+                className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-sub hover:text-main transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* 5 Piliers détaillés */}
-            <div className="space-y-3">
+            {/* 5 piliers : une ligne chacun, écart déclaré / vérifié lisible d'un coup d'œil */}
+            <ul className="-mx-6 divide-y divide-[var(--border-subtle)] border-y border-hairline">
               {pillars.map((p, idx) => {
-                const gravMeta = GRAVITE_PILL[p.worstGravite];
-                const barColor =
-                  p.score >= 70
-                    ? '#86BC25'
-                    : p.score >= 40
-                    ? '#F59E0B'
-                    : '#F43F5E';
-
+                const barColor = p.score >= 70 ? 'var(--reel)' : p.score >= 40 ? 'var(--warning-text)' : 'var(--rupture)';
+                const gap = Math.max(0, p.declaredScore - p.score);
                 return (
-                  <div
-                    key={p.id}
-                    onClick={() => {
-                      if (p.primaryFinding) {
-                        setDetailsDrawerOpen(false);
-                        onSelectFinding(p.primaryFinding);
-                      }
-                    }}
-                    className={`surface-card rounded-xl p-4 space-y-2 transition ${
-                      p.primaryFinding ? 'hover:border-strong cursor-pointer' : ''
-                    }`}
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs font-extrabold text-main">
-                          {p.title}
+                  <li key={p.id}>
+                    <button
+                      type="button"
+                      disabled={!p.primaryFinding}
+                      onClick={() => {
+                        if (p.primaryFinding) {
+                          setDetailsDrawerOpen(false);
+                          onSelectFinding(p.primaryFinding);
+                        }
+                      }}
+                      className="w-full text-left px-6 py-4 space-y-2 hover:bg-[var(--bg-hover)] disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-default"
+                    >
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                        <span className="text-sm font-semibold text-main">
+                          {p.title} <span className="font-normal text-sub">· {p.article}</span>
                         </span>
-                        <span className="font-mono text-[10px] px-2 py-0.5 rounded surface-subtle text-sub">
-                          {p.article}
+                        <span className="text-sm tabular-nums">
+                          <span className="font-semibold" style={{ color: barColor }}>{p.score} %</span>
+                          {gap > 0 && <span className="text-[var(--rupture)]"> · écart −{gap} pts</span>}
                         </span>
                       </div>
-
-                      <div className="flex items-center gap-1.5">
-                        {p.contradiction && (
-                          <span className="badge-critical inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold">
-                            <Zap className="w-2.5 h-2.5" />
-                            {p.contradiction}
-                          </span>
-                        )}
+                      <p className="text-xs text-sub leading-relaxed">{p.summaryText}</p>
+                      <div className="relative h-2 w-full rounded-full bg-[var(--bg-subtle)]">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${p.score}%` }}
+                          transition={{ duration: 0.5, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: barColor }}
+                        />
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${gravMeta.cls}`}
-                        >
-                          {gravMeta.label}
-                        </span>
-                        <span className="font-mono text-xs font-extrabold tabular-nums text-main pl-1">
-                          {p.score}%
-                        </span>
-                        {p.primaryFinding && (
-                          <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
-                        )}
+                          aria-hidden="true"
+                          title={`Déclaré : ${p.declaredScore} %`}
+                          className="absolute -top-1 -bottom-1 w-0.5 rounded bg-[var(--dit)]"
+                          style={{ left: `${p.declaredScore}%` }}
+                        />
                       </div>
-                    </div>
-
-                    <p className="text-xs text-sub leading-relaxed">
-                      {p.summaryText}
-                    </p>
-
-                    <div className="relative h-2 w-full rounded-full surface-subtle overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${p.score}%` }}
-                        transition={{
-                          duration: 0.55,
-                          delay: idx * 0.04,
-                          ease: 'easeOut',
-                        }}
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: barColor }}
-                      />
-                      <div
-                        title={`Déclaré : ${p.declaredScore}%`}
-                        className="absolute top-0 bottom-0 w-0.5 bg-[var(--info-bg)]"
-                        style={{ left: `${p.declaredScore}%` }}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-[10px] text-dim font-mono">
-                      <span>{p.matchedCount} contrôle(s)</span>
-                      <span>
-                        Déclaré {p.declaredScore}% • Écart -
-                        {Math.max(0, p.declaredScore - p.score)} pts
-                      </span>
-                    </div>
-                  </div>
+                      <div className="flex items-center justify-between text-xs text-sub">
+                        <span>
+                          {p.matchedCount} contrôle{p.matchedCount > 1 ? 's' : ''}
+                          {p.contradiction ? ` · ${p.contradiction}` : ''}
+                        </span>
+                        <span className="tabular-nums">Déclaré {p.declaredScore} %</span>
+                      </div>
+                    </button>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
 
             {/* Questions d'entretien DSI (Phase AVANT ou si présentes) */}
             {synthesis.questions_entretien &&
@@ -630,8 +596,8 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <MessageCircleQuestion className="w-4 h-4 tone-warning" />
-                      <h3 className="text-xs font-extrabold uppercase tracking-wider tone-warning">
-                        Questions Ciblées DSI ({synthesis.questions_entretien.length})
+                      <h3 className="text-base font-semibold text-main">
+                        Questions à poser à la DSI ({synthesis.questions_entretien.length})
                       </h3>
                     </div>
                     <button
@@ -672,308 +638,185 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
         </div>
       )}
 
-      {/* VUE PLEIN ÉCRAN « MODE PRÉSENTATION COMEX » */}
+      {/* MODE PRÉSENTATION COMEX : brief d'une page à l'échelle de la projection */}
       {comexModeOpen && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Mode Présentation COMEX — Soutenance Direction Générale NIS2"
+          aria-label="Présentation au comité de direction"
+          data-lenis-prevent
           className="fixed inset-0 z-50 overflow-y-auto bg-[var(--bg-canvas)] text-main"
         >
-          <div className="max-w-[1440px] mx-auto px-6 py-6 lg:px-10 lg:py-8 space-y-6">
-            <header className="surface-panel rounded-2xl p-5 edge-accent flex flex-wrap items-center justify-between gap-4">
-              <div className="space-y-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-md bg-[var(--deloitte)] text-black text-[11px] font-extrabold uppercase tracking-wider">
-                    Soutenance COMEX
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full surface-subtle text-[11px] font-mono font-bold text-main">
-                    Phase {mode}
-                  </span>
-                  <span className="badge-critical px-2.5 py-0.5 rounded-full text-[11px] font-bold">
-                    {comexSimulation.art34_exposure.entity_category}
-                  </span>
-                </div>
-                <h2 className="text-2xl font-extrabold tracking-tight text-main">
-                  {synthesis.client || 'Centre Hospitalier de Valmont'} — Arbitrage NIS2
+          <div className="max-w-[1320px] mx-auto px-6 py-8 lg:px-12 lg:py-12 space-y-10">
+            <header className="flex flex-wrap items-start justify-between gap-6 pb-6 border-b border-hairline">
+              <div className="min-w-0">
+                <p className="text-base text-sub">
+                  Présentation au comité de direction · {comexSimulation.art34_exposure.entity_category} · Phase{' '}
+                  {mode === 'APRES' ? 'APRÈS' : 'AVANT'} entretiens
+                </p>
+                <h2 className="mt-1 text-3xl lg:text-4xl font-semibold tracking-[-0.025em] text-main">
+                  {synthesis.client || 'Centre Hospitalier de Valmont'} — arbitrage NIS2
                 </h2>
               </div>
-
               <button
                 type="button"
                 onClick={() => setComexModeOpen(false)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl surface-card hover:border-[var(--deloitte)] text-xs font-extrabold text-main transition cursor-pointer shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-hairline hover:border-strong text-sm font-semibold text-main transition cursor-pointer shrink-0"
               >
-                <X className="w-4 h-4 text-accent" />
-                <span>Quitter (Échap)</span>
+                <X className="w-4 h-4" />
+                Quitter <kbd className="kbd-pill">Échap</kbd>
               </button>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              <div className="surface-panel rounded-2xl p-5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-dim">
-                    Maturité NIS2
-                  </span>
-                  <TrendingUp className="w-4 h-4 text-accent" />
-                </div>
-                <div className="flex items-baseline gap-2.5">
-                  <span className="text-4xl font-extrabold font-mono tabular-nums text-main">
-                    {maturityScore}%
-                  </span>
-                  <span className="text-sm font-mono font-extrabold text-accent">
-                    → {comexSimulation.projected_score}% (+
-                    {comexSimulation.score_delta})
-                  </span>
-                </div>
-                <div className="text-xs text-sub">
-                  {critiques} critique(s) • {nonConformes + partiels}/{total} à traiter
-                </div>
-              </div>
+            <p className="max-w-5xl text-[2rem] lg:text-[3.1rem] leading-[1.08] font-semibold tracking-[-0.03em] text-main">
+              <span className="text-[var(--rupture)] font-bold tabular-nums">{contradicted}</span> {ledeSubject.unit}
+              {contradicted > 1 ? 's' : ''} {ledeSubject.owner} sur{' '}
+              <span className="tabular-nums">{ledeSubject.base}</span>{' '}
+              {contradicted > 1 ? 'sont contredites' : 'est contredite'} par la configuration réelle. Le plan à 90 jours
+              porte la maturité de <span className="tabular-nums">{maturityScore} %</span> à{' '}
+              <span className="text-[var(--accent-text)] font-bold tabular-nums">{comexSimulation.projected_score} %</span>.
+            </p>
 
-              <div className="surface-panel rounded-2xl p-5 space-y-2 border border-[var(--critical-border)]">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider tone-critical">
-                    Exposition Art. 34
-                  </span>
-                  <Scale className="w-4 h-4 tone-critical" />
+            <dl className="grid grid-cols-2 lg:grid-cols-4 border-t border-hairline">
+              {[
+                {
+                  label: 'Maturité NIS2',
+                  value: `${maturityScore} % → ${comexSimulation.projected_score} %`,
+                  note: `${critiques} constat${critiques > 1 ? 's' : ''} critique${critiques > 1 ? 's' : ''}`,
+                },
+                {
+                  label: 'Exposition aux sanctions (Art. 34)',
+                  value: `Risque ${comexSimulation.art34_exposure.risk_level_before.toLowerCase()}`,
+                  note: `${comexSimulation.art34_exposure.risk_level_after.toLowerCase()} après le plan · ${comexSimulation.art34_exposure.plafond_label}`,
+                  tone: 'text-[var(--rupture)]',
+                },
+                {
+                  label: 'Effort sur 90 jours',
+                  value: `${fmt1(comexSimulation.workload_jh.estimated_jh)} j·h`,
+                  note: `0–30 j : ${fmt1(comexSimulation.workload_jh.by_horizon['0_30'].estimated_jh)} · 30–60 j : ${fmt1(comexSimulation.workload_jh.by_horizon['30_60'].estimated_jh)} · 60–90 j : ${fmt1(comexSimulation.workload_jh.by_horizon['60_90'].estimated_jh)}`,
+                },
+                comparisonSummary
+                  ? {
+                      label: 'Effet des entretiens',
+                      value: `${comparisonSummary.scoreAvant} % → ${comparisonSummary.scoreApres} %`,
+                      note: `${comparisonSummary.ditContradictionsCount} déclaration${comparisonSummary.ditContradictionsCount > 1 ? 's' : ''} démentie${comparisonSummary.ditContradictionsCount > 1 ? 's' : ''}`,
+                    }
+                  : {
+                      label: 'Preuves citées',
+                      value: `${verifiedQuotes} / ${total}`,
+                      note: `${arbitratedCount} / ${comexSimulation.actionable_findings} constats arbitrés`,
+                    },
+              ].map((fact, i) => (
+                <div
+                  key={fact.label}
+                  className={`pt-4 pb-1 pr-5 ${i > 0 ? 'pl-5 border-l border-hairline' : ''} ${i === 2 ? 'max-lg:border-l-0 max-lg:pl-0' : ''}`}
+                >
+                  <dt className="text-sm text-sub">{fact.label}</dt>
+                  <dd className={`mt-1 text-2xl font-semibold tabular-nums ${'tone' in fact && fact.tone ? fact.tone : 'text-main'}`}>
+                    {fact.value}
+                  </dd>
+                  <dd className="mt-0.5 text-sm text-sub">{fact.note}</dd>
                 </div>
-                <div className="text-lg font-extrabold font-mono text-main">
-                  {comexSimulation.art34_exposure.plafond_label}
-                </div>
-                <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-                  <span className="badge-critical px-2 py-0.5 rounded-full font-bold">
-                    {comexSimulation.art34_exposure.risk_level_before}
-                  </span>
-                  <span className="text-dim">→</span>
-                  <span className="badge-success px-2 py-0.5 rounded-full font-bold">
-                    {comexSimulation.art34_exposure.risk_level_after} (-
-                    {comexSimulation.art34_exposure.exposure_reduction_pct}%)
-                  </span>
-                </div>
-              </div>
+              ))}
+            </dl>
 
-              <div className="surface-panel rounded-2xl p-5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-dim">
-                    Charge 90 Jours
-                  </span>
-                  <Clock className="w-4 h-4 text-accent" />
-                </div>
-                <div className="text-3xl font-extrabold font-mono tabular-nums text-main">
-                  {comexSimulation.workload_jh.estimated_jh} j.h
-                </div>
-                <div className="grid grid-cols-3 gap-1.5 text-[11px] font-mono">
-                  <div className="surface-subtle rounded-lg px-2 py-1">
-                    <div className="text-dim text-[10px]">0–30j</div>
-                    <div className="font-bold text-main">
-                      {comexSimulation.workload_jh.by_horizon['0_30'].estimated_jh}
-                    </div>
-                  </div>
-                  <div className="surface-subtle rounded-lg px-2 py-1">
-                    <div className="text-dim text-[10px]">30–60j</div>
-                    <div className="font-bold text-main">
-                      {comexSimulation.workload_jh.by_horizon['30_60'].estimated_jh}
-                    </div>
-                  </div>
-                  <div className="surface-subtle rounded-lg px-2 py-1">
-                    <div className="text-dim text-[10px]">60–90j</div>
-                    <div className="font-bold text-main">
-                      {comexSimulation.workload_jh.by_horizon['60_90'].estimated_jh}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="surface-panel rounded-2xl p-5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-dim">
-                    {comparisonSummary ? 'Delta AVANT → APRÈS' : 'Gouvernance'}
-                  </span>
-                  <GitCompareArrows className="w-4 h-4 text-accent" />
-                </div>
-                {comparisonSummary ? (
-                  <>
-                    <div className="text-2xl font-extrabold font-mono tabular-nums text-main">
-                      {comparisonSummary.scoreAvant}% → {comparisonSummary.scoreApres}%
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 text-[11px]">
-                      <span className="badge-critical px-2 py-0.5 rounded-full font-bold">
-                        {comparisonSummary.ditContradictionsCount} rupture(s) Dit
-                      </span>
-                      <span className="badge-warning px-2 py-0.5 rounded-full font-bold">
-                        +{comparisonSummary.newGapsCount} écart(s)
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-2xl font-extrabold font-mono tabular-nums text-main">
-                      {verifiedQuotes}/{total} preuves
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 text-[11px]">
-                      <span className="badge-success px-2 py-0.5 rounded-full font-bold">
-                        {arbitratedCount}/{comexSimulation.actionable_findings} arbitrés
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-              <div className="xl:col-span-7 space-y-4">
-                <div className="surface-panel rounded-2xl p-5 space-y-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xs font-extrabold uppercase tracking-wider text-main">
-                      Top 3 Risques Prioritaires
-                    </h3>
-                    <span className="badge-critical px-2.5 py-0.5 rounded-full text-[11px] font-extrabold">
-                      Priorité COMEX
-                    </span>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    {(synthesis.top_3_risques || []).slice(0, 3).map((risk, idx) => (
-                      <div
-                        key={idx}
-                        className="surface-card rounded-xl p-3.5 flex items-start gap-3 edge-accent"
-                      >
-                        <span className="px-2 py-0.5 rounded-lg bg-[var(--deloitte)] text-black font-mono font-extrabold text-xs shrink-0">
-                          0{idx + 1}
-                        </span>
-                        <p className="text-xs text-main font-medium leading-relaxed">
-                          {risk}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {topCriticalFindings.length > 0 && (
-                  <div className="surface-panel rounded-2xl p-5 space-y-3">
-                    <h3 className="text-xs font-extrabold uppercase tracking-wider text-dim">
-                      Contradictions Majeures
-                    </h3>
-                    <div className="space-y-2">
-                      {topCriticalFindings.map((f) => {
-                        const grcMeta = f.decision_grc?.decision
-                          ? GRC_DECISION_META[f.decision_grc.decision]
-                          : null;
-                        return (
-                          <div
-                            key={f.id}
-                            onClick={() => {
-                              setComexModeOpen(false);
-                              onSelectFinding(f);
-                            }}
-                            className="surface-card hover:border-[var(--deloitte)] rounded-xl p-3 transition cursor-pointer space-y-1"
-                          >
-                            <div className="flex flex-wrap items-center justify-between gap-2">
-                              <div className="flex items-center gap-2">
-                                <span className="font-mono text-xs font-extrabold text-accent">
-                                  {f.id}
-                                </span>
-                                <span className="text-xs font-extrabold text-main">
-                                  {f.theme}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                {grcMeta && (
-                                  <span
-                                    className={`${grcMeta.badgeCls} px-2 py-0.5 rounded-full text-[10px] font-bold`}
-                                  >
-                                    {grcMeta.shortLabel}
-                                  </span>
-                                )}
-                                <span
-                                  className={`${
-                                    GRAVITE_PILL[f.gravite].cls
-                                  } px-2 py-0.5 rounded-full text-[10px] font-bold`}
-                                >
-                                  {GRAVITE_PILL[f.gravite].label}
-                                </span>
-                              </div>
-                            </div>
-                            <p className="text-xs text-sub line-clamp-2">
-                              {f.contradiction || f.recommandation}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="xl:col-span-5 space-y-4">
-                <div className="surface-panel rounded-2xl p-5 space-y-3.5">
-                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-main">
-                    Trajectoire 90 Jours par Pilier
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-10">
+              <div className="xl:col-span-7 space-y-8">
+                <section aria-labelledby="comex-risks">
+                  <h3 id="comex-risks" className="text-xl font-semibold text-main">
+                    Trois risques à arbitrer
                   </h3>
-
-                  <div className="space-y-3">
-                    {comexSimulation.pillars.map((p) => (
-                      <div key={p.id} className="space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-main truncate pr-2">
-                            {p.title}
-                          </span>
-                          <span className="font-mono font-extrabold tabular-nums shrink-0">
-                            <span className="text-sub">{p.current_score}%</span>{' '}
-                            <span className="text-accent">
-                              → {p.projected_score}%
-                            </span>
-                          </span>
-                        </div>
-                        <div className="h-2 rounded-full surface-subtle overflow-hidden relative">
-                          <div
-                            className="h-full bg-[var(--deloitte)]/35 rounded-full"
-                            style={{ width: `${p.projected_score}%` }}
-                          />
-                          <div
-                            className="h-full bg-[var(--deloitte)] rounded-full absolute inset-y-0 left-0"
-                            style={{ width: `${p.current_score}%` }}
-                          />
-                        </div>
-                      </div>
+                  <ol className="mt-3 space-y-4">
+                    {(synthesis.top_3_risques || []).slice(0, 3).map((risk, idx) => (
+                      <li key={idx} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 text-base leading-relaxed text-main">
+                        <span className="text-xl font-semibold text-[var(--rupture)] tabular-nums leading-snug">{idx + 1}.</span>
+                        <span>{risk}</span>
+                      </li>
                     ))}
-                  </div>
-                </div>
+                  </ol>
+                </section>
 
-                <div className="surface-panel rounded-2xl p-5 border border-[var(--deloitte)]/35 space-y-2.5">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
-                    <h3 className="text-xs font-extrabold uppercase tracking-wider text-main">
-                      Décisions COMEX (Art. 20)
-                    </h3>
-                  </div>
-                  <ul className="space-y-2 text-xs text-sub">
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
-                      <span>
-                        <strong className="text-main">Quick-Wins (0–30j) :</strong>{' '}
-                        {comexSimulation.workload_jh.by_horizon['0_30'].count} action(s) (
-                        {comexSimulation.workload_jh.by_horizon['0_30'].estimated_jh} j.h).
-                      </span>
+                {rankedFindings.length > 0 && (
+                  <section aria-labelledby="comex-contradictions">
+                    <div className="flex flex-wrap items-end justify-between gap-2">
+                      <h3 id="comex-contradictions" className="text-xl font-semibold text-main">
+                        Les contradictions qui fondent ces risques
+                      </h3>
+                      <RibbonLegend />
+                    </div>
+                    <ul className="mt-3 surface-panel rounded-2xl overflow-hidden divide-y divide-[var(--border-subtle)]">
+                      {rankedFindings.slice(0, 4).map((f) => (
+                        <ConcordanceRow
+                          key={f.id}
+                          finding={f}
+                          onOpen={(finding) => {
+                            setComexModeOpen(false);
+                            onSelectFinding(finding);
+                          }}
+                          note={f.decision_grc?.decision ? `Arbitré : ${f.decision_grc.decision_label}` : undefined}
+                        />
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </div>
+
+              <div className="xl:col-span-5 space-y-8">
+                <section aria-labelledby="comex-trajectory">
+                  <h3 id="comex-trajectory" className="text-xl font-semibold text-main">
+                    Trajectoire à 90 jours, par pilier
+                  </h3>
+                  <ul className="mt-4 space-y-4">
+                    {comexSimulation.pillars.map((pl) => (
+                      <li key={pl.id}>
+                        <div className="flex items-baseline justify-between gap-3 text-sm">
+                          <span className="text-main">{pl.title}</span>
+                          <span className="tabular-nums shrink-0">
+                            <span className="text-sub">{pl.current_score} %</span>{' '}
+                            <span className="text-[var(--accent-text)] font-semibold">→ {pl.projected_score} %</span>
+                          </span>
+                        </div>
+                        <div
+                          className="mt-1.5 h-2 rounded-full bg-[var(--bg-subtle)] relative overflow-hidden"
+                          role="img"
+                          aria-label={`${pl.title} : ${pl.current_score} % aujourd'hui, ${pl.projected_score} % visé`}
+                        >
+                          <div className="absolute inset-y-0 left-0 rounded-full bg-[var(--reel-soft)] border border-[var(--accent-border)]" style={{ width: `${pl.projected_score}%` }} />
+                          <div
+                            className="absolute inset-y-0 left-0 rounded-full"
+                            style={{
+                              width: `${pl.current_score}%`,
+                              background: pl.current_score < 40 ? 'var(--rupture)' : pl.current_score < 70 ? 'var(--warning-text)' : 'var(--reel)',
+                            }}
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs text-sub">Barre pleine : aujourd&apos;hui · contour vert : visé à 90 jours.</p>
+                </section>
+
+                <section aria-labelledby="comex-decisions" className="rounded-2xl border border-[var(--accent-border)] bg-[var(--accent-soft)] p-6">
+                  <h3 id="comex-decisions" className="text-xl font-semibold text-main">
+                    Décisions attendues du COMEX (Art. 20)
+                  </h3>
+                  <ul className="mt-3 space-y-3 text-base text-main leading-relaxed">
+                    <li>
+                      <strong className="font-semibold">Engager les gains rapides (0–30 jours)</strong> :{' '}
+                      {comexSimulation.workload_jh.by_horizon['0_30'].count} action
+                      {comexSimulation.workload_jh.by_horizon['0_30'].count > 1 ? 's' : ''},{' '}
+                      {fmt1(comexSimulation.workload_jh.by_horizon['0_30'].estimated_jh)} j·h.
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
-                      <span>
-                        <strong className="text-main">Plan 90j :</strong>{' '}
-                        {comexSimulation.workload_jh.label} ({maturityScore}% →{' '}
-                        {comexSimulation.projected_score}%).
-                      </span>
+                    <li>
+                      <strong className="font-semibold">Valider le plan à 90 jours</strong> : {comexSimulation.workload_jh.label},
+                      maturité de {maturityScore} % à {comexSimulation.projected_score} %.
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--deloitte)] mt-1.5 shrink-0" />
-                      <span>
-                        <strong className="text-main">Double guichet :</strong>{' '}
-                        circuit ANSSI 24h/72h &amp; CNIL 72h.
-                      </span>
+                    <li>
+                      <strong className="font-semibold">Activer le double circuit de notification</strong> : ANSSI (24 h / 72 h)
+                      et CNIL (72 h).
                     </li>
                   </ul>
-                </div>
+                </section>
               </div>
             </div>
           </div>

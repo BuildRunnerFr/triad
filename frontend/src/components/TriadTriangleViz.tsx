@@ -37,9 +37,9 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
   const isClean = active.statut === 'conforme';
 
   const edgeColor = (broken: boolean) => {
-    if (broken) return '#F43F5E';
-    if (isClean) return '#86BC25';
-    return 'rgba(148,163,184,0.45)';
+    if (broken) return 'var(--rupture)';
+    if (isClean) return 'var(--reel)';
+    return 'var(--border-strong)';
   };
 
   return (
@@ -84,7 +84,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               y1="56"
               x2="262"
               y2="56"
-              stroke={edgeColor(breakDitEcrit)}
+              style={{ stroke: edgeColor(breakDitEcrit) }}
               strokeWidth={breakDitEcrit ? 3.5 : 2}
               strokeDasharray={breakDitEcrit ? '6 4' : undefined}
               initial={{ opacity: 0.4 }}
@@ -96,7 +96,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               y1="66"
               x2="164"
               y2="182"
-              stroke={edgeColor(breakDitReel)}
+              style={{ stroke: edgeColor(breakDitReel) }}
               strokeWidth={breakDitReel ? 3.5 : 2}
               strokeDasharray={breakDitReel ? '6 4' : undefined}
             />
@@ -106,7 +106,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               y1="66"
               x2="176"
               y2="182"
-              stroke={edgeColor(breakEcritReel)}
+              style={{ stroke: edgeColor(breakEcritReel) }}
               strokeWidth={breakEcritReel ? 3.5 : 2}
               strokeDasharray={breakEcritReel ? '6 4' : undefined}
             />
@@ -216,7 +216,7 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
                 r="28"
                 style={{
                   fill: 'var(--accent-soft)',
-                  stroke: '#86BC25',
+                  stroke: 'var(--reel)',
                 }}
                 strokeWidth="2"
               />
@@ -253,9 +253,9 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            <div className="surface-card rounded-xl p-3 border-t-2 border-t-sky-500">
-              <div className="text-[10px] font-extrabold uppercase tone-info mb-1">
-                DIT
+            <div className="surface-card rounded-xl p-3 edge-sky">
+              <div className="text-xs font-semibold text-[var(--dit)] mb-1">
+                Dit
               </div>
               <p className="text-xs text-main line-clamp-2 leading-relaxed">
                 {active.dit
@@ -266,18 +266,18 @@ export const TriadTriangleViz: React.FC<TriadTriangleVizProps> = ({
               </p>
             </div>
 
-            <div className="surface-card rounded-xl p-3 border-t-2 border-t-violet-500">
-              <div className="text-[10px] font-extrabold uppercase tone-violet mb-1">
-                ÉCRIT
+            <div className="surface-card rounded-xl p-3 edge-violet">
+              <div className="text-xs font-semibold text-[var(--ecrit)] mb-1">
+                Écrit
               </div>
               <p className="text-xs text-main line-clamp-2 leading-relaxed">
                 {active.ecrit ? `« ${active.ecrit.extrait} »` : 'Non documenté'}
               </p>
             </div>
 
-            <div className="surface-card rounded-xl p-3 border-t-2 border-t-[var(--deloitte)]">
-              <div className="text-[10px] font-extrabold uppercase text-accent mb-1">
-                RÉEL
+            <div className="surface-card rounded-xl p-3 edge-accent">
+              <div className="text-xs font-semibold text-[var(--reel)] mb-1">
+                Réel
               </div>
               <p className="text-xs text-main line-clamp-2 leading-relaxed">
                 {active.reel ? active.reel.constat : 'Procédural'}
