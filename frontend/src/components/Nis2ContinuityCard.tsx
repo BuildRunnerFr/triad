@@ -138,11 +138,11 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
       {/* En-tête court */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h4 className="text-sm sm:text-base font-extrabold text-main">
+          <h4 className="text-sm sm:text-base font-semibold text-main">
             Continuité Clinique RTO / RPO
           </h4>
           <span
-            className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${overallMeta.badgeCls}`}
+            className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${overallMeta.badgeCls}`}
           >
             {overallMeta.label}
           </span>
@@ -150,13 +150,13 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
 
         <div className="flex items-center gap-2">
           {syncState === 'synced' && (
-            <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+            <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
               <ShieldCheck className="w-3 h-3" />
               <span>Données serveur à jour</span>
             </span>
           )}
           {syncState === 'loading' && (
-            <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono">
+            <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px]">
               <RefreshCw className="w-3 h-3 animate-spin" />
               <span>Sync…</span>
             </span>
@@ -170,7 +170,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
           <div className="text-xs font-semibold text-sub">
             Processus vitaux
           </div>
-          <div className="text-xl font-extrabold font-mono text-main tabular-nums">
+          <div className="text-xl font-semibold text-main tabular-nums">
             {report.summary_counts.total}
           </div>
           <div className="text-[11px] text-sub">Art. 21 §2 (c)</div>
@@ -181,7 +181,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
             Exposés rançongiciel
           </div>
           <div
-            className={`text-xl font-extrabold font-mono tabular-nums ${
+            className={`text-xl font-semibold tabular-nums ${
               report.summary_counts.expose > 0
                 ? 'tone-critical'
                 : 'tone-success'
@@ -197,7 +197,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
             Écarts RTO / RPO
           </div>
           <div
-            className={`text-xl font-extrabold font-mono tabular-nums ${
+            className={`text-xl font-semibold tabular-nums ${
               report.summary_counts.rto_rpo_gaps > 0
                 ? 'tone-warning'
                 : 'tone-success'
@@ -212,7 +212,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
           <div className="text-xs font-semibold text-sub">
             Immuables WORM
           </div>
-          <div className="text-xl font-extrabold font-mono text-accent tabular-nums">
+          <div className="text-xl font-semibold text-accent tabular-nums">
             {report.summary_counts.immutable}
           </div>
           <div className="text-[11px] text-sub">Bucket Lock actif</div>
@@ -276,7 +276,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
                         <span className="font-mono text-[10px] font-extrabold px-2 py-0.5 rounded surface-subtle text-sub">
                           {proc.id}
                         </span>
-                        <h5 className="text-xs sm:text-sm font-extrabold text-main">
+                        <h5 className="text-xs sm:text-sm font-semibold text-main">
                           {proc.name}
                         </h5>
                       </div>
@@ -288,7 +288,7 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
                     <div className="flex flex-wrap items-center gap-1 shrink-0">
                       <span
                         title={ransomMeta.detail}
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${ransomMeta.badgeCls}`}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${ransomMeta.badgeCls}`}
                       >
                         {proc.ransomware_status === 'IMMUTABLE' ? (
                           <Lock className="w-3 h-3" />
@@ -315,14 +315,14 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
                           <span>RTO</span>
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded ${
+                          className={`text-[11px] font-semibold px-1.5 py-0.5 rounded ${
                             proc.rto_gap ? 'badge-critical' : 'badge-success'
                           }`}
                         >
-                          {proc.rto_gap ? 'ÉCART' : 'TENU'}
+                          {proc.rto_gap ? 'Écart' : 'Tenu'}
                         </span>
                       </div>
-                      <div className="font-mono text-xs font-extrabold text-main truncate">
+                      <div className="text-xs font-semibold text-main line-clamp-2">
                         {proc.rto_target}
                       </div>
                       <div
@@ -348,14 +348,14 @@ export const Nis2ContinuityCard: React.FC<Nis2ContinuityCardProps> = ({
                           <span>RPO</span>
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded ${
+                          className={`text-[11px] font-semibold px-1.5 py-0.5 rounded ${
                             proc.rpo_gap ? 'badge-critical' : 'badge-success'
                           }`}
                         >
-                          {proc.rpo_gap ? 'EXPOSÉ' : 'GARANTI'}
+                          {proc.rpo_gap ? 'Exposé' : 'Garanti'}
                         </span>
                       </div>
-                      <div className="font-mono text-xs font-extrabold text-main truncate">
+                      <div className="text-xs font-semibold text-main line-clamp-2">
                         {proc.rpo_target}
                       </div>
                       <div

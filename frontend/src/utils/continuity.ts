@@ -17,25 +17,25 @@ export const CONTINUITY_EXPOSURE_META: Record<
   }
 > = {
   CRITIQUE: {
-    label: 'CRITIQUE',
-    badgeCls: 'bg-rose-600 text-white',
+    label: 'Critique',
+    badgeCls: 'badge-critical',
     borderCls: 'border-rose-500/40',
     rank: 4,
   },
   ÉLEVÉ: {
-    label: 'ÉLEVÉ',
+    label: 'Élevé',
     badgeCls: 'badge-high',
     borderCls: 'border-amber-500/35',
     rank: 3,
   },
   MODÉRÉ: {
-    label: 'MODÉRÉ',
+    label: 'Modéré',
     badgeCls: 'badge-warning',
     borderCls: 'border-hairline',
     rank: 2,
   },
   MAÎTRISÉ: {
-    label: 'MAÎTRISÉ',
+    label: 'Maîtrisé',
     badgeCls: 'badge-success',
     borderCls: 'border-[#86BC25]/35',
     rank: 1,
@@ -52,16 +52,16 @@ export const RANSOMWARE_STATUS_META: Record<
   }
 > = {
   IMMUTABLE: {
-    label: 'IMMUTABLE ✓',
-    shortLabel: 'IMMUTABLE',
+    label: 'Immuable',
+    shortLabel: 'Immuable',
     detail: 'Sauvegardes WORM / Bucket Lock actives contre la suppression',
     badgeCls: 'badge-success',
   },
   EXPOSÉ: {
-    label: 'EXPOSÉ ✕',
-    shortLabel: 'EXPOSÉ',
+    label: 'Exposé',
+    shortLabel: 'Exposé',
     detail: 'Sauvegardes sans verrouillage WORM / Bucket Lock anti-rançongiciel',
-    badgeCls: 'bg-rose-600 text-white',
+    badgeCls: 'badge-critical',
   },
 };
 

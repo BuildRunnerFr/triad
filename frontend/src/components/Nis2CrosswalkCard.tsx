@@ -137,23 +137,23 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
       {/* En-tête court */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h4 className="text-sm sm:text-base font-extrabold text-main">
+          <h4 className="text-sm sm:text-base font-semibold text-main">
             Référentiels HDS • ISO 27001 • RGPD
           </h4>
-          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
             {report.summary_counts.total} correspondances
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {syncState === 'synced' && (
-            <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+            <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
               <ShieldCheck className="w-3 h-3" />
               <span>Données serveur à jour</span>
             </span>
           )}
           {syncState === 'loading' && (
-            <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono">
+            <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px]">
               <RefreshCw className="w-3 h-3 animate-spin" />
               <span>Sync…</span>
             </span>
@@ -183,7 +183,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
               <div className="text-xs font-semibold text-sub text-accent">
                 {FRAMEWORK_LABELS[fw].short}
               </div>
-              <div className="text-xl font-extrabold font-mono text-main tabular-nums">
+              <div className="text-xl font-semibold text-main tabular-nums">
                 {sum.conformity_pct}%
               </div>
               <div className="text-[11px] text-sub tabular-nums">
@@ -198,7 +198,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
             Écarts actifs
           </div>
           <div
-            className={`text-xl font-extrabold font-mono tabular-nums ${
+            className={`text-xl font-semibold tabular-nums ${
               report.summary_counts.gaps > 0 ? 'tone-critical' : 'tone-success'
             }`}
           >
@@ -364,7 +364,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
                               {entry.rgpd_ref}
                             </span>
                             {entry.cnil_applicable && (
-                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full badge-warning text-[9px] font-extrabold">
+                              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full badge-warning text-[10px] font-extrabold">
                                 <ShieldAlert className="w-2.5 h-2.5" />
                                 <span>CNIL 72h</span>
                               </span>
@@ -375,7 +375,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
 
                       <td className="py-2.5 px-3 align-middle whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${stMeta.badgeCls}`}
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${stMeta.badgeCls}`}
                         >
                           {stMeta.shortLabel}
                         </span>

@@ -20,25 +20,25 @@ export const CROSSWALK_STATUS_META: Record<
 > = {
   non_conforme: {
     label: 'Écart majeur',
-    shortLabel: 'NON CONFORME',
-    badgeCls: 'bg-rose-600 text-white',
+    shortLabel: 'Non conforme',
+    badgeCls: 'badge-critical',
     rank: 4,
   },
   partiel: {
     label: 'Conformité partielle',
-    shortLabel: 'PARTIEL',
+    shortLabel: 'Partiel',
     badgeCls: 'badge-high',
     rank: 3,
   },
   a_confirmer: {
     label: 'À confirmer',
-    shortLabel: 'À CONFIRMER',
+    shortLabel: 'À confirmer',
     badgeCls: 'badge-warning',
     rank: 2,
   },
   conforme: {
     label: 'Conforme',
-    shortLabel: 'CONFORME ✓',
+    shortLabel: 'Conforme',
     badgeCls: 'badge-success',
     rank: 1,
   },

@@ -156,11 +156,11 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
       {/* En-tête court */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
-          <h4 className="text-sm sm:text-base font-extrabold text-main">
+          <h4 className="text-sm sm:text-base font-semibold text-main">
             Prestataires &amp; Tiers — Art. 21 §2 (d)
           </h4>
           <span
-            className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${overallMeta.badgeCls}`}
+            className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${overallMeta.badgeCls}`}
           >
             {overallMeta.label}
           </span>
@@ -174,13 +174,13 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
             </span>
           )}
           {syncState === 'synced' && (
-            <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+            <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
               <ShieldCheck className="w-3 h-3" />
               <span>Données serveur à jour</span>
             </span>
           )}
           {syncState === 'loading' && (
-            <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono">
+            <span className="surface-subtle text-sub inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px]">
               <RefreshCw className="w-3 h-3 animate-spin" />
               <span>Sync…</span>
             </span>
@@ -194,7 +194,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
           <div className="text-xs font-semibold text-sub">
             Tiers évalués
           </div>
-          <div className="text-xl font-extrabold font-mono text-main tabular-nums">
+          <div className="text-xl font-semibold text-main tabular-nums">
             {report.summary_counts.total}
           </div>
           <div className="text-[11px] text-sub">Périmètre {mode}</div>
@@ -205,7 +205,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
             Critiques &amp; Élevés
           </div>
           <div
-            className={`text-xl font-extrabold font-mono tabular-nums ${
+            className={`text-xl font-semibold tabular-nums ${
               highRiskCount > 0 ? 'tone-critical' : 'tone-success'
             }`}
           >
@@ -222,7 +222,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
             Quarantaine DLP
           </div>
           <div
-            className={`text-xl font-extrabold font-mono tabular-nums ${
+            className={`text-xl font-semibold tabular-nums ${
               totalQuarantined > 0 ? 'tone-critical' : 'text-main'
             }`}
           >
@@ -235,7 +235,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
           <div className="text-xs font-semibold text-sub">
             Maîtrisés
           </div>
-          <div className="text-xl font-extrabold font-mono text-accent tabular-nums">
+          <div className="text-xl font-semibold text-accent tabular-nums">
             {report.summary_counts.maitrise}
           </div>
           <div className="text-[11px] text-sub tabular-nums">
@@ -298,7 +298,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
                       <span className="font-mono text-[10px] font-extrabold px-2 py-0.5 rounded surface-subtle text-sub">
                         {vendor.id}
                       </span>
-                      <h5 className="text-xs sm:text-sm font-extrabold text-main">
+                      <h5 className="text-xs sm:text-sm font-semibold text-main">
                         {vendor.name}
                       </h5>
                     </div>
@@ -315,7 +315,7 @@ export const Nis2SupplyChainCard: React.FC<Nis2SupplyChainCardProps> = ({
                       </span>
                     )}
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${riskMeta.badgeCls}`}
+                      className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${riskMeta.badgeCls}`}
                     >
                       {riskMeta.label}
                     </span>
