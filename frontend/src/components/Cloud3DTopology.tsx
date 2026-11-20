@@ -358,13 +358,14 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
   const focusCameraOnNode = useCallback((spec: TopologyNodeSpec) => {
     const api = apiRef.current;
     if (!api) return;
-    const [nx, ny, nz] = spec.position;
-    const nextLookAt = new THREE.Vector3(nx * 0.72, ny * 0.45, nz * 0.72);
-    const nextPos = new THREE.Vector3(
-      nx * 0.65 - 1.15,
-      Math.max(2.9, ny + 2.8),
-      nz * 0.65 + 7.1
-    );
+    // Recentrage doux : on glisse vers la ressource sans quitter la vue d'ensemble.
+    const node = new THREE.Vector3(...spec.position);
+    const nextLookAt = DEFAULT_CAMERA_TARGET.clone().lerp(node, 0.32);
+    const narrow = (mountRef.current?.clientWidth ?? 800) < 560;
+    const nextPos = DEFAULT_CAMERA_POS.clone()
+      .sub(DEFAULT_CAMERA_TARGET)
+      .multiplyScalar(narrow ? 1.6 : 1)
+      .add(nextLookAt);
     api.flyTo(nextPos, nextLookAt);
   }, []);
 
