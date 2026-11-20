@@ -1847,8 +1847,8 @@ export const SecurityAndDeliverablesView: React.FC<
             </div>
           ) : !validated ? (
             /* Carte verrou épurée pré-validation */
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-            <div className="xl:col-span-7 surface-panel rounded-2xl p-5 sm:p-7 space-y-5">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+            <div className="xl:col-span-7 surface-panel rounded-2xl p-6 sm:p-8 space-y-8">
               <ValidationAttestation
                 synthesis={synthesis}
                 mode={mode}
@@ -1861,13 +1861,13 @@ export const SecurityAndDeliverablesView: React.FC<
                   type="button"
                   aria-expanded={showLockTests}
                   onClick={() => setShowLockTests((prev) => !prev)}
-                  className="w-full px-4 py-2.5 surface-subtle hover:bg-[var(--bg-hover)] flex items-center justify-between gap-2 text-[13px] font-semibold text-sub hover:text-main transition cursor-pointer"
+                  className="w-full min-h-11 px-4 py-2.5 hover:bg-[var(--bg-hover)] flex items-center justify-between gap-3 text-[13px] font-semibold text-sub hover:text-main transition-colors cursor-pointer"
                 >
-                  <span className="inline-flex items-center gap-2">
-                    <Lock className="w-3.5 h-3.5 tone-warning" />
+                  <span className="inline-flex items-center gap-2 text-left">
+                    <Lock className="w-3.5 h-3.5 tone-warning shrink-0" />
                     <span>Vérifier les verrous un par un (HTTP 403)</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs tabular-nums">
+                  <span className="inline-flex items-center gap-1.5 text-xs tabular-nums whitespace-nowrap shrink-0">
                     <span>12 exports</span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
@@ -1878,7 +1878,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 </button>
 
                 {showLockTests && (
-                  <div className="p-3 border-t border-hairline grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="p-3 border-t border-hairline surface-subtle grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <button
                       type="button"
                       disabled={isExportingBundle}
