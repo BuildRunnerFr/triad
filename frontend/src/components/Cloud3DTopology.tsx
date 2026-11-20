@@ -682,7 +682,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       <div
         role="group"
         aria-label="Filtrer les actifs de la topologie"
-        className="absolute top-2.5 left-2.5 right-36 sm:right-auto flex flex-wrap items-center gap-1 z-10"
+        className="absolute top-2.5 left-2.5 right-36 sm:right-auto flex flex-wrap items-center gap-1 z-10 rounded-lg p-0.5 bg-[color-mix(in_srgb,var(--bg-surface)_90%,transparent)] backdrop-blur-sm"
       >
         {(
           [
@@ -735,7 +735,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
       </div>
 
       {/* Contrôles flottants minimalistes — Haut droite : Bascule 2D/3D + Caméra */}
-      <div className="absolute top-2.5 right-2.5 flex items-center gap-1 z-10">
+      <div className="absolute top-2.5 right-2.5 flex items-center gap-1 z-10 rounded-lg p-0.5 bg-[color-mix(in_srgb,var(--bg-surface)_90%,transparent)] backdrop-blur-sm">
         {effectiveMode === '3d' && (
           <>
             <button
