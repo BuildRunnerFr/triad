@@ -150,7 +150,7 @@ export const Nis2RadarChart: React.FC<Nis2RadarChartProps> = ({ findings, theme 
             Réel vérifié
           </span>
         </div>
-        <span className="font-mono text-dim">Art. 21 &amp; 23</span>
+        <span className="text-sub">Art. 21 et 23</span>
       </div>
     </section>
   );

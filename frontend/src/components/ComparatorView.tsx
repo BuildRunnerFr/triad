@@ -218,37 +218,40 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="surface-panel rounded-2xl p-6 sm:p-7 max-w-2xl mx-auto space-y-5"
+        className="max-w-4xl space-y-6 pt-1"
       >
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-2xl bg-[var(--deloitte)]/15 border border-[var(--deloitte)]/35 text-accent flex items-center justify-center shrink-0">
-            <GitCompareArrows className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-lg font-extrabold text-main">
-              Comparateur AVANT → APRÈS
-            </h2>
-            <div className="flex flex-wrap items-center gap-1.5 mt-1">
-              <span className="px-2 py-0.5 rounded-full surface-subtle font-mono text-[10px] font-bold text-sub">
-                Écrit × Réel
-              </span>
-              <span className="text-dim text-xs">→</span>
-              <span className="badge-success px-2 py-0.5 rounded-full font-mono text-[10px] font-extrabold">
-                Dit × Écrit × Réel
-              </span>
-            </div>
+        <div className="pb-6 border-b border-hairline">
+          <h2 className="text-[1.75rem] sm:text-[2.35rem] leading-[1.12] font-semibold tracking-[-0.025em] text-main">
+            Mesurer ce que les entretiens ont changé.
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm text-sub leading-relaxed">
+            La phase AVANT confronte l&apos;Écrit au Réel ; la phase APRÈS y ajoute le Dit des entretiens. Une fois les
+            deux synthèses prêtes, le comparateur montre les déclarations démenties, les écarts confirmés et
+            l&apos;évolution de la maturité, constat par constat.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-main">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[var(--ecrit)]" aria-hidden="true" />Écrit ×
+              <span className="w-2 h-2 rounded-full bg-[var(--reel)]" aria-hidden="true" />Réel
+            </span>
+            <span className="text-sub">→</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[var(--dit)]" aria-hidden="true" />Dit ×
+              <span className="w-2 h-2 rounded-full bg-[var(--ecrit)]" aria-hidden="true" />Écrit ×
+              <span className="w-2 h-2 rounded-full bg-[var(--reel)]" aria-hidden="true" />Réel
+            </span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div
-            className={`rounded-xl p-3.5 border flex items-center justify-between gap-2 ${
-              avantSynthesis ? 'badge-success' : 'surface-card'
+            className={`rounded-xl p-4 border flex items-center justify-between gap-2 ${
+              avantSynthesis ? 'border-[var(--accent-border)] bg-[var(--accent-soft)]' : 'border-hairline bg-[var(--bg-surface)]'
             }`}
           >
             <div>
-              <div className="text-xs font-extrabold">Phase 1 • AVANT</div>
-              <div className="text-[11px] opacity-85 mt-0.5">
+              <div className="text-sm font-semibold text-main">Phase AVANT</div>
+              <div className="text-xs text-sub mt-0.5">
                 {avantSynthesis
                   ? `${avantSynthesis.findings.length} constats • ${avantSynthesis.questions_entretien.length} questions`
                   : 'En attente'}
@@ -260,13 +263,13 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
           </div>
 
           <div
-            className={`rounded-xl p-3.5 border flex items-center justify-between gap-2 ${
-              apresSynthesis ? 'badge-success' : 'surface-card'
+            className={`rounded-xl p-4 border flex items-center justify-between gap-2 ${
+              apresSynthesis ? 'border-[var(--accent-border)] bg-[var(--accent-soft)]' : 'border-hairline bg-[var(--bg-surface)]'
             }`}
           >
             <div>
-              <div className="text-xs font-extrabold">Phase 2 • APRÈS</div>
-              <div className="text-[11px] opacity-85 mt-0.5">
+              <div className="text-sm font-semibold text-main">Phase APRÈS</div>
+              <div className="text-xs text-sub mt-0.5">
                 {apresSynthesis
                   ? `${apresSynthesis.findings.length} constats triangulés`
                   : 'En attente'}

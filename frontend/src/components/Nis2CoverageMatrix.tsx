@@ -227,12 +227,12 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
   };
 
   return (
-    <div className="surface-panel rounded-2xl p-5 space-y-5">
+    <section className="pt-6 border-t border-hairline space-y-5">
       {/* Barre de sous-onglets épurée avec préchargement au survol/focus */}
       <div
         role="tablist"
         aria-label="Sous-onglets de conformité réglementaire"
-        className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl surface-subtle"
+        className="flex flex-wrap items-end gap-1 border-b border-hairline"
       >
         {SUB_TABS.map((tab, idx) => {
           const isActive = activeSubTab === tab.key;
@@ -253,10 +253,10 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
               onFocus={() => preloadSubTabChunk(tab.key)}
               onClick={() => setActiveSubTab(tab.key)}
               onKeyDown={(e) => handleTabKeyDown(e, idx)}
-              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-extrabold transition cursor-pointer ${
+              className={`-mb-px inline-flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold border-b-2 transition cursor-pointer ${
                 isActive
-                  ? 'seg-active'
-                  : 'text-sub hover:text-main'
+                  ? 'border-[var(--text-primary)] text-main'
+                  : 'border-transparent text-sub hover:text-main hover:border-[var(--border-strong)]'
               }`}
             >
               <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -608,6 +608,6 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
           </Suspense>
         </div>
       )}
-    </div>
+    </section>
   );
 };
