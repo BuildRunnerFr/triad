@@ -79,6 +79,14 @@ export interface TopologySceneApi {
 export const DEFAULT_CAMERA_POS = new THREE.Vector3(-1.1, 4.4, 9.6);
 export const DEFAULT_CAMERA_TARGET = new THREE.Vector3(0.5, 0.15, 0);
 
+/** Recul de la caméra pour que la plateforme tienne en largeur sur les cadres étroits (mobile). */
+const homePositionFor = (aspect: number): THREE.Vector3 => {
+  const fit = aspect >= 1.5 ? 1 : Math.min(2.2, 1.3 / Math.max(aspect, 0.4));
+  return DEFAULT_CAMERA_POS.clone().sub(DEFAULT_CAMERA_TARGET).multiplyScalar(fit).add(DEFAULT_CAMERA_TARGET);
+};
+/** En dessous de cette largeur, seules les étiquettes critiques restent affichées au repos. */
+const COMPACT_LABEL_WIDTH = 560;
+
 /* ------------------------------------------------------------------ */
 /* Géométrie de la scène                                               */
 /* ------------------------------------------------------------------ */
@@ -233,7 +241,8 @@ export function createTopologyScene(
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-  camera.position.copy(DEFAULT_CAMERA_POS);
+  camera.position.copy(homePositionFor(width / height));
+  let compact = width < COMPACT_LABEL_WIDTH;
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.copy(DEFAULT_CAMERA_TARGET);
@@ -244,7 +253,9 @@ export function createTopologyScene(
   controls.enablePan = false;
   controls.autoRotate = false;
   controls.minDistance = 5;
-  controls.maxDistance = 15;
+  const fitMaxDistance = (aspect: number) =>
+    Math.max(15, homePositionFor(aspect).distanceTo(DEFAULT_CAMERA_TARGET) * 1.2);
+  controls.maxDistance = fitMaxDistance(width / height);
   controls.minPolarAngle = 0.32;
   controls.maxPolarAngle = 1.28;
   controls.minAzimuthAngle = -1.25;
@@ -663,10 +674,13 @@ export function createTopologyScene(
       outline.visible = n.outlineMat.opacity > 0.01 && n.spec.status !== 'attacker';
       n.mat.emissiveIntensity = (palette.isDark ? 0.1 : 0.02) + 0.16 * n.hoverMix + 0.12 * n.rim;
 
-      const labelFocus = anyLabelFocus ? (isHover ? 1 : 0.55) : 1;
+      const quietInCompact =
+        compact && !isHover && !isSel && n.spec.status !== 'critical' && n.spec.status !== 'attacker';
+      const labelFocus = quietInCompact ? 0 : anyLabelFocus ? (isHover ? 1 : 0.55) : 1;
       n.labelMat.opacity = n.state.label * labelFocus;
       const ls = 1 + 0.06 * n.hoverMix;
-      n.label.scale.set(2.85 * ls, LABEL_SPRITE_H * ls, 1);
+      const lb = compact ? 1.4 : 1;
+      n.label.scale.set(2.85 * ls * lb, LABEL_SPRITE_H * ls * lb, 1);
 
       if (n.waveMat && !reduced) n.waveMat.uniforms.uTime.value += dt;
     }
@@ -790,8 +804,12 @@ export function createTopologyScene(
     if (!entry) return;
     const w = Math.max(280, entry.contentRect.width);
     const h = Math.max(260, entry.contentRect.height);
+    const wasHome = camera.position.distanceTo(homePositionFor(camera.aspect)) < 0.05;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    compact = w < COMPACT_LABEL_WIDTH;
+    controls.maxDistance = fitMaxDistance(camera.aspect);
+    if (wasHome && !flight) camera.position.copy(homePositionFor(camera.aspect));
     renderer.setSize(w, h);
     invalidate();
   });
@@ -856,7 +874,8 @@ export function createTopologyScene(
       invalidate();
     },
     refreshPalette,
-    flyTo: (pos, target) => {
+    flyTo: (requested, target) => {
+      const pos = requested === DEFAULT_CAMERA_POS ? homePositionFor(camera.aspect) : requested;
       if (reduced) {
         flight = null;
         camera.position.copy(pos);

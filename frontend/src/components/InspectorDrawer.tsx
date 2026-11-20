@@ -572,7 +572,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                   )}
                   {content.finding.decision_grc && (
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold ${
                         GRC_DECISION_META[
                           content.finding.decision_grc.decision
                         ]?.badgeCls || 'badge-info'
@@ -632,11 +632,11 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                     >
                       <div data-evidence="dit" className="surface-card rounded-xl p-4 edge-sky space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-bold tone-info">
-                            DIT • Entretien DSI
+                          <span className="text-xs font-semibold tone-info">
+                            Dit · entretien DSI
                           </span>
                           {content.finding.dit?.source && (
-                            <span className="font-mono text-[10px] text-dim truncate">
+                            <span className="font-mono text-[11px] text-dim truncate">
                               {content.finding.dit.source}
                             </span>
                           )}
@@ -650,11 +650,11 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
 
                       <div data-evidence="ecrit" className="surface-card rounded-xl p-4 edge-violet space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-bold tone-violet">
-                            ÉCRIT • Référentiel
+                          <span className="text-xs font-semibold tone-violet">
+                            Écrit · référentiel
                           </span>
                           {content.finding.ecrit?.source && (
-                            <span className="font-mono text-[10px] text-dim truncate">
+                            <span className="font-mono text-[11px] text-dim truncate">
                               {content.finding.ecrit.source}
                               {content.finding.ecrit.section
                                 ? ` • ${content.finding.ecrit.section}`
@@ -671,11 +671,11 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
 
                       <div data-evidence="reel" className="surface-card rounded-xl p-4 edge-accent space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-bold text-accent">
-                            RÉEL • Sonde Cloud GCP
+                          <span className="text-xs font-semibold text-accent">
+                            Réel · sonde Cloud GCP
                           </span>
                           {content.finding.reel?.ressource && (
-                            <code className="font-mono text-[10px] text-sub truncate">
+                            <code className="font-mono text-[11px] text-sub truncate">
                               {content.finding.reel.ressource}
                             </code>
                           )}
@@ -720,7 +720,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                             <span className="text-xs font-extrabold text-main">
                               Décision sur {content.finding.id}
                             </span>
-                            <span className="font-mono text-[10px] text-dim">
+                            <span className="font-mono text-[11px] text-dim">
                               Scellé SHA-256
                             </span>
                           </div>
@@ -782,7 +782,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                                       key={preset}
                                       type="button"
                                       onClick={() => setEcheance(preset)}
-                                      className={`px-1.5 py-0.2 rounded font-mono text-[10px] font-bold transition cursor-pointer ${
+                                      className={`px-1.5 py-0.2 rounded font-mono text-[11px] font-bold transition cursor-pointer ${
                                         echeance === preset
                                           ? 'seg-active'
                                           : 'surface-subtle text-dim hover:text-main'
@@ -1004,7 +1004,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                   {/* Barre compacte de filtrage PII */}
                   <div className="surface-card rounded-2xl p-3 space-y-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-mono text-[10px] px-2 py-0.5 rounded-full badge-success font-bold tabular-nums">
+                      <span className="font-mono text-[11px] px-2 py-0.5 rounded-full badge-success font-bold tabular-nums">
                         {piiStats.total} PII masquée(s)
                       </span>
 
@@ -1025,7 +1025,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
 
                         {filteredPiiCount > 0 && (
                           <div className="inline-flex items-center gap-1 surface-subtle px-1.5 py-0.5 rounded-lg">
-                            <span className="font-mono text-[10px] text-sub px-1 tabular-nums">
+                            <span className="font-mono text-[11px] text-sub px-1 tabular-nums">
                               {activePiiIndex >= 0
                                 ? `${activePiiIndex + 1}/${filteredPiiCount}`
                                 : `0/${filteredPiiCount}`}
@@ -1064,7 +1064,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
                         type="button"
                         aria-pressed={piiFilter === 'ALL'}
                         onClick={() => handleSelectPiiFilter('ALL')}
-                        className={`px-2.5 py-1 rounded-lg font-mono text-[10px] font-bold transition cursor-pointer tabular-nums ${
+                        className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-bold transition cursor-pointer tabular-nums ${
                           piiFilter === 'ALL'
                             ? 'seg-active'
                             : 'surface-subtle text-sub hover:text-main'

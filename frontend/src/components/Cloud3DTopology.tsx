@@ -609,7 +609,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           aria-label="Scène 3D Cloud GCP — flèches pour parcourir les actifs, Entrée pour inspecter"
           onKeyDown={handleCanvasKeyDown}
           className={`w-full transition-[height] duration-200 cursor-grab active:cursor-grabbing focus:outline-none focus:ring-2 focus:ring-[var(--deloitte)]/60 ${
-            isExpanded ? 'h-[560px]' : tall ? 'h-[min(68vh,640px)]' : 'h-[350px]'
+            isExpanded ? 'h-[560px]' : tall ? 'h-[min(68vh,640px)]' : 'h-[440px] sm:h-[350px]'
           }`}
         />
       ) : (
