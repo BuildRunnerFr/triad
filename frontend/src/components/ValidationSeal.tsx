@@ -86,13 +86,13 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex items-start gap-4">
-        <div className="w-11 h-11 rounded-xl badge-warning flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-xl badge-warning flex items-center justify-center shrink-0">
           <Padlock className="w-5 h-5" />
         </div>
-        <div className="min-w-0 space-y-1">
-          <h3 className="text-lg font-extrabold text-main">
+        <div className="min-w-0 space-y-2">
+          <h3 className="text-xl leading-tight font-semibold tracking-[-0.018em] text-main">
             Attester et sceller la synthèse {modeLabel(mode)}
           </h3>
           <p className="text-sm text-sub max-w-prose">
@@ -103,6 +103,7 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
         </div>
       </div>
 
+      <div className="space-y-2">
       <dl className="grid grid-cols-2 sm:grid-cols-4 gap-px rounded-xl overflow-hidden border border-hairline bg-[var(--border-subtle)]">
         <div className="surface-card px-4 py-3">
           <dt className="text-xs text-sub">Constats revus</dt>
@@ -142,6 +143,7 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
           .
         </p>
       )}
+      </div>
 
       {summary.toConfirm > 0 && (
         <p
@@ -156,14 +158,21 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
         </p>
       )}
 
-      <label className="flex items-start gap-3 rounded-xl border border-hairline surface-card px-4 py-3 cursor-pointer hover:border-strong transition">
+      <div className="space-y-4">
+      <label
+        className={`flex items-start gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+          attested
+            ? 'border-[var(--accent-border)] bg-[var(--accent-soft)]'
+            : 'border-[var(--border-strong)] surface-card hover:border-[var(--text-muted)]'
+        }`}
+      >
         <input
           type="checkbox"
           checked={attested}
           onChange={(e) => setAttested(e.target.checked)}
-          className="mt-0.5 w-4 h-4 shrink-0 accent-[var(--deloitte)] cursor-pointer"
+          className="mt-px w-5 h-5 shrink-0 accent-[var(--deloitte)] cursor-pointer"
         />
-        <span className="text-sm text-main">
+        <span className="text-sm leading-relaxed text-main">
           J&apos;atteste avoir revu les {summary.total} constats de la phase {modeLabel(mode)} et
           j&apos;en assume la signature au nom de la mission.
         </span>
@@ -174,7 +183,7 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
           type="submit"
           disabled={!attested || submitting}
           aria-disabled={!attested || submitting}
-          className="inline-flex items-center gap-2 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-40 disabled:cursor-not-allowed text-black font-extrabold text-sm px-5 py-2.5 rounded-xl transition cursor-pointer"
+          className="inline-flex items-center gap-2 min-h-11 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] active:scale-[0.98] disabled:active:scale-100 disabled:opacity-40 disabled:cursor-not-allowed text-black font-bold text-sm px-5 py-2.5 rounded-xl transition-[background-color,opacity,transform] duration-150 cursor-pointer"
         >
           {submitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -186,6 +195,7 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
         {!attested && (
           <span className="text-xs text-sub">Cochez l&apos;attestation pour activer la signature.</span>
         )}
+      </div>
       </div>
     </form>
   );
@@ -388,25 +398,31 @@ const DELIVERABLE_GROUPS: { title: string; items: { name: string; detail: string
 ];
 
 export const LockedDeliverablesList: React.FC = () => (
-  <section aria-labelledby="locked-list-title" className="surface-panel rounded-2xl p-5 sm:p-6">
-    <h3 id="locked-list-title" className="text-lg font-semibold text-main">
-      Ce que la signature débloque
-    </h3>
-    <p className="mt-1 text-xs text-sub">
+  <section aria-labelledby="locked-list-title" className="px-1 sm:px-2 xl:pt-8">
+    <div className="flex items-baseline justify-between gap-4">
+      <h3 id="locked-list-title" className="text-base font-semibold text-main">
+        Ce que la signature débloque
+      </h3>
+      <span className="text-xs text-sub tabular-nums shrink-0">{LOCKED_EXPORTS} exports</span>
+    </div>
+    <p className="mt-2 text-xs leading-relaxed text-sub max-w-prose">
       Chaque export répond 403 tant que la synthèse n&apos;est pas signée, et se reverrouille si un arbitrage change.
     </p>
-    <div className="mt-4 space-y-4">
+    <div className="mt-6 space-y-6">
       {DELIVERABLE_GROUPS.map((group) => (
         <div key={group.title}>
-          <h4 className="text-[13px] font-semibold text-sub">{group.title}</h4>
-          <ul className="mt-1.5 divide-y divide-[var(--border-subtle)] border-y border-hairline">
+          <h4 className="text-xs font-semibold text-sub">{group.title}</h4>
+          <ul className="mt-2 divide-y divide-[var(--border-subtle)] border-t border-hairline">
             {group.items.map((item) => (
-              <li key={item.name} className="py-2 flex items-center justify-between gap-3">
+              <li
+                key={item.name}
+                className="py-3 grid grid-cols-[minmax(0,1fr)_16px] items-start gap-x-4"
+              >
                 <span className="min-w-0">
-                  <span className="block text-sm text-main">{item.name}</span>
-                  <span className="block text-xs text-sub">{item.detail}</span>
+                  <span className="block text-sm leading-5 text-main">{item.name}</span>
+                  <span className="mt-0.5 block text-xs leading-4 text-sub">{item.detail}</span>
                 </span>
-                <Padlock className="w-4 h-4 text-[var(--warning-text)] shrink-0" />
+                <Padlock className="mt-0.5 w-4 h-4 text-[var(--warning-text)]" />
               </li>
             ))}
           </ul>

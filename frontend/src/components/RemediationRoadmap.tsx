@@ -172,11 +172,11 @@ export const HORIZON_META: Record<
   },
 };
 
-const GRAVITE_BADGE: Record<string, { label: string; cls: string }> = {
-  critique: { label: 'Critique', cls: 'badge-critical' },
-  haute: { label: 'Haute', cls: 'badge-high' },
-  moyenne: { label: 'Moyenne', cls: 'badge-warning' },
-  faible: { label: 'Faible', cls: 'surface-subtle text-sub' },
+const GRAVITE_BADGE: Record<string, { label: string; tone: string }> = {
+  critique: { label: 'Critique', tone: 'tone-critical' },
+  haute: { label: 'Haute', tone: 'tone-high' },
+  moyenne: { label: 'Moyenne', tone: 'tone-warning' },
+  faible: { label: 'Faible', tone: 'text-sub' },
 };
 
 export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
@@ -277,11 +277,6 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
       }
     }
     setCompletedIds(next);
-  };
-
-  const toggleCompleted = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCompletedIds((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const toggleExpanded = (id: string, e?: React.MouseEvent) => {
@@ -400,7 +395,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             <h3 className="text-lg font-semibold tracking-[-0.018em] text-main">
               Trajectoire &amp; ROI 30/60/90j
             </h3>
-            <span className="badge-success font-mono text-[13px] font-bold px-2.5 py-0.5 rounded-full tabular-nums">
+            <span className="badge-success text-[13px] font-semibold px-2.5 py-0.5 rounded-full tabular-nums">
               {currentScore}% → {simulatedScore}% (+
               {Math.max(0, activeSim.score_delta)} pts)
             </span>
@@ -550,7 +545,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 <Clock className="w-3.5 h-3.5 text-accent" />
                 Charge j.h
               </span>
-              <span className="font-mono text-xs px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
+              <span className="text-xs px-2 py-0.5 rounded-full surface-subtle text-sub tabular-nums">
                 {activeSim.workload_jh.estimated_jh > 0
                   ? `${String(activeSim.workload_jh.min_jh).replace('.', ',')}–${String(
                       activeSim.workload_jh.max_jh
@@ -637,11 +632,11 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 <div className="flex items-center justify-between gap-2 text-xs">
                   <div className="min-w-0 truncate">
                     <span className="font-bold text-main">{p.title}</span>{' '}
-                    <span className="text-xs font-mono text-dim">
+                    <span className="text-xs text-dim">
                       ({p.article})
                     </span>
                   </div>
-                  <div className="font-mono text-xs shrink-0 tabular-nums">
+                  <div className="text-xs shrink-0 tabular-nums">
                     <span className="text-sub">{p.current_score}%</span>
                     {p.gain > 0 && (
                       <>
@@ -673,7 +668,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
         </div>
       </div>
 
-      {/* COLONNES 30 / 60 / 90 JOURS : CARTES CONDENSÉES + ACCORDÉON « DÉTAILS » */}
+      {/* COLONNES 30 / 60 / 90 JOURS : LISTE ÉDITORIALE À FILETS + DÉTAILS DÉPLIABLES */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-start">
         {(['0_30', '30_60', '60_90'] as const).map((hKey) => {
           const meta = HORIZON_META[hKey];
@@ -681,193 +676,204 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           const items = roadmapItems.filter((i) => i.horizon === hKey);
 
           return (
-            <div
+            <section
               key={hKey}
-              className="surface-panel rounded-2xl p-4 space-y-3"
+              aria-labelledby={`horizon-${hKey}`}
+              className="surface-panel rounded-2xl px-4 pt-4 pb-2 sm:px-5"
             >
-              <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-hairline">
-                <div className="flex items-center gap-2.5">
+              <header className="flex items-start justify-between gap-3 pb-3 border-b border-hairline">
+                <div className="flex items-start gap-3 min-w-0">
                   <div
                     className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${meta.accentCls}`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>
-                  <div>
-                    <span className="font-mono text-xs font-semibold text-sub text-accent">
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-accent tabular-nums">
                       {meta.badge}
-                    </span>
-                    <h4 className="text-[15px] font-semibold text-main">
+                    </p>
+                    <h4
+                      id={`horizon-${hKey}`}
+                      className="text-[15px] leading-snug font-semibold text-main"
+                    >
                       {meta.title}
                     </h4>
                   </div>
                 </div>
-                <span className="font-mono text-[13px] font-bold px-2.5 py-0.5 rounded-full surface-subtle text-main tabular-nums">
+                <span
+                  className="mt-0.5 text-[13px] font-semibold text-sub tabular-nums"
+                  aria-label={`${items.length} chantier${items.length > 1 ? 's' : ''}`}
+                >
                   {items.length}
                 </span>
-              </div>
+              </header>
 
               {items.length === 0 ? (
-                <div className="surface-subtle rounded-xl p-4 text-center text-xs text-dim">
+                <p className="py-6 text-center text-xs text-dim">
                   Aucun chantier sur cet horizon.
-                </div>
+                </p>
               ) : (
-                <div className="space-y-2">
+                <ul className="divide-y divide-[var(--border-subtle)]">
                   {items.map((it) => {
                     const isAlreadyCompliant = it.finding.statut === 'conforme';
                     const isDone = Boolean(completedIds[it.finding.id]);
                     const isExpanded = Boolean(expandedIds[it.finding.id]);
                     const gravMeta =
                       GRAVITE_BADGE[it.finding.gravite] || GRAVITE_BADGE.moyenne;
+                    const detailsId = `roadmap-details-${it.finding.id}`;
 
                     return (
-                      <div
-                        key={it.finding.id}
-                        className={`surface-card hover:border-strong rounded-xl overflow-hidden transition ${
-                          isDone || isAlreadyCompliant
-                            ? 'opacity-80 border-[var(--deloitte)]/50'
-                            : ''
-                        }`}
-                      >
-                        {/* Ligne condensée par défaut */}
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          aria-expanded={isExpanded}
-                          onClick={() => toggleExpanded(it.finding.id)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
-                              toggleExpanded(it.finding.id);
-                            }
-                          }}
-                          className="p-3 space-y-2 cursor-pointer"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 min-w-0">
-                              {isAlreadyCompliant ? (
-                                <CheckCircle2
-                                  className="w-4 h-4 text-accent shrink-0"
-                                  aria-label="Contrôle déjà conforme"
-                                />
-                              ) : (
-                                <input
-                                  type="checkbox"
-                                  checked={isDone}
-                                  onClick={(e) => toggleCompleted(it.finding.id, e)}
-                                  onChange={() => {}}
-                                  aria-label={`Simuler remédiation ${it.finding.id}`}
-                                  className="accent-[var(--deloitte)] rounded cursor-pointer shrink-0"
-                                />
-                              )}
-                              <span className="font-mono text-[13px] font-semibold px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main shrink-0">
+                      <li key={it.finding.id} className="py-3">
+                        <div className="flex items-start gap-2">
+                          {/* Case de simulation : 20 px visibles, cible 28 px */}
+                          {isAlreadyCompliant ? (
+                            <span
+                              className="w-7 h-7 -ml-1 flex items-center justify-center shrink-0"
+                              title="Contrôle déjà conforme"
+                            >
+                              <CheckCircle2
+                                className="w-5 h-5 text-accent"
+                                aria-label="Contrôle déjà conforme"
+                              />
+                            </span>
+                          ) : (
+                            <label
+                              className="w-7 h-7 -ml-1 flex items-center justify-center shrink-0 cursor-pointer rounded-lg hover:bg-[var(--bg-hover)] transition-colors"
+                              title="Inclure dans la simulation"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isDone}
+                                onChange={() =>
+                                  setCompletedIds((prev) => ({
+                                    ...prev,
+                                    [it.finding.id]: !prev[it.finding.id],
+                                  }))
+                                }
+                                aria-label={`Simuler la remédiation de ${it.finding.id}`}
+                                className="w-5 h-5 accent-[var(--deloitte)] cursor-pointer"
+                              />
+                            </label>
+                          )}
+
+                          {/* Titre + méta : bouton de dépliage des détails */}
+                          <button
+                            type="button"
+                            aria-expanded={isExpanded}
+                            aria-controls={detailsId}
+                            onClick={() => toggleExpanded(it.finding.id)}
+                            title={isExpanded ? 'Masquer les détails' : 'Afficher les détails'}
+                            className="group flex-1 min-w-0 flex items-start gap-2 text-left cursor-pointer pt-0.5"
+                          >
+                            <span className="flex-1 min-w-0">
+                            <span className="flex items-baseline gap-2">
+                              <span className="font-mono text-xs font-semibold text-sub shrink-0">
                                 {it.finding.id}
                               </span>
                               <span
-                                className={`text-[13px] font-bold text-main truncate ${
-                                  isDone ? 'line-through' : ''
+                                className={`text-sm leading-snug font-semibold text-main line-clamp-2 group-hover:underline underline-offset-2 decoration-[var(--border-strong)] ${
+                                  isDone ? 'line-through decoration-[var(--text-muted)]' : ''
                                 }`}
                               >
                                 {it.finding.theme}
                               </span>
-                            </div>
-
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onSelectFinding(it.finding);
-                              }}
-                              title="Ouvrir l'inspecteur de preuve"
-                              className="p-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-accent shrink-0 cursor-pointer"
-                            >
-                              <ArrowUpRight className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-
-                          <div className="flex flex-wrap items-center justify-between gap-1.5">
-                            <div className="flex flex-wrap items-center gap-1.5">
-                              {isAlreadyCompliant ? (
-                                <span className="badge-success text-[13px] font-semibold px-2 py-0.5 rounded-full">
-                                  Conforme ✓
-                                </span>
-                              ) : (
-                                <span
-                                  className={`text-[13px] font-semibold px-2 py-0.5 rounded-full ${gravMeta.cls}`}
-                                >
-                                  {gravMeta.label}
-                                </span>
-                              )}
-                              <span className="font-mono text-[13px] font-semibold px-2 py-0.5 rounded-full surface-subtle text-main tabular-nums">
-                                {it.workloadEstimate}
-                              </span>
-                              {it.finding.commande_correction && (
-                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded surface-subtle font-mono text-[13px] font-semibold text-accent">
-                                  <Terminal className="w-2.5 h-2.5" />
-                                  CLI
-                                </span>
-                              )}
-                            </div>
-
-                            <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-sub">
-                              <span>Détails</span>
-                              <ChevronDown
-                                className={`w-3.5 h-3.5 transition-transform ${
-                                  isExpanded ? 'rotate-180 text-accent' : ''
-                                }`}
-                              />
                             </span>
-                          </div>
+                            <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-sub">
+                              <span
+                                className={`font-semibold ${
+                                  isAlreadyCompliant
+                                    ? 'tone-success'
+                                    : gravMeta.tone
+                                }`}
+                              >
+                                {isAlreadyCompliant ? 'Conforme' : gravMeta.label}
+                              </span>
+                              <span aria-hidden="true" className="text-dim">·</span>
+                              <span className="tabular-nums">{it.workloadEstimate}</span>
+                              {it.finding.commande_correction && (
+                                <>
+                                  <span aria-hidden="true" className="text-dim">·</span>
+                                  <span className="inline-flex items-center gap-1">
+                                    <Terminal className="w-3 h-3 text-accent" />
+                                    gcloud
+                                  </span>
+                                </>
+                              )}
+                            </span>
+                            </span>
+                            <ChevronDown
+                              aria-hidden="true"
+                              className={`mt-1 w-4 h-4 shrink-0 text-dim group-hover:text-main transition-transform duration-200 ${
+                                isExpanded ? 'rotate-180 text-accent' : ''
+                              }`}
+                            />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => onSelectFinding(it.finding)}
+                            title="Ouvrir l'inspecteur de preuve"
+                            aria-label={`Ouvrir l'inspecteur de preuve pour ${it.finding.id}`}
+                            className="w-7 h-7 -mr-1 flex items-center justify-center rounded-lg text-accent hover:bg-[var(--bg-hover)] shrink-0 cursor-pointer transition-colors"
+                          >
+                            <ArrowUpRight className="w-4 h-4" />
+                          </button>
                         </div>
 
-                        {/* Accordéon Détails (Dit / Écrit / Réel, recommandation, gcloud) */}
+                        {/* Détails (exigence, porteur, Dit / Écrit / Réel, action, gcloud) */}
                         {isExpanded && (
-                          <div className="px-3 pb-3 pt-2.5 border-t border-hairline surface-subtle space-y-2 text-xs">
-                            <div className="flex flex-wrap items-center justify-between gap-1 text-xs font-mono text-sub">
-                              <span>{it.finding.exigence_nis2}</span>
-                              <span>{it.ownerRole}</span>
-                            </div>
+                          <div
+                            id={detailsId}
+                            className="mt-3 ml-8 space-y-3 text-xs text-sub"
+                          >
+                            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1">
+                              <dt className="text-dim">Exigence</dt>
+                              <dd className="text-main">{it.finding.exigence_nis2}</dd>
+                              <dt className="text-dim">Porteur</dt>
+                              <dd className="text-main">{it.ownerRole}</dd>
+                            </dl>
 
                             {(it.finding.dit || it.finding.ecrit || it.finding.reel) && (
-                              <div className="space-y-1 rounded-lg surface-card p-2 border border-hairline text-xs">
+                              <div className="space-y-1 pl-3 border-l border-hairline">
                                 {it.finding.dit && (
-                                  <div className="text-sub line-clamp-2">
-                                    <strong className="text-main">Dit :</strong> «{' '}
-                                    {it.finding.dit.extrait} »
-                                  </div>
+                                  <p className="line-clamp-2">
+                                    <strong className="font-semibold text-[var(--dit)]">Dit</strong>{' '}
+                                    « {it.finding.dit.extrait} »
+                                  </p>
                                 )}
                                 {it.finding.ecrit && (
-                                  <div className="text-sub line-clamp-2">
-                                    <strong className="text-main">Écrit :</strong> «{' '}
-                                    {it.finding.ecrit.extrait} »
-                                  </div>
+                                  <p className="line-clamp-2">
+                                    <strong className="font-semibold text-[var(--ecrit)]">Écrit</strong>{' '}
+                                    « {it.finding.ecrit.extrait} »
+                                  </p>
                                 )}
                                 {it.finding.reel && (
-                                  <div className="text-sub line-clamp-2">
-                                    <strong className="text-main">Réel :</strong>{' '}
+                                  <p className="line-clamp-2">
+                                    <strong className="font-semibold text-[var(--reel)]">Réel</strong>{' '}
                                     {it.finding.reel.constat}
-                                  </div>
+                                  </p>
                                 )}
                               </div>
                             )}
 
-                            <p className="text-sub leading-relaxed">
-                              <strong className="text-main">Action :</strong>{' '}
+                            <p className="leading-relaxed">
+                              <strong className="font-semibold text-main">Action :</strong>{' '}
                               {it.finding.recommandation}
                             </p>
 
                             {it.finding.commande_correction && (
-                              <pre className="p-2 rounded-lg surface-card border border-hairline font-mono text-xs text-accent overflow-x-auto">
+                              <pre className="px-3 py-2 rounded-lg surface-subtle border border-hairline font-mono text-xs text-main overflow-x-auto">
                                 {it.finding.commande_correction}
                               </pre>
                             )}
                           </div>
                         )}
-                      </div>
+                      </li>
                     );
                   })}
-                </div>
+                </ul>
               )}
-            </div>
+            </section>
           );
         })}
       </div>
@@ -881,7 +887,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               Matrice Effort × Impact NIS2
             </h3>
           </div>
-          <span className="text-xs font-mono text-dim">
+          <span className="text-xs text-dim">
             4 quadrants d&apos;arbitrage
           </span>
         </div>
@@ -906,9 +912,9 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[13px] font-semibold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-left px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--deloitte)] text-[13px] font-semibold text-main transition cursor-pointer"
                   >
-                    <span className="font-mono text-xs px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main">
+                    <span className="font-mono text-xs px-1.5 py-0.5 rounded surface-subtle border border-hairline text-main whitespace-nowrap shrink-0">
                       {it.finding.id}
                     </span>
                     <span>{it.finding.theme}</span>
@@ -937,9 +943,9 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--warning-border)] text-[13px] font-semibold text-main transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-left px-2.5 py-1 rounded-lg surface-subtle hover:border-[var(--warning-border)] text-[13px] font-semibold text-main transition cursor-pointer"
                   >
-                    <span className="font-mono text-xs px-1.5 py-0.2 rounded badge-warning">
+                    <span className="font-mono text-xs px-1.5 py-0.5 rounded badge-warning whitespace-nowrap shrink-0">
                       {it.finding.id}
                     </span>
                     <span>{it.finding.theme}</span>
@@ -955,7 +961,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               <span className="text-[13px] font-bold text-main">
                 3. Hygiène Opérationnelle
               </span>
-              <span className="text-xs font-mono px-2 py-0.5 rounded surface-subtle text-sub">
+              <span className="text-xs px-2 py-0.5 rounded-full surface-subtle text-sub">
                 Effort Faible
               </span>
             </div>
@@ -968,9 +974,9 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle text-xs font-semibold text-main cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-left px-2.5 py-1 rounded-lg surface-subtle text-xs font-semibold text-main cursor-pointer"
                   >
-                    <span className="font-mono text-xs">{it.finding.id}</span>
+                    <span className="font-mono text-xs whitespace-nowrap shrink-0">{it.finding.id}</span>
                     <span>{it.finding.theme}</span>
                   </button>
                 ))
@@ -984,7 +990,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               <span className="text-[13px] font-bold text-main">
                 4. Maintien &amp; PRA
               </span>
-              <span className="text-xs font-mono px-2 py-0.5 rounded surface-subtle text-sub">
+              <span className="text-xs px-2 py-0.5 rounded-full surface-subtle text-sub">
                 Amélioration continue
               </span>
             </div>
@@ -997,10 +1003,10 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                     key={it.finding.id}
                     type="button"
                     onClick={() => onSelectFinding(it.finding)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg surface-subtle hover:border-strong text-xs font-semibold text-main cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-left px-2.5 py-1 rounded-lg surface-subtle hover:border-strong text-xs font-semibold text-main cursor-pointer"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
-                    <span className="font-mono text-xs">{it.finding.id}</span>
+                    <span className="font-mono text-xs whitespace-nowrap shrink-0">{it.finding.id}</span>
                     <span>{it.finding.theme}</span>
                   </button>
                 ))
