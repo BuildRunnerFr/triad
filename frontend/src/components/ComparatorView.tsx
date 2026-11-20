@@ -41,6 +41,7 @@ import {
 } from '../utils/auditMetrics';
 import { computeLocalRemediationSimulation } from '../utils/grcSimulation';
 import { classifyFindingForRoadmap, HORIZON_META } from './RemediationRoadmap';
+import { RevealCurtain } from './comparator/RevealCurtain';
 
 interface ComparatorViewProps {
   sessionId?: string;
@@ -431,6 +432,13 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
           </p>
         )}
       </section>
+
+      {/* RIDEAU DE RÉVÉLATION : le même tableau, déclaré puis vérifié */}
+      <RevealCurtain
+        items={summary.items}
+        scoreAvant={summary.scoreAvant}
+        scoreApres={summary.scoreApres}
+      />
 
       {/* LIGNE 2 : LISTE CONDENSÉE PAR CONSTAT + ACCORDÉON « DÉTAILS » */}
       <div className="surface-panel rounded-2xl p-4 sm:p-5 space-y-4">
