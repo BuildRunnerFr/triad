@@ -27,6 +27,8 @@ interface Cloud3DTopologyProps {
   theme: ThemeMode;
   onSelectFinding: (finding: Finding) => void;
   onNotify?: (title: string, detail?: string, tone?: ToastTone) => void;
+  /** Vue plein focus (Investigation) : scène haute au lieu du format carte. */
+  tall?: boolean;
 }
 
 type NodeStatus = 'critical' | 'warning' | 'compliant' | 'attacker' | 'auditor';
@@ -181,6 +183,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
   theme,
   onSelectFinding,
   onNotify,
+  tall = false,
 }) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -636,11 +639,11 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
 
     const platformGeo = new THREE.CylinderGeometry(3.85, 4.05, 0.12, 6);
     const platformMat = new THREE.MeshStandardMaterial({
-      color: isDark ? 0x121915 : 0xe6eae5,
+      color: isDark ? 0x18211c : 0xdde3dc,
       transparent: true,
-      opacity: isDark ? 0.58 : 0.72,
-      roughness: 0.4,
-      metalness: 0.25,
+      opacity: isDark ? 0.5 : 0.55,
+      roughness: 0.95,
+      metalness: 0,
     });
     const platform = new THREE.Mesh(platformGeo, platformMat);
     platform.position.set(2.05, -1.48, 0);
@@ -1224,7 +1227,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           aria-label="Scène 3D Cloud GCP — flèches pour parcourir les actifs, Entrée pour inspecter"
           onKeyDown={handleCanvasKeyDown}
           className={`w-full transition-[height] duration-200 cursor-grab active:cursor-grabbing focus:outline-none focus:ring-2 focus:ring-[var(--deloitte)]/60 ${
-            isExpanded ? 'h-[560px]' : 'h-[350px]'
+            isExpanded ? 'h-[560px]' : tall ? 'h-[min(68vh,640px)]' : 'h-[350px]'
           }`}
         />
       ) : (

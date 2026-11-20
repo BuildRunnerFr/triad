@@ -837,6 +837,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
               proof={null}
               theme={docTheme}
               onSelectFinding={onSelectFinding}
+              tall
             />
           </Suspense>
         </div>
