@@ -500,20 +500,20 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
             )}
           </div>
 
-          <span className="font-mono text-[11px] text-sub px-2.5 py-0.5 rounded-full surface-subtle tabular-nums">
+          <span className="text-xs text-sub tabular-nums">
             {activeSim.remediated_ids.length}/{activeSim.actionable_findings} simulé(s)
           </span>
         </div>
 
-        {/* 4 Cartes KPI aérées : Score, Charge j.h, Exposition Art. 34, Quick-Wins */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+        {/* 4 chiffres séparés par des filets : Score, Charge j.h, Exposition Art. 34, Quick-Wins */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 border-t border-hairline">
           {/* KPI 1 : Score AVANT -> APRÈS simulation */}
-          <div className="surface-card rounded-2xl p-4 space-y-2 border border-hairline">
+          <div className="pt-3 pb-2 pr-4 xl:pl-4 xl:first:pl-0 xl:border-l xl:first:border-l-0 border-hairline space-y-2">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-semibold text-sub">
                 Score Projeté
               </span>
-              <span className="badge-success font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full tabular-nums">
+              <span className="badge-success text-[10px] font-semibold px-2 py-0.5 rounded-full tabular-nums">
                 +{Math.max(0, activeSim.score_delta)} pts
               </span>
             </div>
@@ -522,7 +522,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                 {currentScore}%
               </span>
               <span className="text-dim">→</span>
-              <span className="text-2xl font-extrabold text-main tabular-nums">
+              <span className="text-2xl font-semibold text-main tabular-nums">
                 {simulatedScore}%
               </span>
             </div>
@@ -544,7 +544,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           </div>
 
           {/* KPI 2 : Charge j.h */}
-          <div className="surface-card rounded-2xl p-4 space-y-1.5 border border-hairline">
+          <div className="pt-3 pb-2 pr-4 xl:pl-4 xl:border-l border-hairline space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-semibold text-sub inline-flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-accent" />
@@ -558,7 +558,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
                   : '0 j.h'}
               </span>
             </div>
-            <div className="text-2xl font-extrabold font-mono text-main tabular-nums">
+            <div className="text-2xl font-semibold text-main tabular-nums">
               {String(activeSim.workload_jh.estimated_jh).replace('.', ',')} j.h
             </div>
             <div className="text-[11px] text-sub">
@@ -569,14 +569,14 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           </div>
 
           {/* KPI 3 : Exposition Art. 34 */}
-          <div className="surface-card rounded-2xl p-4 space-y-1.5 border border-hairline">
+          <div className="pt-3 pb-2 pr-4 xl:pl-4 xl:border-l border-hairline space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-semibold text-sub inline-flex items-center gap-1">
                 <Scale className="w-3.5 h-3.5 text-accent" />
                 Exposition Art. 34
               </span>
               <span
-                className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                   activeSim.art34_exposure.risk_level_after === 'MAÎTRISÉ'
                     ? 'badge-success'
                     : activeSim.art34_exposure.risk_level_after === 'MODÉRÉ'
@@ -591,10 +591,10 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               </span>
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold font-mono text-accent tabular-nums">
+              <span className="text-2xl font-semibold text-accent tabular-nums">
                 -{String(activeSim.art34_exposure.exposure_reduction_pct).replace('.', ',')}%
               </span>
-              <span className="text-[11px] font-mono text-sub tabular-nums">
+              <span className="text-[11px] text-sub tabular-nums">
                 ({activeSim.art34_exposure.critical_gaps_before}→
                 {activeSim.art34_exposure.critical_gaps_after} crit.)
               </span>
@@ -605,7 +605,7 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
           </div>
 
           {/* KPI 4 : Quick-Wins */}
-          <div className="surface-card rounded-2xl p-4 space-y-1.5 border border-hairline">
+          <div className="pt-3 pb-2 pr-4 xl:pl-4 xl:border-l border-hairline space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-semibold text-sub inline-flex items-center gap-1">
                 <Zap className="w-3.5 h-3.5 text-accent" />
@@ -616,14 +616,14 @@ export const RemediationRoadmap: React.FC<RemediationRoadmapProps> = ({
               </span>
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold font-mono text-main tabular-nums">
+              <span className="text-2xl font-semibold text-main tabular-nums">
                 {quickWins.length}
               </span>
               <span className="text-[11px] text-sub">
                 action(s) J+30
               </span>
             </div>
-            <div className="text-[11px] font-mono text-sub tabular-nums">
+            <div className="text-[11px] text-sub tabular-nums">
               {activeSim.workload_jh.quick_wins_count} activé(s) en simulation
             </div>
           </div>
