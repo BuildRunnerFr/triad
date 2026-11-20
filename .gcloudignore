@@ -46,3 +46,6 @@ Thumbs.db
 # Artefacts locaux de revue design (captures navigateur, Impeccable)
 .playwright-mcp/
 .impeccable/
+
+# Worktrees et réglages locaux de Claude Code
+.claude/
