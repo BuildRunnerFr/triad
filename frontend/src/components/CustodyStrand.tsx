@@ -10,6 +10,29 @@ import { gsap, prefersReducedMotion, useGSAP } from '../motion/gsap';
  */
 
 const GENESIS = '0'.repeat(64);
+
+/** Codes d'action du registre → libellés français lisibles (le code brut reste dans le détail). */
+const ACTION_LABELS: Record<string, string> = {
+  RUN_START: 'Lancement',
+  SANITIZED: 'Pièce assainie',
+  QUARANTINE: 'Quarantaine',
+  PROMPT_INJECTION_QUARANTINED: 'Injection bloquée',
+  SYNTHESIS_READY: 'Synthèse prête',
+  SYNTHESIS_READY_CACHE: 'Synthèse prête',
+  TOOL_CALL: 'Appel de sonde',
+  MODEL_REQUEST: 'Requête modèle',
+  MODEL_RESPONSE: 'Réponse modèle',
+  HUMAN_VALIDATION: 'Validation humaine',
+  HUMAN_VALIDATION_APPROVED: 'Validation humaine',
+  FINDING_DECISION_UPDATED: 'Arbitrage',
+  WORM_ARCHIVED: 'Archivage WORM',
+  SECURITY_VIOLATION_BLOCKED: 'Action bloquée',
+  VIOLATION: 'Violation',
+  AUDIT_EVENT: 'Événement',
+};
+const actionLabel = (code: string): string =>
+  ACTION_LABELS[code] ??
+  (code.charAt(0) + code.slice(1).toLowerCase()).replace(/_/g, ' ');
 const GAP = 34;
 const LINK_H = 74;
 const ROW_GAP = 30;
@@ -253,7 +276,7 @@ export const CustodyStrand: React.FC<CustodyStrandProps> = ({
                   role="button"
                   tabIndex={i === focusIdx ? 0 : -1}
                   aria-pressed={isActive}
-                  aria-label={`Maillon ${l.blockNum}, ${l.entry.agent}, ${l.entry.action}${
+                  aria-label={`Maillon ${l.blockNum}, ${l.entry.agent}, ${actionLabel(l.entry.action)}${
                     broken ? ', rupture détectée' : ''
                   }. Précédent ${prevText}, empreinte ${short(l.entry.hash)}.`}
                   onMouseEnter={() => setActive(i)}
@@ -302,7 +325,7 @@ export const CustodyStrand: React.FC<CustodyStrandProps> = ({
                     <tspan style={{ fill: broken ? 'var(--rupture)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' }}>
                       {String(l.blockNum).padStart(2, '0')}
                     </tspan>
-                    <tspan dx={8}>{clip(l.entry.action, maxChars)}</tspan>
+                    <tspan dx={8}>{clip(actionLabel(l.entry.action), maxChars)}</tspan>
                   </text>
                   <text
                     x={prevOnLeft ? leftX + 4 : rightX - 4}
@@ -344,7 +367,8 @@ export const CustodyStrand: React.FC<CustodyStrandProps> = ({
           <div className="grid gap-x-6 gap-y-1.5 sm:grid-cols-[auto_1fr]">
             <span className="text-xs text-dim">Maillon</span>
             <span className="text-main font-semibold">
-              {String(detail.blockNum).padStart(2, '0')} · {detail.entry.agent} · {detail.entry.action}
+              {String(detail.blockNum).padStart(2, '0')} · {detail.entry.agent} · {actionLabel(detail.entry.action)}{' '}
+                <span className="font-mono text-xs text-dim">{detail.entry.action}</span>
               {(detail.cracked || detail.joinBroken) && (
                 <span className="ml-2 text-[var(--rupture)]">
                   {detail.cracked ? 'empreinte non conforme' : 'attache rompue avec le maillon précédent'}

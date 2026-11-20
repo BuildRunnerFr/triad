@@ -373,6 +373,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
   // Les callbacks vivent dans des refs : la scène n'est reconstruite que si
   // les ressources changent (pas au changement de thème ni de sélection).
   const onSelectFindingRef = useRef(onSelectFinding);
+  const lastClickRef = useRef<{ id: string; at: number } | null>(null);
   const focusRef = useRef(focusCameraOnNode);
   const applyRef = useRef(applyFilterToRegistry);
   useEffect(() => {
@@ -397,17 +398,25 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
           onClick: (id) => {
             const spec = id ? specById.get(id) : undefined;
             if (spec) {
+              // Clic : sélection + recentrage ; la fiche du constat s'ouvre au double-clic
+              // ou depuis la carte de sélection en bas du cadre.
+              lastClickRef.current = { id: spec.id, at: performance.now() };
               setSelectedNodeId(spec.id);
               focusRef.current(spec);
-              if (spec.finding) onSelectFindingRef.current(spec.finding);
             } else {
+              // Second clic d'un double-clic pendant le recentrage : on garde la sélection.
+              const last = lastClickRef.current;
+              if (last && performance.now() - last.at < 450) return;
               setSelectedNodeId(null);
             }
           },
           onDoubleClick: (id) => {
-            const spec = id ? specById.get(id) : undefined;
+            // Le premier clic a lancé le recentrage : le nœud a pu glisser sous le curseur.
+            const last = lastClickRef.current;
+            const recentId = last && performance.now() - last.at < 700 ? last.id : null;
+            const spec = specById.get(id ?? '') ?? (recentId ? specById.get(recentId) : undefined);
             if (spec) {
-              focusRef.current(spec);
+              if (spec.finding) onSelectFindingRef.current(spec.finding);
             } else {
               setSelectedNodeId(null);
               apiRef.current?.flyTo(DEFAULT_CAMERA_POS, DEFAULT_CAMERA_TARGET);
@@ -896,6 +905,9 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
               <span className="inline-flex items-center gap-1" title="La sonde balaie la configuration en lecture seule, sans jamais lire les données">
                 <span className="w-3 h-px bg-[var(--reel)]" />
                 <span>Balayage en lecture seule</span>
+              </span>
+              <span className="hidden md:inline text-dim">
+                Clic : sélectionner · double-clic : ouvrir le constat
               </span>
             </div>
           )}
