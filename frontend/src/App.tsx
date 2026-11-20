@@ -64,6 +64,7 @@ import { KeyboardShortcutsDialog } from './components/KeyboardShortcutsDialog';
 import { MissionLaunchpad } from './components/MissionLaunchpad';
 import type { DeliverablesSubTab } from './components/SecurityAndDeliverablesView';
 import { LiveExecutionOverlay } from './components/LiveExecutionOverlay';
+import { HeaderOptionsMenu } from './components/HeaderOptionsMenu';
 import { rankFindings } from './components/ConcordanceRibbon';
 import {
   ToastStack,
@@ -1416,15 +1417,15 @@ export const App: React.FC = () => {
           <header className="sticky top-0 z-20 surface-panel border-x-0 border-t-0 px-4 sm:px-6 py-2.5 backdrop-blur-md">
             <div className="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2.5 min-w-0">
-                <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-main truncate">
+                <h1 className="text-base font-semibold tracking-tight text-main truncate">
                   {sectionTitles[activeNav]}
                 </h1>
-                <span className="text-dim hidden sm:inline">•</span>
+                <span className="text-dim hidden 2xl:inline">•</span>
                 <button
                   type="button"
                   onClick={() => setActiveNav('mission')}
                   title="Gérer la session d'audit active"
-                  className={`font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-full transition cursor-pointer ${
+                  className={`hidden 2xl:inline-flex text-xs font-semibold px-2.5 py-0.5 rounded-full transition cursor-pointer ${
                     sessionId === DEFAULT_SESSION_ID
                       ? 'surface-subtle text-sub hover:text-main'
                       : 'badge-info'
@@ -1491,7 +1492,7 @@ export const App: React.FC = () => {
                 <div
                   role="group"
                   aria-label="Sélection de la phase d'audit"
-                  className="flex surface-subtle p-0.5 rounded-xl"
+                  className="flex surface-subtle p-0.5 rounded-lg"
                 >
                   {(['AVANT', 'APRES'] as const).map((m) => {
                     const active = mode === m;
@@ -1504,7 +1505,7 @@ export const App: React.FC = () => {
                         type="button"
                         aria-pressed={active}
                         onClick={() => handleModeChange(m)}
-                        className={`min-h-[32px] flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-extrabold transition cursor-pointer ${
+                        className={`min-h-[34px] flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold transition cursor-pointer ${
                           active
                             ? 'seg-active'
                             : 'text-sub hover:text-main'
@@ -1529,7 +1530,7 @@ export const App: React.FC = () => {
                   onMouseEnter={() => preloadNavChunk('cockpit')}
                   onClick={handleRunAudit}
                   disabled={isRunning}
-                  className="min-h-[36px] inline-flex items-center gap-1.5 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-black font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition shadow-xs cursor-pointer"
+                  className="min-h-[38px] inline-flex items-center gap-1.5 bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] disabled:opacity-50 text-[#0B100D] font-bold px-4 py-1.5 rounded-lg text-sm transition cursor-pointer"
                 >
                   {isRunning ? (
                     <>
@@ -1544,100 +1545,21 @@ export const App: React.FC = () => {
                   )}
                 </button>
 
-                {/* Option Cache Secours compacte */}
-                <UiTooltip label="Cache secours hors-ligne">
-                  <label className="min-h-[36px] inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl surface-card text-xs font-semibold text-sub hover:text-main cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={useCache}
-                      onChange={(e) => setUseCache(e.target.checked)}
-                      className="accent-[var(--deloitte)] rounded"
-                    />
-                    <Zap className="w-3.5 h-3.5 text-accent" />
-                    <span className="hidden xl:inline">Cache</span>
-                  </label>
-                </UiTooltip>
-
-                {/* Déclencheur Palette Ctrl+K */}
-                <UiTooltip label="Palette de commandes" shortcut="Ctrl K">
-                  <button
-                    type="button"
-                    onMouseEnter={() => void loadCommandPalette()}
-                    onFocus={() => void loadCommandPalette()}
-                    onClick={() => {
-                      void loadCommandPalette();
-                      setHasOpenedPalette(true);
-                      setPaletteOpen(true);
-                    }}
-                    className="min-h-[36px] inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl surface-card text-xs font-medium text-sub hover:text-main hover:border-strong transition cursor-pointer"
-                  >
-                    <Search className="w-3.5 h-3.5 text-accent" />
-                    <kbd className="kbd-pill hidden sm:inline-flex">Ctrl K</kbd>
-                  </button>
-                </UiTooltip>
-
-                {/* Bascule Densité Confort / Compacte (persistée localStorage) */}
-                <UiTooltip
-                  label={
-                    density === 'comfort'
-                      ? 'Passer en densité Compacte'
-                      : 'Passer en densité Confort'
-                  }
-                >
-                  <button
-                    type="button"
-                    aria-label="Basculer la densité d'affichage"
-                    aria-pressed={density === 'compact'}
-                    onClick={() =>
-                      setDensity((d) => (d === 'comfort' ? 'compact' : 'comfort'))
-                    }
-                    className="min-h-[36px] inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl surface-card text-xs font-semibold text-sub hover:text-main hover:border-strong transition cursor-pointer"
-                  >
-                    {density === 'comfort' ? (
-                      <>
-                        <Minimize2 className="w-3.5 h-3.5 text-accent" />
-                        <span className="hidden lg:inline">Confort</span>
-                      </>
-                    ) : (
-                      <>
-                        <Maximize2 className="w-3.5 h-3.5 text-accent" />
-                        <span className="hidden lg:inline">Compact</span>
-                      </>
-                    )}
-                  </button>
-                </UiTooltip>
-
-                {/* Bascule Thème */}
-                <UiTooltip
-                  label={
-                    theme === 'dark' ? 'Thème clair' : 'Thème sombre'
-                  }
-                >
-                  <button
-                    type="button"
-                    aria-label="Basculer le thème d'affichage"
-                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                    className="min-h-[36px] min-w-[36px] inline-flex items-center justify-center p-2 rounded-xl surface-card text-sub hover:text-main transition cursor-pointer"
-                  >
-                    {theme === 'dark' ? (
-                      <Sun className="w-4 h-4 text-[var(--warning-text)]" />
-                    ) : (
-                      <Moon className="w-4 h-4 text-slate-700" />
-                    )}
-                  </button>
-                </UiTooltip>
-
-                {/* Réinitialiser */}
-                <UiTooltip label="Réinitialiser la session">
-                  <button
-                    type="button"
-                    aria-label="Réinitialiser toute la session"
-                    onClick={handleReset}
-                    className="min-h-[36px] min-w-[36px] inline-flex items-center justify-center p-2 rounded-xl surface-card text-sub hover:text-[var(--critical-text)] transition cursor-pointer"
-                  >
-                    <RotateCcw className="w-4 h-4" />
-                  </button>
-                </UiTooltip>
+                <HeaderOptionsMenu
+                  theme={theme}
+                  onThemeChange={setTheme}
+                  density={density}
+                  onDensityChange={setDensity}
+                  useCache={useCache}
+                  onUseCacheChange={setUseCache}
+                  onOpenPalette={() => {
+                    void loadCommandPalette();
+                    setHasOpenedPalette(true);
+                    setPaletteOpen(true);
+                  }}
+                  onOpenShortcuts={() => setShortcutsOpen(true)}
+                  onReset={handleReset}
+                />
               </div>
             </div>
           </header>
