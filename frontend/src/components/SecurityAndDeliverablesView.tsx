@@ -1853,6 +1853,8 @@ export const SecurityAndDeliverablesView: React.FC<
                 synthesis={synthesis}
                 mode={mode}
                 onValidate={handleAttestedValidate}
+                sealHash={latestHash}
+                blockNum={auditLog.length || undefined}
               />
 
               {/* Accordéon compact des 12 verrous HTTP 403 individuels */}
@@ -1998,6 +2000,12 @@ export const SecurityAndDeliverablesView: React.FC<
                 hash={latestHash}
                 play={sealedAt !== null}
                 sealedAt={sealedAt}
+                broken={
+                  Boolean(forensicTamper) ||
+                  !globalChainValid ||
+                  Boolean(browserVerifyReport?.supported && !browserVerifyReport.allValid)
+                }
+                blockNum={auditLog.length || undefined}
               />
               {/* Barre d'export compacte (actions principales + groupe secondaire propre) */}
               <div className="surface-panel rounded-2xl p-4 space-y-3">

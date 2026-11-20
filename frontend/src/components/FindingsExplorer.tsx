@@ -34,6 +34,7 @@ import {
   X,
   Scale,
   Triangle,
+  Layers,
   Box,
   Loader2,
 } from 'lucide-react';
@@ -51,6 +52,7 @@ import { ConcordanceRow, RibbonLegend, rankFindings } from './ConcordanceRibbon'
 import { TriadTriangleViz } from './TriadTriangleViz';
 
 const LazyCloud3DTopology = lazy(() => import('./Cloud3DTopology'));
+const LazyGeologyCore = lazy(() => import('./geology/GeologyCore'));
 
 interface FindingsExplorerProps {
   findings: Finding[];
@@ -60,7 +62,7 @@ interface FindingsExplorerProps {
   onOpenQuoteInDoc: (sourceName: string, quote: string) => void;
 }
 
-type ExplorerTab = 'constats' | 'triangle' | 'topology';
+type ExplorerTab = 'constats' | 'triangle' | 'topology' | 'carottage';
 
 const STATUS_META: Record<
   StatutFinding,
@@ -603,6 +605,7 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
                 ['constats', 'Constats', LayoutGrid],
                 ['triangle', 'Triangle', Triangle],
                 ['topology', 'Topologie 3D', Box],
+                ['carottage', 'Carottage', Layers],
               ] as const
             ).map(([key, label, Icon]) => {
               const isActive = activeTab === key;
@@ -838,6 +841,27 @@ export const FindingsExplorer: React.FC<FindingsExplorerProps> = ({
               theme={docTheme}
               onSelectFinding={onSelectFinding}
               tall
+            />
+          </Suspense>
+        </div>
+      )}
+
+      {/* VUE 4 : CAROTTAGE (COUPE GÉOLOGIQUE DES CONSTATS) */}
+      {activeTab === 'carottage' && (
+        <div className="surface-panel rounded-2xl p-3">
+          <Suspense
+            fallback={
+              <div className="h-[420px] rounded-xl surface-card flex items-center justify-center gap-2 text-xs text-sub">
+                <Loader2 className="w-4 h-4 animate-spin text-accent" />
+                <span>Chargement de la coupe géologique…</span>
+              </div>
+            }
+          >
+            <LazyGeologyCore
+              findings={filtered.length > 0 ? filtered : findings}
+              mode={mode}
+              theme={docTheme}
+              onInspectFinding={onSelectFinding}
             />
           </Suspense>
         </div>

@@ -12,7 +12,7 @@ import { gsap, prefersReducedMotion, useGSAP } from '../motion/gsap';
 const GENESIS = '0'.repeat(64);
 
 /** Codes d'action du registre → libellés français lisibles (le code brut reste dans le détail). */
-const ACTION_LABELS: Record<string, string> = {
+export const ACTION_LABELS: Record<string, string> = {
   RUN_START: 'Lancement',
   SANITIZED: 'Pièce assainie',
   QUARANTINE: 'Quarantaine',
@@ -30,7 +30,7 @@ const ACTION_LABELS: Record<string, string> = {
   VIOLATION: 'Violation',
   AUDIT_EVENT: 'Événement',
 };
-const actionLabel = (code: string): string =>
+export const actionLabel = (code: string): string =>
   ACTION_LABELS[code] ??
   (code.charAt(0) + code.slice(1).toLowerCase()).replace(/_/g, ' ');
 const GAP = 34;

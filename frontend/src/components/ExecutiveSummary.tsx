@@ -20,6 +20,7 @@ import {
   TrendingUp,
   CheckCircle2,
   ChevronDown,
+  History,
 } from 'lucide-react';
 import type {
   AuditMode,
@@ -48,6 +49,10 @@ import type { ContourWell } from './TruthContourField';
 
 /** Relevé topographique (WebGL) chargé à part : hors du bundle initial. */
 const LazyTruthContourField = lazy(() => import('./TruthContourField'));
+
+/** Replay cinématique du registre, chargé seulement à l'ouverture. */
+const loadAuditReplay = () => import('./replay/AuditReplay');
+const LazyAuditReplay = lazy(loadAuditReplay);
 
 const WELL_DEPTH: Record<GraviteFinding, number> = {
   critique: 1,
@@ -122,6 +127,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
   const [copiedQuestions, setCopiedQuestions] = useState(false);
   const [comexModeOpen, setComexModeOpen] = useState(false);
   const [detailsDrawerOpen, setDetailsDrawerOpen] = useState(false);
+  const [replayOpen, setReplayOpen] = useState(false);
 
   useEffect(() => {
     if (!comexModeOpen && !detailsDrawerOpen) return;
@@ -452,6 +458,17 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
             </button>
             <button
               type="button"
+              onClick={() => setReplayOpen(true)}
+              onPointerEnter={() => void loadAuditReplay()}
+              onFocus={() => void loadAuditReplay()}
+              aria-haspopup="dialog"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline hover:border-strong text-xs font-semibold text-main transition cursor-pointer"
+            >
+              <History className="w-3.5 h-3.5" />
+              <span>Rejouer l’audit</span>
+            </button>
+            <button
+              type="button"
               onClick={() => setComexModeOpen(true)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--deloitte)] hover:bg-[var(--deloitte-hover)] text-[#0B100D] text-xs font-bold transition cursor-pointer"
             >
@@ -688,6 +705,12 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
               )}
           </div>
         </div>
+      )}
+
+      {replayOpen && (
+        <Suspense fallback={null}>
+          <LazyAuditReplay synthesis={synthesis} mode={mode} onClose={() => setReplayOpen(false)} />
+        </Suspense>
       )}
 
       {/* MODE PRÉSENTATION COMEX : brief d'une page à l'échelle de la projection */}

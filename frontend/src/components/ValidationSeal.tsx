@@ -3,6 +3,7 @@ import { AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
 import type { AuditMode, AuditSynthesis as Synthesis } from '../types';
 import { DURATION, EASE_OUT, gsap, prefersReducedMotion, useGSAP } from '../motion/gsap';
 import DecryptedText from './reactbits/DecryptedText';
+import GuillocheSeal from './seal/GuillocheSeal';
 
 const LOCKED_EXPORTS = 12;
 
@@ -48,12 +49,17 @@ interface ValidationAttestationProps {
   synthesis: Synthesis;
   mode: AuditMode;
   onValidate: () => Promise<boolean>;
+  /** Empreinte de tête du registre : paramètre le sceau en filigrane (« à sceller »). */
+  sealHash?: string;
+  blockNum?: number;
 }
 
 export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
   synthesis,
   mode,
   onValidate,
+  sealHash,
+  blockNum,
 }) => {
   const [attested, setAttested] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -88,6 +94,15 @@ export const ValidationAttestation: React.FC<ValidationAttestationProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex items-start gap-4">
+        {sealHash && (
+          <GuillocheSeal
+            hash={sealHash}
+            status="pending"
+            blockNum={blockNum}
+            size={176}
+            className="order-last ml-auto shrink-0 hidden md:block -mt-1"
+          />
+        )}
         <div className="w-10 h-10 rounded-xl badge-warning flex items-center justify-center shrink-0">
           <Padlock className="w-5 h-5" />
         </div>
@@ -211,12 +226,22 @@ interface SealBannerProps {
   /** Joue la cérémonie une fois, juste après la signature dans cette session. */
   play: boolean;
   sealedAt: Date | null;
+  /** Rupture d'intégrité détectée (chaîne serveur invalide ou altération recalculée dans le navigateur). */
+  broken?: boolean;
+  blockNum?: number;
 }
 
 /** Signatures dont la cérémonie a déjà été jouée : un remontage affiche l'état final statique. */
 const playedSeals = new Set<string>();
 
-export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealedAt }) => {
+export const SealBanner: React.FC<SealBannerProps> = ({
+  mode,
+  hash,
+  play,
+  sealedAt,
+  broken = false,
+  blockNum,
+}) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const shortHash = hash ? hash.slice(0, 24) : '';
@@ -300,8 +325,29 @@ export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealed
     <div
       ref={rootRef}
       role="status"
-      className="rounded-2xl border border-[var(--accent-border)] bg-[var(--accent-soft)] px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-3"
+      className={`rounded-2xl border px-5 py-5 flex flex-col sm:flex-row sm:items-center gap-x-7 gap-y-4 ${
+        broken
+          ? 'border-[color-mix(in_srgb,var(--rupture)_40%,transparent)] bg-[var(--rupture-soft)]'
+          : 'border-[var(--accent-border)] bg-[var(--accent-soft)]'
+      }`}
     >
+      {hash && (
+        <GuillocheSeal
+          hash={hash}
+          status={broken ? 'broken' : 'sealed'}
+          play={animate}
+          blockNum={blockNum}
+          size={200}
+          className="shrink-0 self-center w-[168px] h-[168px] sm:w-[200px] sm:h-[200px]"
+        />
+      )}
+      <div className="min-w-0 flex-1 space-y-4">
+      {broken && (
+        <p className="text-sm font-semibold tone-critical">
+          Empreinte non conforme : le registre recalculé ne correspond plus au sceau.
+        </p>
+      )}
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-[var(--deloitte)] text-black flex items-center justify-center">
           <Padlock className="w-5 h-5" open={staticOpen} />
@@ -354,6 +400,17 @@ export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealed
           </p>
         </div>
       )}
+      </div>
+      {hash && (
+        <div data-seal-detail className="max-w-[62ch] space-y-1">
+          <p className="text-xs leading-relaxed text-sub">
+            Le sceau est tracé à partir de l&apos;empreinte complète du registre : une autre empreinte
+            produit une autre rosace.
+          </p>
+          <p className="font-mono text-[11px] leading-relaxed text-sub break-all select-all">{hash}</p>
+        </div>
+      )}
+      </div>
     </div>
   );
 };
