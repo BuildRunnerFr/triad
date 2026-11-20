@@ -444,7 +444,7 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
             <button
               type="button"
               onClick={onOpenTriadView}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--accent-text)] hover:underline underline-offset-4 cursor-pointer"
+              className="inline-flex items-center gap-1 min-h-[28px] text-xs font-semibold text-[var(--accent-text)] hover:underline underline-offset-4 cursor-pointer"
             >
               <span>Tous les constats ({total})</span>
               <ArrowRight className="w-3.5 h-3.5" />

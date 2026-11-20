@@ -37,7 +37,7 @@
       "accent-text": {
         "role": "primary",
         "displayName": "Vert lisible",
-        "canonical": "#2D7A0C",
+        "canonical": "#286E0A",
         "tonalRamp": [
           "#1F3A13",
           "#31661A",
@@ -82,7 +82,7 @@
       "reel": {
         "role": "secondary",
         "displayName": "Vert du Réel",
-        "canonical": "#2D7A0C",
+        "canonical": "#286E0A",
         "tonalRamp": [
           "#1F3A13",
           "#31661A",
@@ -97,7 +97,7 @@
       "rupture": {
         "role": "tertiary",
         "displayName": "Vermillon de rupture",
-        "canonical": "#C2361B",
+        "canonical": "#B32F16",
         "tonalRamp": [
           "#381A14",
           "#63281D",
@@ -690,7 +690,7 @@
       "refersTo": "badge-critical",
       "description": "Trio texte / fond doux / bordure complète, en casse normale ; identifiants de constat en puce neutre mono.",
       "html": "<span class=\"ds-badge ds-badge-critical\">Non conforme</span> <span class=\"ds-badge ds-badge-warning\">Partiel</span> <span class=\"ds-badge ds-badge-success\">Synthèse prête</span> <span class=\"ds-chip-id\">F-003 ↗</span>",
-      "css": ".ds-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font:640 11px/1.4 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-badge-critical{color:var(--critical-text, #C2361B);background:var(--critical-bg, rgba(194,54,27,.08));border:1px solid var(--critical-border, rgba(194,54,27,.32))}.ds-badge-warning{color:var(--warning-text, #8A5A00);background:var(--warning-bg, rgba(196,140,0,.12));border:1px solid var(--warning-border, rgba(138,90,0,.30))}.ds-badge-success{color:var(--accent-text, #2D7A0C);background:var(--accent-soft, rgba(134,188,37,.16));border:1px solid var(--accent-border, rgba(45,122,12,.38))}.ds-chip-id{display:inline-flex;padding:2px 6px;border-radius:6px;border:1px solid var(--border-subtle, rgba(20,26,22,.11));background:var(--bg-subtle, #E9ECE6);color:var(--text-primary, #141A16);font:600 11px/1.4 'JetBrains Mono', ui-monospace, monospace}"
+      "css": ".ds-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font:640 11px/1.4 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-badge-critical{color:var(--critical-text, #B32F16);background:var(--critical-bg, rgba(194,54,27,.08));border:1px solid var(--critical-border, rgba(194,54,27,.32))}.ds-badge-warning{color:var(--warning-text, #8A5A00);background:var(--warning-bg, rgba(196,140,0,.12));border:1px solid var(--warning-border, rgba(138,90,0,.30))}.ds-badge-success{color:var(--accent-text, #286E0A);background:var(--accent-soft, rgba(134,188,37,.16));border:1px solid var(--accent-border, rgba(45,122,12,.38))}.ds-chip-id{display:inline-flex;padding:2px 6px;border-radius:6px;border:1px solid var(--border-subtle, rgba(20,26,22,.11));background:var(--bg-subtle, #E9ECE6);color:var(--text-primary, #141A16);font:600 11px/1.4 'JetBrains Mono', ui-monospace, monospace}"
     },
     {
       "name": "Champ de recherche",
@@ -713,8 +713,8 @@
       "kind": "custom",
       "refersTo": "concordance-row",
       "description": "Geste signature : ligne de constat avec glyphe Dit/Écrit/Réel, rupture cassée et annotée en vermillon, gravité au diamètre.",
-      "html": "<button class=\"ds-ribbon\"><span class=\"ds-ribbon-id\">F-001</span><span class=\"ds-ribbon-txt\"><b>Exposition des données</b><small>Dit ≠ Réel · Art. 21 §2 (i) — contrôle d'accès</small></span><svg width=\"168\" height=\"30\" viewBox=\"0 0 168 30\" aria-hidden=\"true\" style=\"overflow:visible\"><line x1=\"10\" y1=\"17\" x2=\"84\" y2=\"17\" stroke=\"rgba(20,26,22,.24)\" stroke-width=\"1.5\"/><line x1=\"84\" y1=\"17\" x2=\"116\" y2=\"17\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><line x1=\"126\" y1=\"17\" x2=\"158\" y2=\"17\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><line x1=\"115\" y1=\"22\" x2=\"119\" y2=\"12\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><line x1=\"123\" y1=\"22\" x2=\"127\" y2=\"12\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><text x=\"121\" y=\"4\" text-anchor=\"middle\" fill=\"#C2361B\" font-size=\"9\" font-weight=\"640\">rupture</text><circle cx=\"10\" cy=\"17\" r=\"4.5\" fill=\"#2350B8\"/><circle cx=\"84\" cy=\"17\" r=\"4.5\" fill=\"#7A3A9E\"/><circle cx=\"158\" cy=\"17\" r=\"7.5\" fill=\"#C2361B\"/></svg><span class=\"ds-ribbon-st\"><b>Non conforme</b><small>Critique</small></span></button>",
-      "css": ".ds-ribbon{display:grid;grid-template-columns:3.25rem minmax(0,1fr) auto 7.5rem;align-items:center;gap:8px 16px;width:100%;max-width:820px;padding:14px 20px;border:0;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11));background:var(--bg-surface, #FBFBF8);text-align:left;cursor:pointer;font-family:'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;transition:background-color .12s ease}.ds-ribbon:hover{background:var(--bg-hover, rgba(20,26,22,.045))}.ds-ribbon:hover b{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong, rgba(20,26,22,.24))}.ds-ribbon-id{font:400 12px/1 'JetBrains Mono', ui-monospace, monospace;color:var(--text-secondary, #46504A)}.ds-ribbon-txt b{display:block;font-weight:560;font-size:14px;color:var(--text-primary, #141A16)}.ds-ribbon-txt small{display:block;font-size:12px;color:var(--text-secondary, #46504A);margin-top:2px}.ds-ribbon-st{display:flex;flex-direction:column;align-items:flex-end;font-size:12px}.ds-ribbon-st b{font-weight:640;color:var(--rupture, #C2361B)}.ds-ribbon-st small{color:var(--text-secondary, #46504A)}.ds-ribbon:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:-2px}"
+      "html": "<button class=\"ds-ribbon\"><span class=\"ds-ribbon-id\">F-001</span><span class=\"ds-ribbon-txt\"><b>Exposition des données</b><small>Dit ≠ Réel · Art. 21 §2 (i) — contrôle d'accès</small></span><svg width=\"168\" height=\"30\" viewBox=\"0 0 168 30\" aria-hidden=\"true\" style=\"overflow:visible\"><line x1=\"10\" y1=\"17\" x2=\"84\" y2=\"17\" stroke=\"rgba(20,26,22,.24)\" stroke-width=\"1.5\"/><line x1=\"84\" y1=\"17\" x2=\"116\" y2=\"17\" stroke=\"#B32F16\" stroke-width=\"1.75\"/><line x1=\"126\" y1=\"17\" x2=\"158\" y2=\"17\" stroke=\"#B32F16\" stroke-width=\"1.75\"/><line x1=\"115\" y1=\"22\" x2=\"119\" y2=\"12\" stroke=\"#B32F16\" stroke-width=\"1.75\"/><line x1=\"123\" y1=\"22\" x2=\"127\" y2=\"12\" stroke=\"#B32F16\" stroke-width=\"1.75\"/><text x=\"121\" y=\"4\" text-anchor=\"middle\" fill=\"#B32F16\" font-size=\"9\" font-weight=\"640\">rupture</text><circle cx=\"10\" cy=\"17\" r=\"4.5\" fill=\"#2350B8\"/><circle cx=\"84\" cy=\"17\" r=\"4.5\" fill=\"#7A3A9E\"/><circle cx=\"158\" cy=\"17\" r=\"7.5\" fill=\"#B32F16\"/></svg><span class=\"ds-ribbon-st\"><b>Non conforme</b><small>Critique</small></span></button>",
+      "css": ".ds-ribbon{display:grid;grid-template-columns:3.25rem minmax(0,1fr) auto 7.5rem;align-items:center;gap:8px 16px;width:100%;max-width:820px;padding:14px 20px;border:0;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11));background:var(--bg-surface, #FBFBF8);text-align:left;cursor:pointer;font-family:'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;transition:background-color .12s ease}.ds-ribbon:hover{background:var(--bg-hover, rgba(20,26,22,.045))}.ds-ribbon:hover b{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong, rgba(20,26,22,.24))}.ds-ribbon-id{font:400 12px/1 'JetBrains Mono', ui-monospace, monospace;color:var(--text-secondary, #46504A)}.ds-ribbon-txt b{display:block;font-weight:560;font-size:14px;color:var(--text-primary, #141A16)}.ds-ribbon-txt small{display:block;font-size:12px;color:var(--text-secondary, #46504A);margin-top:2px}.ds-ribbon-st{display:flex;flex-direction:column;align-items:flex-end;font-size:12px}.ds-ribbon-st b{font-weight:640;color:var(--rupture, #B32F16)}.ds-ribbon-st small{color:var(--text-secondary, #46504A)}.ds-ribbon:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:-2px}"
     },
     {
       "name": "Chiffre-titre éditorial",
@@ -722,7 +722,7 @@
       "refersTo": "panel",
       "description": "Numéral vermillon autonome, annotation à filet et phrase-titre qui intègre les chiffres.",
       "html": "<section class=\"ds-lede\"><div class=\"ds-lede-num\"><span>4</span><em><i></i>dont 3 critiques</em></div><div><h2>affirmations de la DSI sur 4 sont contredites par la configuration réelle.</h2><p>Centre Hospitalier de Valmont · phase APRÈS entretiens · 7 constats</p></div></section>",
-      "css": ".ds-lede{display:flex;gap:28px;align-items:flex-start;padding-bottom:24px;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11));font-family:'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-lede-num span{display:block;font-size:7.5rem;line-height:.82;font-weight:560;letter-spacing:-.05em;color:var(--rupture, #C2361B);font-variant-numeric:tabular-nums}.ds-lede-num em{display:flex;align-items:center;gap:8px;margin-top:8px;font:normal 640 12px/1 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;color:var(--rupture, #C2361B)}.ds-lede-num i{width:24px;height:1px;background:currentColor}.ds-lede h2{margin:4px 0 0;font-size:2.6rem;line-height:1.08;font-weight:560;letter-spacing:-.028em;color:var(--text-primary, #141A16);text-wrap:balance}.ds-lede p{margin:12px 0 0;font-size:14px;color:var(--text-secondary, #46504A)}"
+      "css": ".ds-lede{display:flex;gap:28px;align-items:flex-start;padding-bottom:24px;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11));font-family:'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-lede-num span{display:block;font-size:7.5rem;line-height:.82;font-weight:560;letter-spacing:-.05em;color:var(--rupture, #B32F16);font-variant-numeric:tabular-nums}.ds-lede-num em{display:flex;align-items:center;gap:8px;margin-top:8px;font:normal 640 12px/1 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;color:var(--rupture, #B32F16)}.ds-lede-num i{width:24px;height:1px;background:currentColor}.ds-lede h2{margin:4px 0 0;font-size:2.6rem;line-height:1.08;font-weight:560;letter-spacing:-.028em;color:var(--text-primary, #141A16);text-wrap:balance}.ds-lede p{margin:12px 0 0;font-size:14px;color:var(--text-secondary, #46504A)}"
     }
   ],
   "narrative": {

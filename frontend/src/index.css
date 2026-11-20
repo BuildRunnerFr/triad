@@ -72,7 +72,7 @@
   [data-theme="light"] {
     --deloitte: #86BC25;
     --deloitte-hover: #78AA1E;
-    --accent-text: #2D7A0C;
+    --accent-text: #286E0A;
     --accent-soft: rgba(134, 188, 37, 0.16);
     --accent-border: rgba(45, 122, 12, 0.38);
 
@@ -97,12 +97,12 @@
     --dit-soft: rgba(35, 80, 184, 0.09);
     --ecrit: #7A3A9E;
     --ecrit-soft: rgba(122, 58, 158, 0.09);
-    --reel: #2D7A0C;
+    --reel: #286E0A;
     --reel-soft: rgba(45, 122, 12, 0.10);
-    --rupture: #C2361B;
+    --rupture: #B32F16;
     --rupture-soft: rgba(194, 54, 27, 0.10);
 
-    --critical-text: #C2361B;
+    --critical-text: #B32F16;
     --critical-bg: rgba(194, 54, 27, 0.08);
     --critical-border: rgba(194, 54, 27, 0.32);
 

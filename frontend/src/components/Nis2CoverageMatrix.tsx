@@ -265,8 +265,8 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                 <span
                   className={`font-mono text-[10px] px-1.5 py-0.2 rounded-full tabular-nums ${
                     isActive
-                      ? 'bg-black/15 text-black'
-                      : 'surface-card text-sub'
+                      ? 'surface-subtle text-main'
+                      : 'surface-subtle text-sub'
                   }`}
                 >
                   {report.coverageRatePct}%
@@ -453,7 +453,7 @@ export const Nis2CoverageMatrix: React.FC<Nis2CoverageMatrixProps> = ({
                                 e.stopPropagation();
                                 toggleRow(item.id);
                               }}
-                              className="inline-flex items-center gap-1.5 font-semibold text-main text-sm tabular-nums cursor-pointer"
+                              className="inline-flex items-center gap-1.5 min-h-[28px] font-semibold text-main text-sm tabular-nums cursor-pointer"
                             >
                               {isExpanded ? (
                                 <ChevronDown className="w-3.5 h-3.5 text-accent shrink-0" />

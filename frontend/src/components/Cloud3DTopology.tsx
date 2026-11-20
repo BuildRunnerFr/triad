@@ -1323,7 +1323,7 @@ export const Cloud3DTopology: React.FC<Cloud3DTopologyProps> = ({
                 setSimStep(null);
                 setHudFilter(key);
               }}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold transition cursor-pointer tabular-nums ${
+              className={`min-h-[28px] px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer tabular-nums ${
                 active
                   ? activeCls
                   : 'surface-panel/90 backdrop-blur-xs text-sub hover:text-main'
