@@ -258,7 +258,7 @@ export const SealBanner: React.FC<SealBannerProps> = ({ mode, hash, play, sealed
           shackle,
           { y: 0, rotate: 0, transformOrigin: '100% 100%' },
           // Même pose finale que le rendu statique (translateY(-3px) rotate(-24deg), origine coin bas-droit).
-          { ...OPEN_POSE, duration: 0.45, ease: 'back.out(2.2)' },
+          { ...OPEN_POSE, duration: 0.45, ease: EASE_OUT },
           '-=0.35'
         )
         .to(

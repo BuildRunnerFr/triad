@@ -120,7 +120,7 @@ export const CloudTopologyViz: React.FC<CloudTopologyVizProps> = ({
                 <Globe className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[10px] font-mono uppercase tracking-wider tone-critical font-bold">
+                <div className="text-xs font-mono tone-critical font-bold">
                   Zone Non-Fiable
                 </div>
                 <div className="text-xs font-extrabold text-main">

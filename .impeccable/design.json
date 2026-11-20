@@ -1,0 +1,802 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-20T04:06:21Z",
+  "title": "Design System: TRIAD",
+  "extensions": {
+    "colorMeta": {
+      "deloitte": {
+        "role": "primary",
+        "displayName": "Vert Deloitte",
+        "canonical": "#86BC25",
+        "tonalRamp": [
+          "#2B3616",
+          "#495F21",
+          "#6B9028",
+          "#91CB2A",
+          "#AAD65C",
+          "#C2DC93",
+          "#DBE7C5",
+          "#F3F7EE"
+        ]
+      },
+      "deloitte-hover": {
+        "role": "primary",
+        "displayName": "Vert Deloitte appuyé",
+        "canonical": "#78AA1E",
+        "tonalRamp": [
+          "#2B3716",
+          "#49601F",
+          "#6B9225",
+          "#92CE27",
+          "#ABD959",
+          "#C2DD92",
+          "#DBE8C4",
+          "#F4F7EE"
+        ]
+      },
+      "accent-text": {
+        "role": "primary",
+        "displayName": "Vert lisible",
+        "canonical": "#2D7A0C",
+        "tonalRamp": [
+          "#1F3A13",
+          "#31661A",
+          "#429C1C",
+          "#53DD18",
+          "#7BE44E",
+          "#A6E48B",
+          "#CEEBC1",
+          "#F0F8ED"
+        ]
+      },
+      "dit": {
+        "role": "secondary",
+        "displayName": "Cobalt du Dit",
+        "canonical": "#2350B8",
+        "tonalRamp": [
+          "#162036",
+          "#20335F",
+          "#274791",
+          "#295ACC",
+          "#5B81D7",
+          "#93A9DC",
+          "#C5CFE8",
+          "#EEF1F7"
+        ]
+      },
+      "ecrit": {
+        "role": "secondary",
+        "displayName": "Prune de l'Écrit",
+        "canonical": "#7A3A9E",
+        "tonalRamp": [
+          "#291B31",
+          "#462A55",
+          "#663880",
+          "#8A43B2",
+          "#A56FC3",
+          "#BF9FD1",
+          "#DACAE2",
+          "#F3EFF5"
+        ]
+      },
+      "reel": {
+        "role": "secondary",
+        "displayName": "Vert du Réel",
+        "canonical": "#2D7A0C",
+        "tonalRamp": [
+          "#1F3A13",
+          "#31661A",
+          "#429C1C",
+          "#53DD18",
+          "#7BE44E",
+          "#A6E48B",
+          "#CEEBC1",
+          "#F0F8ED"
+        ]
+      },
+      "rupture": {
+        "role": "tertiary",
+        "displayName": "Vermillon de rupture",
+        "canonical": "#C2361B",
+        "tonalRamp": [
+          "#381A14",
+          "#63281D",
+          "#963421",
+          "#D53D20",
+          "#DE6B54",
+          "#E09C8F",
+          "#EAC9C3",
+          "#F7EFED"
+        ]
+      },
+      "high-text": {
+        "role": "tertiary",
+        "displayName": "Orange brûlé (gravité haute)",
+        "canonical": "#B34A0B",
+        "tonalRamp": [
+          "#3B2111",
+          "#693617",
+          "#A04B17",
+          "#E46011",
+          "#E98549",
+          "#E7AC88",
+          "#EDD1C0",
+          "#F8F1ED"
+        ]
+      },
+      "warning-text": {
+        "role": "tertiary",
+        "displayName": "Ocre (partiel, verrou)",
+        "canonical": "#8A5A00",
+        "tonalRamp": [
+          "#3E2D0F",
+          "#6E4E12",
+          "#A9730E",
+          "#F29F03",
+          "#F4B53E",
+          "#EEC881",
+          "#F0DEBD",
+          "#F9F4EC"
+        ]
+      },
+      "info-text": {
+        "role": "tertiary",
+        "displayName": "Bleu d'information",
+        "canonical": "#1F5FA8",
+        "tonalRamp": [
+          "#162536",
+          "#203E60",
+          "#265891",
+          "#2875CD",
+          "#5B95D7",
+          "#92B5DD",
+          "#C5D5E8",
+          "#EEF2F7"
+        ]
+      },
+      "ink-on-green": {
+        "role": "neutral",
+        "displayName": "Encre sur vert",
+        "canonical": "#0B100D",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "paper-canvas": {
+        "role": "neutral",
+        "displayName": "Papier d'étude",
+        "canonical": "#F2F3EF",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "paper-surface": {
+        "role": "neutral",
+        "displayName": "Feuille",
+        "canonical": "#FBFBF8",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "paper-subtle": {
+        "role": "neutral",
+        "displayName": "Papier ombré",
+        "canonical": "#E9ECE6",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "paper-elevated": {
+        "role": "neutral",
+        "displayName": "Feuille relevée",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "ink-rail": {
+        "role": "neutral",
+        "displayName": "Encre de rail",
+        "canonical": "#0E1813",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "text-primary": {
+        "role": "neutral",
+        "displayName": "Encre",
+        "canonical": "#141A16",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "text-secondary": {
+        "role": "neutral",
+        "displayName": "Encre secondaire",
+        "canonical": "#46504A",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Encre atténuée",
+        "canonical": "#5C6660",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "border-subtle": {
+        "role": "neutral",
+        "displayName": "Filet",
+        "canonical": "rgba(20, 26, 22, 0.11)",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Filet appuyé",
+        "canonical": "rgba(20, 26, 22, 0.24)",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-canvas": {
+        "role": "neutral",
+        "displayName": "Encre de fond (sombre)",
+        "canonical": "#0C110F",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-rail": {
+        "role": "neutral",
+        "displayName": "Rail (sombre)",
+        "canonical": "#080C0A",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-surface": {
+        "role": "neutral",
+        "displayName": "Feuille (sombre)",
+        "canonical": "#121915",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-subtle": {
+        "role": "neutral",
+        "displayName": "Papier ombré (sombre)",
+        "canonical": "#18211C",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-elevated": {
+        "role": "neutral",
+        "displayName": "Feuille relevée (sombre)",
+        "canonical": "#1A231E",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-text-primary": {
+        "role": "neutral",
+        "displayName": "Encre claire (sombre)",
+        "canonical": "#EEF2EE",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-text-secondary": {
+        "role": "neutral",
+        "displayName": "Encre secondaire (sombre)",
+        "canonical": "#A9B5AD",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-text-muted": {
+        "role": "neutral",
+        "displayName": "Encre atténuée (sombre)",
+        "canonical": "#87958C",
+        "tonalRamp": [
+          "#0C110F",
+          "#161C19",
+          "#252D29",
+          "#3B4540",
+          "#6F7D75",
+          "#B3BFB7",
+          "#E6EAE5",
+          "#F4F6F3"
+        ]
+      },
+      "night-accent-text": {
+        "role": "primary",
+        "displayName": "Vert lisible (sombre)",
+        "canonical": "#9BD03A",
+        "tonalRamp": [
+          "#2A3518",
+          "#485C23",
+          "#6A8C2C",
+          "#90C431",
+          "#A9D161",
+          "#C1D996",
+          "#DBE6C6",
+          "#F3F6EE"
+        ]
+      },
+      "night-dit": {
+        "role": "secondary",
+        "displayName": "Cobalt du Dit (sombre)",
+        "canonical": "#7EA4FF",
+        "tonalRamp": [
+          "#0F1D3E",
+          "#122D6E",
+          "#0E3CA9",
+          "#0349F2",
+          "#3E74F4",
+          "#81A1EE",
+          "#BDCCF0",
+          "#ECF0F9"
+        ]
+      },
+      "night-ecrit": {
+        "role": "secondary",
+        "displayName": "Prune de l'Écrit (sombre)",
+        "canonical": "#C79BEA",
+        "tonalRamp": [
+          "#281736",
+          "#43225E",
+          "#62298F",
+          "#832CC9",
+          "#A05ED4",
+          "#BC94DB",
+          "#D8C6E7",
+          "#F3EEF6"
+        ]
+      },
+      "night-reel": {
+        "role": "secondary",
+        "displayName": "Vert du Réel (sombre)",
+        "canonical": "#9BD03A",
+        "tonalRamp": [
+          "#2A3518",
+          "#485C23",
+          "#6A8C2C",
+          "#90C431",
+          "#A9D161",
+          "#C1D996",
+          "#DBE6C6",
+          "#F3F6EE"
+        ]
+      },
+      "night-rupture": {
+        "role": "tertiary",
+        "displayName": "Vermillon (sombre)",
+        "canonical": "#FF7A5C",
+        "tonalRamp": [
+          "#3E170F",
+          "#6E2312",
+          "#A92B0E",
+          "#F22F03",
+          "#F4603E",
+          "#EE9581",
+          "#F0C6BD",
+          "#F9EEEC"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Numéral du chiffre-titre",
+        "purpose": "Numéral autonome vermillon du cockpit, un seul par écran (5.5rem sous 640px)."
+      },
+      "headline": {
+        "displayName": "Phrase-titre",
+        "purpose": "Phrase qui dit la contradiction avec les chiffres intégrés ; titre client de Mission à 2.4rem."
+      },
+      "headline-comex": {
+        "displayName": "Phrase-titre COMEX",
+        "purpose": "Échelle projection du mode Présentation COMEX (2rem sous 1024px)."
+      },
+      "title": {
+        "displayName": "Titre de section",
+        "purpose": "Titres de section, de vue et du tiroir."
+      },
+      "figure": {
+        "displayName": "Fait chiffré",
+        "purpose": "Faits secondaires séparés par des filets, chiffres tabulaires."
+      },
+      "body": {
+        "displayName": "Corps",
+        "purpose": "Intitulés, descriptions, risques ; citations à 15px dans le tiroir."
+      },
+      "label": {
+        "displayName": "Libellé",
+        "purpose": "Boutons, segments, statuts, libellés de faits ; casse normale ; 11px pour micro-libellés."
+      },
+      "mono": {
+        "displayName": "Mono de preuve",
+        "purpose": "Uniquement empreintes SHA-256, ressources GCP, identifiants F-00x, touches."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel",
+        "value": "0 1px 2px rgba(20, 26, 22, 0.05)",
+        "purpose": "Panneaux de section et en-tête collant (sombre : 0 1px 2px rgba(0,0,0,0.35))."
+      },
+      {
+        "name": "dialog",
+        "value": "0 18px 48px -12px rgba(20, 26, 22, 0.28), 0 2px 6px rgba(20, 26, 22, 0.06)",
+        "purpose": "Surfaces relevées : menus, palette, dialogues (sombre : 0 24px 64px -12px rgba(0,0,0,0.7))."
+      },
+      {
+        "name": "segment-active",
+        "value": "inset 0 0 0 1px var(--border-strong), 0 1px 2px rgba(0, 0, 0, 0.08)",
+        "purpose": "Élément sélectionné d'une bascule ou d'onglets compacts."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid var(--deloitte); outline-offset: 2px; border-radius: 0.6rem",
+        "purpose": "Focus clavier visible sur tout élément interactif."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "expo.out (≈ cubic-bezier(0.16, 1, 0.3, 1))",
+        "purpose": "Courbe de marque GSAP : arrivée confiante, sans rebond."
+      },
+      {
+        "name": "ease-in",
+        "value": "power2.in",
+        "purpose": "Sorties, plus rapides que les entrées."
+      },
+      {
+        "name": "duration-feedback",
+        "value": "0.14s",
+        "purpose": "Retour immédiat (fondu du tiroir, survols)."
+      },
+      {
+        "name": "duration-state",
+        "value": "0.24s",
+        "purpose": "Changement d'état, entrée échelonnée des blocs du tiroir (stagger 0.09s)."
+      },
+      {
+        "name": "duration-view",
+        "value": "0.42s",
+        "purpose": "Arrivée d'une vue ou d'un détail (stagger 0.06s dans le sceau)."
+      },
+      {
+        "name": "duration-focal",
+        "value": "0.7s",
+        "purpose": "Moment focal unique : dévoilement du sceau de validation."
+      },
+      {
+        "name": "row-hover",
+        "value": "background-color 0.12s ease",
+        "purpose": "Survol de ligne de liste."
+      },
+      {
+        "name": "theme-switch",
+        "value": "background-color 0.18s ease, color 0.18s ease",
+        "purpose": "Bascule clair/sombre du corps."
+      },
+      {
+        "name": "drawer-spring",
+        "value": "spring damping 28, stiffness 280 (framer-motion)",
+        "purpose": "Glissement du tiroir d'inspection depuis la droite."
+      },
+      {
+        "name": "smooth-scroll",
+        "value": "Lenis lerp 0.14, smoothWheel, syncTouch off",
+        "purpose": "Défilement fluide à inertie courte, coupé sous prefers-reduced-motion ; zones internes en data-lenis-prevent."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation/transition 0.01ms",
+        "purpose": "prefers-reduced-motion : état final immédiat partout."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Seul aplat vert : l'action principale de l'écran (Auditer, Présentation COMEX, Revoir et signer).",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><polygon points=\"6 3 20 12 6 21 6 3\"/></svg>Auditer</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:6px 16px;border:0;border-radius:8px;background:var(--deloitte, #86BC25);color:#0B100D;font:640 14px/1.2 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color .14s cubic-bezier(.16,1,.3,1)}.ds-btn-primary:hover{background:var(--deloitte-hover, #78AA1E)}.ds-btn-primary:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:2px}.ds-btn-primary:disabled{opacity:.5;cursor:not-allowed}"
+    },
+    {
+      "name": "Bouton secondaire",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Bouton au trait pour toutes les actions non principales.",
+      "html": "<button class=\"ds-btn-secondary\">Revoir et valider <span aria-hidden=\"true\">›</span></button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--border-subtle, rgba(20,26,22,.11));border-radius:8px;background:transparent;color:var(--text-primary, #141A16);font:640 12px/1.2 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:border-color .14s,background-color .14s}.ds-btn-secondary:hover{border-color:var(--border-strong, rgba(20,26,22,.24));background:var(--bg-hover, rgba(20,26,22,.045))}.ds-btn-secondary:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:2px}"
+    },
+    {
+      "name": "Bascule de phase (segment neutre)",
+      "kind": "custom",
+      "refersTo": "segment-active",
+      "description": "Bascule AVANT|APRÈS et onglets compacts : la sélection est neutre, jamais verte.",
+      "html": "<div class=\"ds-seg\" role=\"group\" aria-label=\"Phase\"><button class=\"ds-seg-item\" aria-pressed=\"false\">AVANT</button><button class=\"ds-seg-item ds-seg-active\" aria-pressed=\"true\">APRÈS <span class=\"ds-seg-dot\"></span></button></div>",
+      "css": ".ds-seg{display:inline-flex;padding:2px;border-radius:8px;background:var(--bg-subtle, #E9ECE6);border:1px solid var(--border-subtle, rgba(20,26,22,.11))}.ds-seg-item{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:4px 12px;border:0;border-radius:6px;background:transparent;color:var(--text-secondary, #46504A);font:640 12px/1 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:color .14s}.ds-seg-item:hover{color:var(--text-primary, #141A16)}.ds-seg-active{background:var(--bg-elevated, #FFFFFF);color:var(--text-primary, #141A16);box-shadow:inset 0 0 0 1px var(--border-strong, rgba(20,26,22,.24)),0 1px 2px rgba(0,0,0,.08)}.ds-seg-dot{width:6px;height:6px;border-radius:50%;background:var(--deloitte, #86BC25)}.ds-seg-item:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:2px}"
+    },
+    {
+      "name": "Onglets soulignés",
+      "kind": "nav",
+      "refersTo": "tab-underline-active",
+      "description": "Onglets de section (Livrables, Plan de remédiation…) soulignés de 2px en encre.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">Livrables <span class=\"ds-tab-n\">12</span></button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Plan de remédiation</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">Intégrité des preuves</button></div>",
+      "css": ".ds-tabs{display:flex;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11))}.ds-tab{display:inline-flex;gap:8px;align-items:center;padding:10px 14px;border:0;border-bottom:2px solid transparent;background:none;color:var(--text-secondary, #46504A);font:560 14px/1.2 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:color .14s,border-color .14s}.ds-tab:hover{color:var(--text-primary, #141A16);border-bottom-color:var(--border-strong, rgba(20,26,22,.24))}.ds-tab[aria-selected=true]{color:var(--text-primary, #141A16);border-bottom-color:var(--text-primary, #141A16)}.ds-tab-n{font-size:12px;color:var(--text-secondary, #46504A);font-variant-numeric:tabular-nums}.ds-tab:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:2px}"
+    },
+    {
+      "name": "Puces de ton",
+      "kind": "chip",
+      "refersTo": "badge-critical",
+      "description": "Trio texte / fond doux / bordure complète, en casse normale ; identifiants de constat en puce neutre mono.",
+      "html": "<span class=\"ds-badge ds-badge-critical\">Non conforme</span> <span class=\"ds-badge ds-badge-warning\">Partiel</span> <span class=\"ds-badge ds-badge-success\">Synthèse prête</span> <span class=\"ds-chip-id\">F-003 ↗</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:9999px;font:640 11px/1.4 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-badge-critical{color:var(--critical-text, #C2361B);background:var(--critical-bg, rgba(194,54,27,.08));border:1px solid var(--critical-border, rgba(194,54,27,.32))}.ds-badge-warning{color:var(--warning-text, #8A5A00);background:var(--warning-bg, rgba(196,140,0,.12));border:1px solid var(--warning-border, rgba(138,90,0,.30))}.ds-badge-success{color:var(--accent-text, #2D7A0C);background:var(--accent-soft, rgba(134,188,37,.16));border:1px solid var(--accent-border, rgba(45,122,12,.38))}.ds-chip-id{display:inline-flex;padding:2px 6px;border-radius:6px;border:1px solid var(--border-subtle, rgba(20,26,22,.11));background:var(--bg-subtle, #E9ECE6);color:var(--text-primary, #141A16);font:600 11px/1.4 'JetBrains Mono', ui-monospace, monospace}"
+    },
+    {
+      "name": "Champ de recherche",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Recherche des constats : feuille, filet, focus en bordure verte.",
+      "html": "<label class=\"ds-search\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg><input placeholder=\"Rechercher un constat…\" /></label>",
+      "css": ".ds-search{position:relative;display:flex;align-items:center;width:280px;color:var(--text-muted, #5C6660)}.ds-search svg{position:absolute;left:10px}.ds-search input{width:100%;padding:6px 28px 6px 32px;border:1px solid var(--border-subtle, rgba(20,26,22,.11));border-radius:10px;background:var(--bg-card, #FBFBF8);color:var(--text-primary, #141A16);font:400 12px/1.4 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;caret-color:var(--deloitte, #86BC25);outline:none;transition:border-color .14s}.ds-search input::placeholder{color:var(--text-muted, #5C6660)}.ds-search input:focus{border-color:var(--deloitte, #86BC25)}"
+    },
+    {
+      "name": "Élément du rail",
+      "kind": "nav",
+      "refersTo": "rail-item",
+      "description": "Navigation des 5 vues sur rail d'encre ; actif en voile vert, pas en aplat.",
+      "html": "<nav class=\"ds-rail\"><a class=\"ds-rail-item\" href=\"#\">Mission <span class=\"ds-rail-n\">4</span></a><a class=\"ds-rail-item\" aria-current=\"page\" href=\"#\">Cockpit <span class=\"ds-rail-n\">7</span></a><a class=\"ds-rail-item\" href=\"#\">Livrables <span class=\"ds-rail-n ds-rail-n-warn\">À signer</span></a></nav>",
+      "css": ".ds-rail{display:flex;flex-direction:column;gap:4px;width:224px;padding:10px;background:#0E1813}.ds-rail-item{display:flex;justify-content:space-between;align-items:center;min-height:38px;padding:8px 12px;border:1px solid transparent;border-radius:10px;color:#93A199;text-decoration:none;font:640 12px/1.2 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;transition:background-color .14s,color .14s}.ds-rail-item:hover{color:#fff;background:rgba(255,255,255,.04)}.ds-rail-item[aria-current=page]{color:#fff;background:rgba(134,188,37,.15);border-color:rgba(134,188,37,.4)}.ds-rail-n{padding:2px 8px;border-radius:9999px;font-size:10px;background:rgba(238,242,238,.1);color:#EEF2EE}.ds-rail-n-warn{background:#F2C14E;color:#0B100D}.ds-rail-item:focus-visible{outline:2px solid #86BC25;outline-offset:2px}"
+    },
+    {
+      "name": "Ruban de concordance",
+      "kind": "custom",
+      "refersTo": "concordance-row",
+      "description": "Geste signature : ligne de constat avec glyphe Dit/Écrit/Réel, rupture cassée et annotée en vermillon, gravité au diamètre.",
+      "html": "<button class=\"ds-ribbon\"><span class=\"ds-ribbon-id\">F-001</span><span class=\"ds-ribbon-txt\"><b>Exposition des données</b><small>Dit ≠ Réel · Art. 21 §2 (i) — contrôle d'accès</small></span><svg width=\"168\" height=\"30\" viewBox=\"0 0 168 30\" aria-hidden=\"true\" style=\"overflow:visible\"><line x1=\"10\" y1=\"17\" x2=\"84\" y2=\"17\" stroke=\"rgba(20,26,22,.24)\" stroke-width=\"1.5\"/><line x1=\"84\" y1=\"17\" x2=\"116\" y2=\"17\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><line x1=\"126\" y1=\"17\" x2=\"158\" y2=\"17\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><line x1=\"115\" y1=\"22\" x2=\"119\" y2=\"12\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><line x1=\"123\" y1=\"22\" x2=\"127\" y2=\"12\" stroke=\"#C2361B\" stroke-width=\"1.75\"/><text x=\"121\" y=\"4\" text-anchor=\"middle\" fill=\"#C2361B\" font-size=\"9\" font-weight=\"640\">rupture</text><circle cx=\"10\" cy=\"17\" r=\"4.5\" fill=\"#2350B8\"/><circle cx=\"84\" cy=\"17\" r=\"4.5\" fill=\"#7A3A9E\"/><circle cx=\"158\" cy=\"17\" r=\"7.5\" fill=\"#C2361B\"/></svg><span class=\"ds-ribbon-st\"><b>Non conforme</b><small>Critique</small></span></button>",
+      "css": ".ds-ribbon{display:grid;grid-template-columns:3.25rem minmax(0,1fr) auto 7.5rem;align-items:center;gap:8px 16px;width:100%;max-width:820px;padding:14px 20px;border:0;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11));background:var(--bg-surface, #FBFBF8);text-align:left;cursor:pointer;font-family:'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;transition:background-color .12s ease}.ds-ribbon:hover{background:var(--bg-hover, rgba(20,26,22,.045))}.ds-ribbon:hover b{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--border-strong, rgba(20,26,22,.24))}.ds-ribbon-id{font:400 12px/1 'JetBrains Mono', ui-monospace, monospace;color:var(--text-secondary, #46504A)}.ds-ribbon-txt b{display:block;font-weight:560;font-size:14px;color:var(--text-primary, #141A16)}.ds-ribbon-txt small{display:block;font-size:12px;color:var(--text-secondary, #46504A);margin-top:2px}.ds-ribbon-st{display:flex;flex-direction:column;align-items:flex-end;font-size:12px}.ds-ribbon-st b{font-weight:640;color:var(--rupture, #C2361B)}.ds-ribbon-st small{color:var(--text-secondary, #46504A)}.ds-ribbon:focus-visible{outline:2px solid var(--deloitte, #86BC25);outline-offset:-2px}"
+    },
+    {
+      "name": "Chiffre-titre éditorial",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "Numéral vermillon autonome, annotation à filet et phrase-titre qui intègre les chiffres.",
+      "html": "<section class=\"ds-lede\"><div class=\"ds-lede-num\"><span>4</span><em><i></i>dont 3 critiques</em></div><div><h2>affirmations de la DSI sur 4 sont contredites par la configuration réelle.</h2><p>Centre Hospitalier de Valmont · phase APRÈS entretiens · 7 constats</p></div></section>",
+      "css": ".ds-lede{display:flex;gap:28px;align-items:flex-start;padding-bottom:24px;border-bottom:1px solid var(--border-subtle, rgba(20,26,22,.11));font-family:'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-lede-num span{display:block;font-size:7.5rem;line-height:.82;font-weight:560;letter-spacing:-.05em;color:var(--rupture, #C2361B);font-variant-numeric:tabular-nums}.ds-lede-num em{display:flex;align-items:center;gap:8px;margin-top:8px;font:normal 640 12px/1 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;color:var(--rupture, #C2361B)}.ds-lede-num i{width:24px;height:1px;background:currentColor}.ds-lede h2{margin:4px 0 0;font-size:2.6rem;line-height:1.08;font-weight:560;letter-spacing:-.028em;color:var(--text-primary, #141A16);text-wrap:balance}.ds-lede p{margin:12px 0 0;font-size:14px;color:var(--text-secondary, #46504A)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "L'étude de cabinet qu'on manipule",
+    "overview": "**Creative North Star: \"L'étude de cabinet qu'on manipule\"**\n\nTRIAD se lit comme un rapport de cabinet de conseil devenu interactif : un papier vert-gris très clair, une encre presque noire, une seule grotesque éditoriale, des filets de 1px plutôt que des boîtes, et de grands chiffres annotés comme dans une planche de rapport annuel. L'information principale est la contradiction entre ce que le client dit, ce qu'il écrit et ce qui est vrai dans sa configuration ; elle est dessinée comme un graphique éditorial annoté (le ruban de concordance), jamais comme un voyant de tableau de bord.\n\nLa densité est celle d'un outil de travail de consultant : listes à filets triées par gravité, faits secondaires alignés en ligne, une action principale par écran. Le seul aplat de couleur fort est le vert Deloitte, réservé à l'action principale et aux états validés ; les trois piliers portent chacun leur teinte à pleine force (cobalt, prune, vert), et le vermillon annote la rupture. Le mouvement est court, décéléré, sans rebond, et s'efface entièrement sous `prefers-reduced-motion`.\n\nCe monde remplace explicitement l'ancien cockpit cyber sombre à néon : pas de fond nuit par défaut, pas de lueurs, pas de grille de cartes KPI identiques. Le thème sombre existe, mais comme « encre » vert très sombre, pas comme bleu nuit néon.",
+    "keyCharacteristics": [
+      "Papier vert-gris clair par défaut, rail de navigation en encre profonde.",
+      "Une seule famille, Schibsted Grotesk, de l'énorme numéral au micro-libellé ; JetBrains Mono uniquement pour les empreintes, ressources et identifiants de constat.",
+      "Filets de 1px comme structure ; panneaux à peine relevés, bordures complètes teintées pour le ton.",
+      "Trois teintes de piliers (Dit, Écrit, Réel) et un vermillon d'annotation, toutes contrôlées WCAG AA.",
+      "Gravité lue par le diamètre d'un point sur une rampe fixe, jamais par la seule couleur."
+    ],
+    "rules": [
+      {
+        "name": "The Green Fill Rule",
+        "body": "L'aplat vert Deloitte est réservé à l'action principale de l'écran et aux états validés (sceau, signature). Un onglet, un filtre ou une bascule sélectionnés ne deviennent jamais verts.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Pillars Rule",
+        "body": "Cobalt = Dit, prune = Écrit, vert = Réel, partout (ruban, radar, pièces, triangle, légendes). Ces teintes ne servent à rien d'autre.",
+        "section": "colors"
+      },
+      {
+        "name": "The Vermillion Annotates Rule",
+        "body": "Le vermillon signale une rupture ou un niveau critique, et il s'accompagne toujours d'un mot ou d'une forme (« rupture », cassure, diamètre) : la couleur seule ne porte jamais l'information.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scoped Night Rule",
+        "body": "Les surfaces sombres dans un écran clair (rail, overlay du pipeline) portent `data-theme=\"dark\"` pour récupérer les jetons sombres ; on n'y écrit pas de couleurs claires codées en dur.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Grotesque Rule",
+        "body": "Tout le texte, du numéral de 7.5rem au libellé de 11px, est en Schibsted Grotesk. Aucune seconde famille d'affichage.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Is Evidence Rule",
+        "body": "JetBrains Mono est réservée aux empreintes, ressources et identifiants de constat. Un libellé, un statut ou un compteur humain (« Lecture seule vérifiée », « 12 exports ») est en grotesque.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Eyebrow Rule",
+        "body": "Aucun sur-titre en petites capitales au-dessus d'un titre ; le titre dit lui-même ce qu'est la section. Les libellés restent en casse normale.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hairline First Rule",
+        "body": "Une séparation se fait d'abord par un filet de 1px (`border-subtle`) ; une boîte n'apparaît que pour regrouper une liste ou un panneau, et les faits chiffrés ne sont jamais mis en cartes.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do réserver l'aplat vert Deloitte (#86BC25, texte #0B100D) à l'action principale de l'écran et aux états validés.",
+      "Do marquer toute sélection (onglet, filtre, bascule AVANT|APRÈS) par le segment neutre : feuille relevée, contour intérieur `border-strong`.",
+      "Do séparer par des filets de 1px avant d'ajouter une boîte ; aligner les faits chiffrés en ligne à filets.",
+      "Do exprimer un ton par une bordure complète teintée (accent, info, prune, ocre, vermillon).",
+      "Do employer cobalt, prune et vert uniquement pour Dit, Écrit et Réel, et annoter chaque rupture vermillon par un mot ou une cassure.",
+      "Do coder la gravité par le diamètre du point (3.5 → 7.5px), jamais par la seule couleur.",
+      "Do poser `data-theme=\"dark\"` sur toute surface sombre insérée dans un écran clair (rail, overlay du pipeline).",
+      "Do garder la mono pour les empreintes SHA-256, les ressources GCP et les identifiants F-00x.",
+      "Do utiliser `expo.out` et les durées 0.14 / 0.24 / 0.42 / 0.7s, et tout couper sous `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "Don't revenir au cockpit cyber sombre à néon : pas de fond nuit par défaut, pas de lueur colorée, pas de bleu nuit.",
+      "Don't construire une grille de cartes KPI identiques ; un chiffre important devient une phrase-titre annotée.",
+      "Don't utiliser de bande latérale colorée sur une carte ou une ligne.",
+      "Don't colorer en vert plein un onglet, un filtre ou un élément de navigation sélectionné.",
+      "Don't poser de sur-titre en petites capitales au-dessus d'un titre, ni de libellés en capitales espacées.",
+      "Don't utiliser la mono pour un libellé, un statut ou un compteur lisible par un humain.",
+      "Don't introduire une seconde famille d'affichage ni une police chargée depuis un CDN (les fontes sont auto-hébergées, CSP stricte).",
+      "Don't utiliser d'easing à rebond ou élastique."
+    ]
+  }
+}

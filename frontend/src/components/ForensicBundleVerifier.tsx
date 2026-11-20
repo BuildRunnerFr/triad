@@ -409,7 +409,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
             {/* 5 piliers KPI de contrôle */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold uppercase text-sub">
+                <div className="text-[10px] font-bold text-sub">
                   Anti-ZipSlip
                 </div>
                 <div
@@ -422,7 +422,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold uppercase text-sub">
+                <div className="text-[10px] font-bold text-sub">
                   Manifeste SHA-256
                 </div>
                 <div
@@ -439,7 +439,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold uppercase text-sub">
+                <div className="text-[10px] font-bold text-sub">
                   Chaîne Audit
                 </div>
                 <div
@@ -454,7 +454,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline">
-                <div className="text-[10px] font-bold uppercase text-sub">
+                <div className="text-[10px] font-bold text-sub">
                   Synthèse Scellée
                 </div>
                 <div
@@ -471,7 +471,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               </div>
 
               <div className="p-3 rounded-xl surface-subtle border border-hairline col-span-2 sm:col-span-1">
-                <div className="text-[10px] font-bold uppercase text-sub">
+                <div className="text-[10px] font-bold text-sub">
                   Sceau HMAC
                 </div>
                 <div
@@ -489,7 +489,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               <div className="flex items-center gap-2 min-w-0">
                 <Link2 className="w-4 h-4 text-accent shrink-0" />
                 <div className="min-w-0 font-mono text-xs truncate">
-                  <span className="text-[10px] font-sans font-bold uppercase text-sub mr-2">
+                  <span className="text-[10px] font-sans font-bold text-sub mr-2">
                     Tête SHA-256 :
                   </span>
                   <span className="font-bold text-main">
@@ -565,7 +565,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 {filesAccordionOpen && (
                   <div className="overflow-x-auto border-t border-hairline">
                     <table className="w-full text-left text-xs">
-                      <thead className="surface-subtle text-[10px] uppercase text-sub border-b border-hairline">
+                      <thead className="surface-subtle text-[10px] text-sub border-b border-hairline">
                         <tr>
                           <th className="p-2.5">Pièce</th>
                           <th className="p-2.5">Taille</th>

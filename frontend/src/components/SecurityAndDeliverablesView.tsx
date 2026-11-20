@@ -303,7 +303,7 @@ function renderAnssiMarkdownPreview(markdown: string): React.ReactNode {
           className="overflow-x-auto rounded-xl border border-hairline my-2"
         >
           <table className="w-full text-left text-[11px]">
-            <thead className="surface-subtle text-[10px] uppercase text-sub border-b border-hairline">
+            <thead className="surface-subtle text-[10px] text-sub border-b border-hairline">
               <tr>
                 {headers.map((h, hIdx) => (
                   <th key={hIdx} className="p-2 font-extrabold">
@@ -2307,7 +2307,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                           <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                            <div className="text-[10px] font-bold uppercase text-slate-500">
+                            <div className="text-[10px] font-bold text-slate-500">
                               Indice Maturité
                             </div>
                             <div className="font-mono text-sm font-extrabold text-slate-900 mt-0.5 tabular-nums">
@@ -2319,7 +2319,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             </div>
                           </div>
                           <div className="p-3 rounded-xl bg-[var(--critical-bg)] border border-[var(--critical-border)]">
-                            <div className="text-[10px] font-bold uppercase text-[var(--critical-text)]">
+                            <div className="text-[10px] font-bold text-[var(--critical-text)]">
                               Ruptures du Dit
                             </div>
                             <div className="font-mono text-sm font-extrabold text-[var(--critical-text)] mt-0.5 tabular-nums">
@@ -2327,7 +2327,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             </div>
                           </div>
                           <div className="p-3 rounded-xl bg-[var(--warning-bg)] border border-[var(--warning-border)]">
-                            <div className="text-[10px] font-bold uppercase text-[var(--warning-text)]">
+                            <div className="text-[10px] font-bold text-[var(--warning-text)]">
                               Nouveaux Écarts
                             </div>
                             <div className="font-mono text-sm font-extrabold text-[var(--warning-text)] mt-0.5 tabular-nums">
@@ -2335,7 +2335,7 @@ export const SecurityAndDeliverablesView: React.FC<
                             </div>
                           </div>
                           <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                            <div className="text-[10px] font-bold uppercase text-slate-500">
+                            <div className="text-[10px] font-bold text-slate-500">
                               Écarts Confirmés
                             </div>
                             <div className="font-mono text-sm font-extrabold text-slate-900 mt-0.5 tabular-nums">
@@ -2346,7 +2346,7 @@ export const SecurityAndDeliverablesView: React.FC<
 
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
                           <table className="w-full text-left text-[11px]">
-                            <thead className="bg-slate-100 text-[10px] uppercase text-slate-600 border-b border-slate-200">
+                            <thead className="bg-[var(--bg-subtle)] text-[10px] text-slate-600 border-b border-slate-200">
                               <tr>
                                 <th className="p-2.5">Réf.</th>
                                 <th className="p-2.5">Domaine NIS2</th>
@@ -2418,7 +2418,7 @@ export const SecurityAndDeliverablesView: React.FC<
                               <strong>Action corrective :</strong> {f.recommandation}
                             </div>
                             {f.decision_grc && (
-                              <div className="text-[11px] bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-slate-800">
+                              <div className="text-[11px] bg-[var(--bg-subtle)] border border-slate-200 rounded-lg px-3 py-2 text-slate-800">
                                 <strong>Arbitrage GRC :</strong>{' '}
                                 {f.decision_grc.decision_label}
                                 {f.decision_grc.porteur
@@ -2450,7 +2450,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         </h3>
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
                           <table className="w-full text-left text-[11px]">
-                            <thead className="bg-slate-100 text-[10px] uppercase text-slate-600 border-b border-slate-200">
+                            <thead className="bg-[var(--bg-subtle)] text-[10px] text-slate-600 border-b border-slate-200">
                               <tr>
                                 <th className="p-2.5">Horizon</th>
                                 <th className="p-2.5">Constat</th>
@@ -2514,7 +2514,7 @@ export const SecurityAndDeliverablesView: React.FC<
 
                         <div className="overflow-x-auto rounded-xl border border-slate-200">
                           <table className="w-full text-left text-[11px]">
-                            <thead className="bg-slate-100 text-[10px] uppercase text-slate-600 border-b border-slate-200">
+                            <thead className="bg-[var(--bg-subtle)] text-[10px] text-slate-600 border-b border-slate-200">
                               <tr>
                                 <th className="p-2">Article</th>
                                 <th className="p-2">Exigence Directive (UE) 2022/2555</th>
@@ -2610,7 +2610,7 @@ export const SecurityAndDeliverablesView: React.FC<
                   </div>
 
                   <div className="px-4 py-2.5 surface-subtle border-b border-hairline text-xs flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-[10px] uppercase font-bold text-dim">
+                    <span className="font-mono text-[10px] font-bold text-dim">
                       Objet :
                     </span>
                     <span className="font-semibold text-main">
@@ -3516,7 +3516,7 @@ export const SecurityAndDeliverablesView: React.FC<
 
               <div className="overflow-x-auto rounded-xl border border-hairline">
                 <table className="w-full text-left text-xs">
-                  <thead className="surface-subtle text-[10px] uppercase text-sub border-b border-hairline">
+                  <thead className="surface-subtle text-[10px] text-sub border-b border-hairline">
                     <tr>
                       <th className="p-3">Agent</th>
                       <th className="p-3">Outils Autorisés</th>

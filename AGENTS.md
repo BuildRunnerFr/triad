@@ -22,6 +22,7 @@ Ce dépôt contient **TRIAD**, une plateforme d'audit de conformité **NIS2** pr
   - React Bits (MIT + Commons Clause, usage applicatif) vendorisé dans `src/components/reactbits/` (`CountUp`, `DecryptedText`, `SpotlightCard`, imports `framer-motion`).
   - Validation : plus de signature en un clic. `ValidationSeal.tsx` impose une attestation (récapitulatif + case à cocher) puis joue la cérémonie de scellement une seule fois par signature.
   - Couleur : vert plein réservé à l'action principale et aux états validés ; sélection neutre via `.seg-active`, bordures teintées via `.edge-*` (pas de bande latérale).
+  - **Système visuel de référence : [DESIGN.md](./DESIGN.md)** (monde « étude de cabinet » : papier vert-gris, rail encre, Schibsted Grotesk, rubans de concordance Dit/Écrit/Réel) et [PRODUCT.md](./PRODUCT.md). Toute nouvelle interface s'y conforme.
 - `infra/terraform/` : IaC GCP complète (`main.tf`, `variables.tf`, `outputs.tf`, `terraform.tfvars.example`).
 - `scripts/` : `release_readiness.sh`, `verify_bundle.sh` (v1..v6), `verify_snapshot.sh`, `generate_sbom.sh` (CycloneDX 1.5), `predeploy_check.sh`.
 - `tests/` : `62` tests `pytest` hors-ligne + `1` test `live` Vertex AI.

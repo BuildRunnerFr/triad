@@ -494,7 +494,7 @@ export const InspectorDrawer: React.FC<InspectorDrawerProps> = ({
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             className="relative z-10 w-full max-w-2xl surface-panel h-full shadow-2xl flex flex-col overflow-hidden border-l border-hairline"
           >
             {/* En-tête du tiroir : identifiant, intitulé, navigation entre constats */}

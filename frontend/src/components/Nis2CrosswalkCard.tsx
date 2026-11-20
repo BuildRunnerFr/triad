@@ -292,7 +292,7 @@ export const Nis2CrosswalkCard: React.FC<Nis2CrosswalkCardProps> = ({
       ) : (
         <div className="overflow-x-auto rounded-xl border border-hairline">
           <table className="w-full text-left text-xs">
-            <thead className="surface-subtle text-[10px] uppercase tracking-wider text-sub border-b border-hairline">
+            <thead className="surface-subtle text-xs text-sub border-b border-hairline">
               <tr>
                 <th className="py-2.5 px-3">Exigence NIS2</th>
                 {(frameworkFilter === 'ALL' || frameworkFilter === 'HDS') && (

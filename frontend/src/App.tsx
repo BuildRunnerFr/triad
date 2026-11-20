@@ -1227,7 +1227,7 @@ export const App: React.FC = () => {
       icon: Triangle,
       disabled: !synthesis,
       badge: nonConformesCount > 0 ? `${nonConformesCount}` : undefined,
-      badgeTone: 'bg-[#FF7A5C]/20 text-[#FFA28C]',
+      badgeTone: 'bg-[var(--critical-bg)] text-[var(--critical-text)]',
     },
     {
       id: 'compare',
@@ -1245,7 +1245,7 @@ export const App: React.FC = () => {
       badge: validated ? 'Validé' : synthesis ? 'À signer' : undefined,
       badgeTone: validated
         ? 'bg-[var(--deloitte)] text-black'
-        : 'bg-[#F2C14E]/20 text-[#F2C14E]',
+        : 'bg-[var(--warning-bg)] text-[var(--warning-text)]',
     },
   ];
 
@@ -1274,7 +1274,7 @@ export const App: React.FC = () => {
           <div>
             {/* Marque TRIAD */}
             <div className="px-4 py-4 border-b border-white/8 flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[var(--deloitte)] text-black flex items-center justify-center shadow-[0_0_16px_rgba(134,188,37,0.28)] shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[var(--deloitte)] text-black flex items-center justify-center shrink-0">
                 <svg
                   viewBox="0 0 24 24"
                   className="w-4 h-4 fill-none stroke-current"
@@ -1393,7 +1393,7 @@ export const App: React.FC = () => {
                 className={`font-bold ${
                   statusData?.chain?.valide !== false
                     ? 'text-[var(--accent-text)]'
-                    : 'text-[#FFA28C]'
+                    : 'text-[var(--critical-text)]'
                 }`}
               >
                 {statusData?.chain?.valide !== false ? 'Intègre ✓' : 'Altéré !'}
@@ -1403,10 +1403,10 @@ export const App: React.FC = () => {
             <button
               type="button"
               onClick={handleSimulateViolation}
-              className="w-full inline-flex items-center gap-2 text-left text-[11px] text-slate-400 hover:text-[#FFA28C] transition px-2 py-1 rounded-lg hover:bg-white/[0.03] cursor-pointer"
+              className="w-full inline-flex items-center gap-2 text-left text-[11px] text-slate-400 hover:text-[var(--critical-text)] transition px-2 py-1 rounded-lg hover:bg-white/[0.03] cursor-pointer"
             >
               <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Tester Garde du Corps</span>
+              <span className="truncate">Tester le blocage d&apos;une action</span>
             </button>
           </div>
         </aside>
@@ -1573,7 +1573,7 @@ export const App: React.FC = () => {
             <div className="bg-[var(--rupture)] text-white px-6 py-2.5 shadow-md">
               <div className="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 text-xs font-bold">
-                  <span className="inline-flex items-center gap-1 bg-white text-[var(--critical-text)] px-2 py-0.5 rounded-md font-extrabold uppercase text-[10px]">
+                  <span className="inline-flex items-center gap-1 bg-white text-[var(--critical-text)] px-2 py-0.5 rounded-md font-extrabold text-[10px]">
                     <ShieldAlert className="w-3.5 h-3.5" /> Garde du Corps — Action Bloquée
                   </span>
                   <span>{statusData.security_alert}</span>
