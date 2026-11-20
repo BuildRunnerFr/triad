@@ -17,6 +17,14 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - [x] 11. Livrables : Plan de remédiation, Posture et permissions, Intégrité des preuves (registre, vérificateur .zip).
 - [x] 12. Palette de commandes, dialogue raccourcis, notifications, états vides (nouvelle session).
 
+## Carnet des tours suivants (petits lots sûrs, un par réveil)
+- [ ] Comparateur : section « Questions d'audition Phase AVANT » (tuile icône) → titre simple + liste à filets.
+- [ ] Vérificateur .zip (ForensicBundleVerifier) : revue visuelle et alignement (filets, pas de mono costume).
+- [ ] Posture et permissions : revue visuelle et alignement.
+- [ ] Rafraîchir la planche Figma (captures comparateur/couverture/remédiation à jour).
+- [ ] 08:30 : récapitulatif final (republier la page récap si besoin), notification, arrêt de la boucle.
+Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, dist lié) ; scripts de capture dans scratchpad (shots.cjs, delivtabs.cjs, coverage.cjs, a11y.cjs) ; page récap : https://claude.ai/artifact/T8H2DtYCZis8VPj7HcuYUm (fichier scratchpad/recap/index.html).
+
 ## Journal
 - 01:10 — It.1 : PRODUCT.md, tirage (candidate 6 « étude de cabinet », seed:c9ef73d2d28d009f), contrat de surface ; Schibsted Grotesk + JetBrains Mono auto-hébergées (Google Fonts retiré) ; jetons clair par défaut / sombre encre ; @theme (slate→neutres vert-gris, rayons, graisses) ; 234 couleurs codées en dur → jetons ; favicon ; thème persisté.
 - 01:15 — It.2 : cockpit recomposé : phrase-titre éditoriale (affirmations contredites, chiffres dans le texte, CountUp une fois), faits secondaires séparés par filets, « Ruptures, par gravité » en rubans de concordance (composant ConcordanceRibbon : rupture localisée Dit≠Écrit / Écrit≠Réel, gravité = diamètre), « Trois risques à porter au COMEX » ; cartes KPI SpotlightCard retirées (gabarit hero-metric refusé) ; barre basse mobile sur une ligne.
