@@ -54,3 +54,4 @@ Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, 
 - 11:27 — Lot 1 (agents) : relevé topographique en shader derrière le chiffre du Cockpit ; Livrables au plancher 12 px + brin de la chaîne de garde SHA-256 (maillons emboîtés, rupture fendue en vermillon). Déployé.
 - 11:32 — Lot 2 : prisme de concordance 3D (Investigation › Triangle) : piliers Dit/Écrit/Réel, perles barycentriques, fissure vermillon en shader ; feuille fondue dans le panneau. Déployé.
 - 11:37 — Lot 3 : topologie 3D en instrument de relevé (balayage de sonde lecture seule, ondes de fuite vermillon, flux de particules sur courbes, plateforme papier gravée, ombres de contact) ; barres d'outils sur fond voilé pour le mobile. Déployé.
+- 11:42 — Lot 4 : Posture et permissions — libellés d'état serveur en casse phrase à l'affichage (sigles HTTP, HMAC, GCP… préservés). Déployé.

@@ -77,6 +77,32 @@ import { CustodyStrand } from './CustodyStrand';
 import { LockedDeliverablesList, SealBanner, ValidationAttestation } from './ValidationSeal';
 import type { ToastTone } from './ToastStack';
 
+/** Libellés d'état serveur en capitales → casse phrase, sigles préservés. */
+const KEEP_CAPS = new Set(['HTTP', 'HMAC', 'SHA', 'SHA-256', 'GCP', 'DLP', 'WORM', 'CSP', 'API', 'IAM', 'PII', 'RGPD', 'HDS', 'KMS', 'SA', 'SBOM']);
+const toSentenceCase = (label: string): string => {
+  if (!label) return label;
+  let first = true;
+  return label
+    .split(/(\s+)/)
+    .map((w) => {
+      const letters = w.replace(/[^A-Za-zÀ-ÿ]/g, '');
+      if (!letters) {
+        if (w.trim()) first = false;
+        return w;
+      }
+      const isCaps = letters.length >= 2 && letters === letters.toLocaleUpperCase('fr-FR');
+      const bare = w.replace(/[^A-ZÀ-Ý0-9-]/g, '');
+      if (!isCaps || KEEP_CAPS.has(bare) || /\d/.test(bare)) { first = false; return w; }
+      const low = w.toLocaleLowerCase('fr-FR');
+      if (first) {
+        first = false;
+        return low.replace(/[a-zà-ÿ]/, (c) => c.toLocaleUpperCase('fr-FR'));
+      }
+      return low;
+    })
+    .join('');
+};
+
 export type DeliverablesSubTab =
   | 'deliverables'
   | 'roadmap'
@@ -3267,7 +3293,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 {securityPosture && (
                   <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[13px] font-bold">
                     <ShieldCheck className="w-3 h-3" />
-                    {securityPosture.status}
+                    {toSentenceCase(securityPosture.status)}
                   </span>
                 )}
                 <span className="badge-warning px-2.5 py-0.5 rounded-full text-[13px] font-bold">
@@ -3360,7 +3386,7 @@ export const SecurityAndDeliverablesView: React.FC<
                                 : 'surface-subtle text-sub border border-hairline'
                             }`}
                           >
-                            {barrier.status_label}
+                            {toSentenceCase(barrier.status_label)}
                           </span>
                           {barrier.detail && (
                             <ChevronDown
