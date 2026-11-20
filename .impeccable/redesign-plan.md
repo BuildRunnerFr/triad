@@ -18,9 +18,9 @@ Contrat : .impeccable/surfaces/frontend-src-app-tsx.md (étude de cabinet, ruban
 - [x] 12. Palette de commandes, dialogue raccourcis, notifications, états vides (nouvelle session).
 
 ## Carnet des tours suivants (petits lots sûrs, un par réveil)
-- [ ] Comparateur : section « Questions d'audition Phase AVANT » (tuile icône) → titre simple + liste à filets.
-- [ ] Vérificateur .zip (ForensicBundleVerifier) : revue visuelle et alignement (filets, pas de mono costume).
-- [ ] Posture et permissions : revue visuelle et alignement.
+- [x] Comparateur : section « Questions d'audition Phase AVANT » (tuile icône) → titre simple + liste à filets.
+- [x] Vérificateur .zip (ForensicBundleVerifier) : revue visuelle et alignement (filets, pas de mono costume).
+- [x] Posture et permissions : revue visuelle et alignement.
 - [ ] Rafraîchir la planche Figma (captures comparateur/couverture/remédiation à jour).
 - [ ] 08:30 : récapitulatif final (republier la page récap si besoin), notification, arrêt de la boucle.
 Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, dist lié) ; scripts de capture dans scratchpad (shots.cjs, delivtabs.cjs, coverage.cjs, a11y.cjs) ; page récap : https://claude.ai/artifact/T8H2DtYCZis8VPj7HcuYUm (fichier scratchpad/recap/index.html).
@@ -44,3 +44,4 @@ Contexte : backend isolé sur http://127.0.0.1:8091 (copie dans scratchpad/iso, 
 - 05:14 — Mesure d'accessibilité sur le rendu (5 vues × 2 thèmes) : 0 échec de contraste AA (vert de texte #286E0A, vermillon clair #B32F16, compteur d'onglet sombre corrigé), cibles < 24 px agrandies (lien « Tous les constats », filtres 3D, boutons Détails) ; DESIGN.md/design.json mis à jour.
 - 05:17 — Overlay d'audit en langage consultant (« Audit en cours », statuts En cours / Terminé / En attente) ; lignes du comparateur allégées (statuts, charge et catégorie en texte coloré, actions en liens).
 - 05:21 — Page récapitulative avant/après publiée (artifact privé) ; tiroir : commande gcloud à la ligne ; plan de remédiation : 4 chiffres en ligne à filets (plus de cartes, plus de mono).
+- 05:23 — Comparateur : questions AVANT en titre-phrase + liste numérotée à filets ; posture et vérificateur .zip revus, mono retirée de 13 pastilles d'état.

@@ -217,10 +217,10 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
               Vérificateur d&apos;Archive Probatoire (.zip)
             </h3>
             <div className="flex flex-wrap items-center gap-1.5 mt-1">
-              <span className="badge-success px-2 py-0.5 rounded-full font-mono text-[10px] font-extrabold">
+              <span className="badge-success px-2 py-0.5 rounded-full text-[10px] font-extrabold">
                 v1..v6 • 12 pièces • HMAC-SHA256
               </span>
-              <span className="px-2 py-0.5 rounded-full surface-subtle font-mono text-[10px] font-semibold text-sub">
+              <span className="px-2 py-0.5 rounded-full surface-subtle text-[10px] font-semibold text-sub">
                 Anti-ZipSlip &amp; 0 écriture disque
               </span>
             </div>
@@ -342,7 +342,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
 
             <div className="flex flex-wrap items-center gap-2 shrink-0">
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-extrabold ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
                   SIGNATURE_STATUS_META[certificate.signature_status].pillCls
                 }`}
                 title={SIGNATURE_STATUS_META[certificate.signature_status].detail}
@@ -353,7 +353,7 @@ export const ForensicBundleVerifier: React.FC<ForensicBundleVerifierProps> = ({
                 </span>
               </span>
               <span
-                className={`px-3 py-1 rounded-full text-xs font-mono font-extrabold ${
+                className={`px-3 py-1 rounded-full text-xs font-extrabold ${
                   certificate.authentic
                     ? 'seg-active'
                     : 'badge-critical'

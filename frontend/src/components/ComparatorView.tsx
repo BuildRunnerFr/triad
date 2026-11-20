@@ -741,16 +741,11 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
             onClick={() => setQuestionsOpen((prev) => !prev)}
             className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[var(--bg-hover)] transition cursor-pointer"
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg badge-warning flex items-center justify-center shrink-0">
-                <MessageCircleQuestion className="w-4 h-4" />
-              </div>
-              <span className="text-xs sm:text-sm font-extrabold text-main">
-                Questions d&apos;audition Phase AVANT (
-                {avantSynthesis.questions_entretien.length})
-              </span>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-sub">
+            <h3 className="text-base font-semibold text-main text-left">
+              Questions posées à la DSI en phase AVANT{' '}
+              <span className="text-sub font-normal tabular-nums">({avantSynthesis.questions_entretien.length})</span>
+            </h3>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-sub">
               <span>{questionsOpen ? 'Masquer' : 'Afficher'}</span>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
@@ -761,19 +756,14 @@ export const ComparatorView: React.FC<ComparatorViewProps> = ({
           </button>
 
           {questionsOpen && (
-            <div className="p-4 pt-3 border-t border-hairline grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            <ol className="border-t border-hairline divide-y divide-[var(--border-subtle)]">
               {avantSynthesis.questions_entretien.map((q, idx) => (
-                <div
-                  key={idx}
-                  className="surface-card rounded-xl p-3 flex items-start gap-2.5 text-xs"
-                >
-                  <span className="px-2 py-0.5 rounded font-mono font-bold text-[10px] badge-warning shrink-0 mt-0.5">
-                    Q{idx + 1}
-                  </span>
+                <li key={idx} className="px-5 py-3 grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2 text-sm">
+                  <span className="font-semibold text-sub tabular-nums">{idx + 1}.</span>
                   <p className="text-main leading-relaxed">{q}</p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           )}
         </div>
       )}

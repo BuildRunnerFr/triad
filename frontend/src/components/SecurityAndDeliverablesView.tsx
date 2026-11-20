@@ -3264,17 +3264,17 @@ export const SecurityAndDeliverablesView: React.FC<
                   Posture d&apos;Auto-Sécurité
                 </h3>
                 {securityPosture && (
-                  <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold">
+                  <span className="badge-success inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
                     <ShieldCheck className="w-3 h-3" />
                     {securityPosture.status}
                   </span>
                 )}
-                <span className="badge-warning px-2.5 py-0.5 rounded-full font-mono text-[10px] font-extrabold">
+                <span className="badge-warning px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
                   {securityPosture?.locked_exports_count ?? 12} verrous humains HTTP 403
                 </span>
                 {securityPosture && (
                   <span
-                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                       securityPosture.hmac_signing_enabled
                         ? 'badge-success'
                         : 'surface-subtle text-sub border border-hairline'
@@ -3353,7 +3353,7 @@ export const SecurityAndDeliverablesView: React.FC<
                         </span>
                         <div className="flex items-center gap-1.5 shrink-0">
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-extrabold ${
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
                               barrier.active
                                 ? 'badge-success'
                                 : 'surface-subtle text-sub border border-hairline'
@@ -3509,7 +3509,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 <h3 className="text-sm sm:text-base font-extrabold text-main">
                   Matrice des Droits par Agent
                 </h3>
-                <span className="badge-critical px-2.5 py-0.5 rounded-full font-mono text-[10px] font-extrabold">
+                <span className="badge-critical px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
                   0 écriture GCP
                 </span>
               </div>
@@ -3575,7 +3575,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 <Link2 className="w-3.5 h-3.5" />
                 <span>Registre SHA-256</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums ${
+                  className={`px-1.5 py-0.5 rounded-full text-[10px] tabular-nums ${
                     chainInnerTab === 'ledger'
                       ? 'bg-black/20'
                       : 'surface-subtle text-sub'
@@ -3599,7 +3599,7 @@ export const SecurityAndDeliverablesView: React.FC<
                 <FolderArchive className="w-3.5 h-3.5" />
                 <span>Vérificateur .zip</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono ${
+                  className={`px-1.5 py-0.5 rounded-full text-[10px] ${
                     chainInnerTab === 'verifier'
                       ? 'bg-black/20'
                       : 'surface-subtle text-sub'
@@ -3611,7 +3611,7 @@ export const SecurityAndDeliverablesView: React.FC<
             </div>
 
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-extrabold ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${
                 globalChainValid ? 'badge-success' : 'badge-critical'
               }`}
             >
@@ -3639,7 +3639,7 @@ export const SecurityAndDeliverablesView: React.FC<
                     Registre Chaîné SHA-256
                   </h3>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full font-mono text-[11px] font-extrabold tabular-nums ${
+                    className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold tabular-nums ${
                       hasActiveLogFilters
                         ? 'seg-active'
                         : 'surface-subtle text-main'
