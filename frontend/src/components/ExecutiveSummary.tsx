@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   AlertTriangle,
@@ -44,6 +44,21 @@ import { ConcordanceRow, RibbonLegend, rankFindings } from './ConcordanceRibbon'
 import { CloudTopologyViz } from './CloudTopologyViz';
 import { Nis2CoverageMatrix } from './Nis2CoverageMatrix';
 import type { ToastTone } from './ToastStack';
+import type { ContourWell } from './TruthContourField';
+
+/** Relevé topographique (WebGL) chargé à part : hors du bundle initial. */
+const LazyTruthContourField = lazy(() => import('./TruthContourField'));
+
+const WELL_DEPTH: Record<GraviteFinding, number> = {
+  critique: 1,
+  haute: 0.72,
+  moyenne: 0.48,
+  faible: 0.3,
+};
+
+/** Masque : le relief s'efface vers le chiffre-titre (à gauche) et vers les faits secondaires (en bas). */
+const CONTOUR_MASK =
+  'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 34%, #000 62%), linear-gradient(to bottom, transparent 0%, #000 14%, #000 58%, transparent 92%)';
 
 interface ExecutiveSummaryProps {
   synthesis: AuditSynthesis;
@@ -321,6 +336,23 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
 
   const rankedFindings = rankFindings(findings).filter((f) => f.statut !== 'conforme');
 
+  // Chaque constat non conforme creuse un puits dans le relevé ; un écart partiel, à demi-profondeur.
+  const contourKey = findings
+    .filter((f) => f.statut === 'non_conforme' || f.statut === 'partiel')
+    .map((f) => `${f.id}|${f.gravite}|${f.statut}`)
+    .join(';');
+  const contourWells = useMemo<ContourWell[]>(
+    () =>
+      contourKey
+        ? contourKey.split(';').map((entry) => {
+            const [id, gravite, statut] = entry.split('|') as [string, GraviteFinding, string];
+            const depth = (WELL_DEPTH[gravite] ?? 0.4) * (statut === 'partiel' ? 0.5 : 1);
+            return { id, depth, critical: gravite === 'critique' && statut === 'non_conforme' };
+          })
+        : [],
+    [contourKey]
+  );
+
   const fmt1 = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
   const ledeFacts: { label: string; value: string; tone?: string }[] = [
     { label: 'Maturité NIS2', value: `${maturityScore} %`, tone: maturityScore < 40 ? 'text-[var(--rupture)]' : undefined },
@@ -345,7 +377,21 @@ export const ExecutiveSummary: React.FC<ExecutiveSummaryProps> = ({
       className="space-y-6"
     >
       {/* CHIFFRE-TITRE ÉDITORIAL : la contradiction dite en une phrase, chiffres intégrés au texte */}
-      <section aria-labelledby="cockpit-lede" className="pt-1 pb-6 border-b border-hairline">
+      <section aria-labelledby="cockpit-lede" className="relative isolate pt-1 pb-6 border-b border-hairline">
+        {contourWells.length > 0 && (
+          <Suspense fallback={null}>
+            <LazyTruthContourField
+              wells={contourWells}
+              className="absolute inset-0 -z-10 overflow-hidden"
+              style={{
+                maskImage: CONTOUR_MASK,
+                WebkitMaskImage: CONTOUR_MASK,
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'source-in',
+              }}
+            />
+          </Suspense>
+        )}
         <div className="flex flex-wrap items-start justify-between gap-x-10 gap-y-5">
           <div className="min-w-0 max-w-5xl flex items-start gap-5 sm:gap-7">
             {/* Numéral autonome + annotation reliée par un filet (geste éditorial) */}
