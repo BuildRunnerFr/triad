@@ -534,3 +534,15 @@ input, textarea {
 [cmdk-input]:focus-visible {
   outline: none;
 }
+
+/* Retour tactile à l'appui (principe Emil Kowalski) : compression légère des boutons compacts.
+   Exclut les lignes pleine largeur, onglets et éléments de menu où l'effet serait trop ample. */
+:where(button:not(.w-full):not([role="tab"]):not([role="menuitem"]):not([role="radio"])) {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 160ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+:where(button:not(.w-full):not([role="tab"]):not([role="menuitem"]):not([role="radio"])):not(:disabled):active {
+  transform: scale(0.97);
+  transition-duration: 90ms;
+}
